@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagina RegEx Builder voor GSC & GA | RegEx Builder</title>
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Specifieke pagina's filteren met RegEx in Google Search Console of Google Analytics? Met de RegEx builder bouw je gemakkelijk een RegEx voor GSC en GA.">
+  <link rel="alternate" hreflang="nl" href="https://regex.thijsvanhal.nl/">
+  <link rel="alternate" hreflang="en" href="https://regex.thijsvanhal.nl/en/pages/">
+  <link rel="alternate" hreflang="x-default" href="https://regex.thijsvanhal.nl/">
+  <link rel="stylesheet" href="/files/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="/files/styles.css" type="text/css">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <style type="text/css" media="screen" link rel="preload" as="font">
+    @font-face {
+      font-family: 'madaregular';
+      src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
+         url('/files/font/mada-regular-webfont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'madabold';
+      src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
+         url('/files/font/mada-bold-webfont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <!-- End Google Tag Manager -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://regex.thijsvanhal.nl/",
+      "url": "https://regex.thijsvanhal.nl/",
+      "name": "RegEx Builder",
+      "creator": {
+        "@id": "https://regex.thijsvanhal.nl/#person"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://regex.thijsvanhal.nl/#person",
+      "email": "mail@thijsvanhal.nl",
+      "name": "Thijs van Hal",
+      "url": "https://www.thijsvanhal.nl/",
+      "sameAs": "https://twitter.com/thijsvanhal"
+    }
+    </script>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar navbar-expand-md">
+      <div class="container-sm" id="c-navbar">
+        <a class="navbar-brand" href="/">Apps</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/regex-builder/"> RegEx Pagina&apos;s</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/regex-builder/zoekwoorden/">RegEx Zoekwoorden</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto" id="second-menu">
+            <li class="nav-item">
+              <a class="nav-link active" href="/regex-builder/">NL</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">/</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/regex-builder/en/pages/">EN</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-sm" id="top-container">
+      <p>
+        <label for="input-area">Voeg hier je pagina&apos;s toe</label>
+        <textarea class="input-area" id="input-area" rows="6"></textarea>
+      </p>
+    </div>
+    <div class="container-sm">
+      <p>
+        Hoe wil je dat de pagina&apos;s matchen in Google Search Console of Google Analytics?
+        <label>
+          <input type="radio" name="optionsRadios" id="bevat" value="option1" checked="" data-np-checked="1">
+          Bevat
+        </label>
+        <label>
+          <input type="radio" name="optionsRadios" id="exact" value="option2" data-np-checked="1">
+          Exact
+        </label>
+      </p>
+      <button type="button" class="btn btn-primary" id="generate-button">Genereer RegEx</button>
+    </div>
+    <div class="container-sm">
+      <div class="row">
+        <div class="col-sm" id="resultaat">
+          <label for="result-gsc">Google Search Console RegEx</label>
+          <textarea class="textarea-results" id="result-gsc"></textarea>
+          <div class="tekens" id="tekens-gsc"></div>
+        </div>
+        <div class="col-sm" id="resultaat">
+          <label for="result-ga">Google Analytics RegEx</label>
+          <textarea class="textarea-results" id="result-ga"></textarea>
+          <div class="tekens" id="tekens-ga"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container-sm">
+      <div class="body-text">
+        <h1>Pagina RegEx maken voor Google Search Console & Google Analytics</h1>
+        <p>Heb je SEO optimalisaties gedaan voor een specifieke set aan pagina&apos;s en wil je vervolgens de resultaten zien van die specifieke pagina&apos;s in Google Search Console of Google Analytics? Dan bouw je deze RegEx makkelijk op met deze tool.</p>
+        <h2>Hoe gebruik je deze pagina RegEx builder?</h2>
+        <p>Plak een set aan pagina&apos;s in het tekstvak en kies vervolgens of de filter deze pagina&apos;s moet bevatten of exact die pagina&apos;s moeten zijn.<br><br><b>Bijvoorbeeld:</b> Je hebt voor elke plaatsnaam in Nederland een pagina (https://www.voorbeeld.nl/amsterdam & https://www.voorbeeld.nl/utrecht) en eronder een subpagina met /contact (https://www.voorbeeld.nl/amsterdam/contact & https://www.voorbeeld.nl/utrecht/contact ).<br><br>Kies je voor exact? Dan zie je enkel de resultaten van /amsterdam en /utrecht. Kies je voor bevat? Dan zie je alle pagina&apos;s waar /amsterdam en /utrecht in de url zit, dus ook /amsterdam/contact en /utrecht/contact.<br></p>
+        <h3>Voorbeeld RegEx bevat voor Google Search Console</h3>
+        <pre><code>^https://www.voorbeeld.nl(/amsterdam|/utrecht)</code></pre>
+        <h3>Voorbeeld RegEx exact voor Google Search Console</h3>
+        <pre><code>^https://www.voorbeeld.nl(/amsterdam|/utrecht)$</code></pre>
+        <h2>Hoe gebruik je de RegEx in Google Search Console?</h2>
+        <p><b>Stap 1:</b> Ga naar Google Search Console en klik in &apos;Prestaties&apos; als nieuwe filter voor &apos;Pagina&apos;.</p>
+        <img src="./images/pagina-regex-builder-gsc-1.jpg" class="img-fluid" alt="Pagina RegEx builder GSC stap 1" width="1678" height="365">
+        <p><b>Stap 2:</b> Klik vervolgens op &apos;Aangepast (regex)&apos;</p>
+        <img src="./images/pagina-regex-builder-gsc-2.jpg" class="img-fluid" alt="Pagina RegEx builder GSC stap 2" width="496" height="304">
+        <p><b>Stap 3:</b> De standaard optie is hier &apos;Komt overeen met regex&apos; , laat dit ongewijzigd.</p>
+        <img src="./images/pagina-regex-builder-gsc-3.jpg" class="img-fluid" alt="Pagina RegEx builder GSC stap 3" width="492" height="349">
+        <p><b>Stap 4:</b> Plak de RegEx in het vak en klik op &apos;Toepassen&apos;.</p>
+        <img src="./images/pagina-regex-builder-gsc-4.jpg" class="img-fluid" alt="Pagina RegEx builder GSC stap 4" width="494" height="354">
+        <h2>Hoe gebruik je de RegEx in Google Analytics 4?</h2>
+        <p><i>Helaas is het op dit moment enkel mogelijk om RegEx in het &apos;Ontdekken&apos; tab te gebruiken en niet in de standaard rapporten van Google Analytics 4.</i><br><br><b>Stap 1:</b> Ga naar Google Analytics en maak een gewenst rapport in &apos;Ontdekken&apos; met &apos;Paginapad + querytekenreeks&apos; als rij.</p>
+        <img src="./images/pagina-regex-builder-ga-1.jpg" class="img-fluid" alt="Pagina RegEx builder GA stap 1" width="988" height="768">
+        <p><b>Stap 2:</b> Scroll naar onder en klik op filter, kies vervolgens voor &apos;Paginapad + querytekenreeks&apos;</p>
+        <img src="./images/pagina-regex-builder-ga-2.jpg" class="img-fluid" alt="Pagina RegEx builder GA stap 2" width="406" height="382">
+        <p><b>Stap 3:</b> Klik vervolgens op &apos;komt overeen met RegEx&apos;</p>
+        <img src="./images/pagina-regex-builder-ga-3.jpg" class="img-fluid" alt="Pagina RegEx builder GA stap 3" width="242" height="320">
+        <p><b>Stap 4:</b> Plak de RegEx in het vak en klik op &apos;Toepassen&apos;.</p>
+        <img src="./images/pagina-regex-builder-ga-4.jpg" class="img-fluid" alt="Pagina RegEx builder GA stap 4" width="209" height="322">
+        <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+      </div>
+    </div>
+    <!-- JS Files -->
+    <script type="text/javascript" async src="/files/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/regex-builder/files/app_pagina.js"></script>      
+  </body>
+</html>

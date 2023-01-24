@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoekwoord RegEx Builder voor GSC | RegEx Builder</title>
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Specifieke zoekwoorden filteren met RegEx in Google Search Console? Met de RegEx builder bouw je gemakkelijk een reguliere expressie met meerdere zoekwoorden.">
+  <link rel="alternate" hreflang="nl" href="https://regex.thijsvanhal.nl/zoekwoorden/">
+  <link rel="alternate" hreflang="en" href="https://regex.thijsvanhal.nl/en/keywords/">
+  <link rel="alternate" hreflang="x-default" href="https://regex.thijsvanhal.nl/zoekwoorden/">
+  <link rel="stylesheet" href="/files/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="/files/styles.css" type="text/css">
+  <link rel="preload" as="font" href="/files/font/mada-regular-webfont.woff2">
+  <link rel="preload" as="font" href="/files/font/mada-bold-webfont.woff2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <style type="text/css" media="screen">
+    @font-face {
+      font-family: 'madaregular';
+      src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
+         url('/files/font/mada-regular-webfont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'madabold';
+      src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
+         url('/files/font/mada-bold-webfont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <!-- End Google Tag Manager -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://regex.thijsvanhal.nl/",
+      "url": "https://regex.thijsvanhal.nl/",
+      "name": "RegEx Builder",
+      "creator": {
+        "@id": "https://regex.thijsvanhal.nl/#person"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://regex.thijsvanhal.nl/#person",
+      "email": "mail@thijsvanhal.nl",
+      "name": "Thijs van Hal",
+      "url": "https://www.thijsvanhal.nl/",
+      "sameAs": "https://twitter.com/thijsvanhal"
+    }
+    </script>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar navbar-expand-md">
+      <div class="container-sm" id="c-navbar">
+        <a class="navbar-brand" href="/">Apps</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Pagina&apos;s</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/zoekwoorden/">Zoekwoorden</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto" id="second-menu">
+            <li class="nav-item">
+              <a class="nav-link active" href="/zoekwoorden/">NL</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">/</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/en/keywords/">EN</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-sm" id="top-container">
+      <p>
+        <label for="input-area">Voeg hier je zoekwoorden toe</label>
+        <textarea class="input-area" id="input-area" rows="6"></textarea>
+      </p>
+    </div>
+    <div class="container-sm">
+      <button type="button" class="btn btn-primary" id="generate-button">Genereer RegEx</button>
+    </div>
+    <div class="container-sm">
+      <div class="row">
+        <div class="col-sm" id="resultaat">
+          <label for="result-bevat">Google Search Console RegEx Bevat</label>
+          <textarea class="textarea-results" id="result-bevat"></textarea>
+          <div class="tekens" id="tekens-bevat"></div>
+        </div>
+        <div class="col-sm" id="resultaat">
+          <label for="result-exact">Google Search Console RegEx Exact</label>
+          <textarea class="textarea-results" id="result-exact"></textarea>
+          <div class="tekens" id="tekens-exact"></div>
+        </div>
+      </div>
+    </div>
+    <div class="container-sm">
+      <div class="body-text">
+        <h1>Zoekwoord RegEx maken voor Google Search Console</h1>
+        <p>Heb je SEO optimalisaties gedaan voor een specifieke set aan zoekwoorden en wil je vervolgens de resultaten zien van die specifieke zoekwoorden in Google Search Console? Dan bouw je deze RegEx makkelijk op met deze tool.</p>
+        <h2>Hoe gebruik je deze zoekwoorden RegEx builder?</h2>
+        <p>Plak een set aan zoekwoorden in het tekstvak en kies vervolgens of de filter deze zoekwoorden moet bevatten of exact die zoekwoorden moeten zijn.<br><br><b>Bijvoorbeeld:</b> Je hebt voor elke plaatsnaam in Nederland een pagina (https://www.voorbeeld.nl/amsterdam & https://www.voorbeeld.nl/utrecht) en eronder een subpagina met /contact (https://www.voorbeeld.nl/amsterdam/contact & https://www.voorbeeld.nl/utrecht/contact ) . Je hebt geoptimaliseerd voor de zoekwoorden &apos;amsterdam&apos;, &apos;amsterdam contact&apos;, &apos;utrecht&apos; en &apos;utrecht contact&apos;.<br><br>Kies je voor exact? Dan zie je enkel de resultaten van de zoekwoorden &apos;amsterdam&apos; en &apos;utrecht&apos;. Kies je voor bevat? Dan zie je alles zoekwoorden in Google Search Console waar &apos;amsterdam&apos; en &apos;utrecht&apos; in zit, dus ook &apos;amsterdam contact&apos; en &apos;utrecht contact&apos;.</p>
+        <h3>Voorbeeld RegEx bevat voor Google Search Console</h3>
+        <pre><code>\b(amsterdam|utrecht)\b</code></pre>
+        <h3>Voorbeeld RegEx exact voor Google Search Console</h3>
+        <pre><code>^(amsterdam|utrecht)$</code></pre>
+        <h2>Hoe gebruik je de RegEx in Google Search Console?</h2>
+        <p><b>Stap 1:</b> Ga naar Google Search Console en klik in Prestaties als nieuwe filter voor &apos;Zoekopdracht&apos;.</p>
+        <img src="../images/zoekwoord-regex-builder-gsc-1.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 1" width="1675" height="363">
+        <p><b>Stap 2:</b> Klik vervolgens op &apos;Aangepast (regex)&apos;</p>
+        <img src="../images/zoekwoord-regex-builder-gsc-2.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 2" width="491" height="295">
+        <p><b>Stap 3:</b> De standaard optie is hier &apos;Komt overeen met regex&apos; , laat dit ongewijzigd.</p>
+        <img src="../images/zoekwoord-regex-builder-gsc-3.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 3" width="496" height="352">
+        <p><b>Stap 4:</b> Plak de RegEx in het vak en klik op &apos;Toepassen&apos;.</p>
+        <img src="../images/zoekwoord-regex-builder-gsc-4.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 4" width="491" height="355">
+        <h2>RegEx voor vragen</h2>
+        <p>Met onderstaande RegEx vind je gemakkelijk alle vragen in jouw Google Search Console Property. Door alle zoekwoorden met &apos;wie&apos;, &apos;wat&apos; etc. te zoeken vind je gemakkelijk input voor content of je FAQ!</p>
+        <pre><code>\b(zijn|kan|hoe|wat|wanneer|waar|welke|wie|waarom|wil)\b</code></pre>
+        <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+      </div>
+    </div>
+    <!-- JS Files -->
+    <script type="text/javascript" async src="/files/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/regex-builder/files/app_zoekwoorden.js"></script>      
+  </body>
+</html>
