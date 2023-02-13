@@ -111,7 +111,7 @@ textarea {
 .textarea-results {
     height: 200px;
 }
-input {
+input[type=radio] {
     margin-left: 10px;
 }
 #woorden-totaal {
@@ -178,4 +178,9 @@ a {
 }
 #apps {
     padding: auto;
+}
+#date-text {
+    white-space: pre-line;
+    height: 50px;
+    margin-top: 10px;
 }
