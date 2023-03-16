@@ -38,7 +38,15 @@ function removeDuplicates(mixedKeywords) {
 // Code voor automatisch updaten van mixer
 var elements = ["lijst-1", "lijst-2", "lijst-3", "optional-list-mix", "optional-list-2", "optional-list-3"];
 for (var i = 0; i < elements.length; i++) {
-    document.getElementById(elements[i]).addEventListener("input", function() {
+    var el = document.getElementById(elements[i]);
+    if (el instanceof HTMLInputElement) {
+        el.addEventListener("input", updateMixer);
+    } else {
+        el.addEventListener("blur", updateMixer);
+    }
+}
+
+function updateMixer () {
     var textArea1 = document.getElementById("lijst-1").value;
     var keywords1 = textArea1 ? textArea1.split("\n").filter(Boolean) : [''];
     var textArea2 = document.getElementById("lijst-2").value;
@@ -129,7 +137,7 @@ for (var i = 0; i < elements.length; i++) {
     resultLength.textContent = length.toString();
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
-})};
+};
 
 // Zorg dat alles automatisch geselecteerd wordt
 resultTextarea.addEventListener('click', () => {
