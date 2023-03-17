@@ -7,9 +7,26 @@ const keywordsInput1 = document.getElementById('lijst-1');
 const keywordsInput2 = document.getElementById('lijst-2');
 const keywordsInput3 = document.getElementById('lijst-3');
 
+// Alert voor meer dan 10.000 zoekwoorden
+let showAlert = true;
+
+function showMaxWordCountAlert() {
+  if (showAlert) {
+    if (document.documentElement.lang === 'nl') {
+        window.alert('In Google Ads kun je maximaal 10.000 woorden plakken, pas je zoekwoordlijsten aan!');
+    } else if (document.documentElement.lang === 'en') {
+        window.alert('You can only paste up to 10.000 keywords in Google Ads, change your keyword lists!');
+    }
+    showAlert = false;
+  }
+}
+
 // Functie Length
 function getLength(mixedKeywords) {
     const string = mixedKeywords.toString()
+    if (string.split('\n').length >= 10000) {
+        showMaxWordCountAlert();
+    }
     if (document.documentElement.lang === 'nl') {
         return new String(`${string.split('\n').length} Zoekwoorden`);
     } else if(document.documentElement.lang === 'en') {
@@ -138,13 +155,45 @@ function updateMixer () {
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
 };
-
+// Functie notificatie
+function showNotification(message, duration) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, duration);
+}
 // Zorg dat alles automatisch geselecteerd wordt
 resultTextarea.addEventListener('click', () => {
-    resultTextarea.select();
+    if (resultTextarea.value !== '') {
+        resultTextarea.select();
+        document.execCommand("copy");
+        if (document.documentElement.lang === 'nl') {
+            showNotification('Resultaten gekopieerd naar clipboard!', 3000);
+            showAlert = true;
+        } else if(document.documentElement.lang === 'en') {
+            showNotification('Results copied to clipboard!', 3000);
+            showAlert = true;
+        }
+    }
 });
 resultTextarea.addEventListener('focus', () => {
-    resultTextarea.select();
+    if (resultTextarea.value !== '') {
+        resultTextarea.select();
+        document.execCommand("copy");
+        if (document.documentElement.lang === 'nl') {
+            showNotification('Resultaten gekopieerd naar clipboard!', 3000);
+            showAlert = true;
+        } else if(document.documentElement.lang === 'en') {
+            showNotification('Results copied to clipboard!', 3000);
+            showAlert = true;
+        }
+    }
 });
 keywordsInput1.addEventListener('click', () => {
     keywordsInput1.select();

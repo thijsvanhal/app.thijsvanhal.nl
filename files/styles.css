@@ -47,6 +47,9 @@
         margin-bottom: 30px;
         height: 100%;
     }
+    .notification {
+        width: 330px !important;
+    }
 }
 body {
     font-family: madaregular;
@@ -183,4 +186,42 @@ a {
     white-space: pre-line;
     height: 50px;
     margin-top: 10px;
+}
+.notification {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 30px;
+    line-height: 30px;
+    background-color: #02343f;
+    color: #f0edcc;
+    text-align: center;
+    border-radius: 10px;
+    animation: fade-in 0.3s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+    from {
+        top: -100%;
+        opacity: 0;
+    }
+    to {
+        top: 1.5%;
+        opacity: 1;
+    }
+}
+
+.notification.fade-out {
+    animation: fade-out 0.3s ease-in-out forwards;
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
