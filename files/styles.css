@@ -12,10 +12,16 @@
     font-style: normal;
     font-display: swap;
 }
+@media (min-width:600px) {
+    #bulk-list-values {
+        height: 349px;
+    }
+}
+
 @media (min-width:1280px) {
     .container {
     max-width: 1250px;
-}
+    }
 }
 @media (min-width:1440px) {
     .container {
@@ -99,6 +105,10 @@ textarea {
     overflow: auto;
     padding-right: 15px;
 }
+.form-control {
+    border: 2px solid #02343f;
+    border-radius: 10px;
+}
 .card {
     font-family: madaregular;
     height: 100%;
@@ -131,7 +141,7 @@ input[type=radio] {
 .tekens {
     height: 24px;
 }
-#keyword-container {
+#keyword-container, #alle-lijsten {
     margin-top: 30px;
     margin-bottom: 30px;
 }
@@ -201,7 +211,6 @@ a {
     border-radius: 10px;
     animation: fade-in 0.3s ease-in-out forwards;
 }
-
 @keyframes fade-in {
     from {
         top: -100%;
@@ -212,11 +221,9 @@ a {
         opacity: 1;
     }
 }
-
 .notification.fade-out {
     animation: fade-out 0.3s ease-in-out forwards;
 }
-
 @keyframes fade-out {
     from {
         opacity: 1;
@@ -224,4 +231,22 @@ a {
     to {
         opacity: 0;
     }
+}
+#bulk-input {
+    height: 80px !important;
+}
+.accordion-button:not(.collapsed) {
+    color:#02343f;
+    background-color:#02343f26;
+}
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='02343f'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+.table {
+    --bs-table-border-color: #02343f;
+}
+#alle-lijsten-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
 }
