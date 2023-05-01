@@ -81,6 +81,9 @@
       <div class="navbar-collapse collapse" id="navContent">
         <ul class="navbar-nav ml-auto" id="second-menu">
           <li class="nav-item">
+            <a class="nav-link" id="inlog_knop" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link active" href="/keyword-mixer/">NL</a>
           </li>
           <li class="nav-item">
@@ -93,6 +96,34 @@
       </div>
     </div>
   </nav>
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Inloggen bij DataForSEO</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+        </div>
+        <div class="modal-body">
+          <p id="ingelogd"></p>
+          <form>
+            <div class="mb-3">
+              <label for="inputEmail" class="form-label">API Login</label>
+              <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="mb-3">
+              <label for="inputAPI" class="form-label">API Wachtwoord</label>
+              <input type="password" class="form-control" id="inputAPI" placeholder="API">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">Onthouden</label>
+            </div>
+            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container-sm" id="keyword-container">
     <div class="row">
       <div class="col-sm">
@@ -135,21 +166,17 @@
     </div>
   </div>
   <div class="container-sm" id="keyword-container">
-    <h1>Bulk Zoekwoorden Mixen</h1>
-    <div>
-      <label for="list-values">Bulk zoekwoorden mixen</label>
-      <textarea class="keywords-input" id="bulk-input"></textarea>
+    <div class="body-text">
+      <h1>Bulk Zoekwoorden Mixen</h1>
+      <p>Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden maar hoe werkt de bulk keyword mixer precies?</p>
+      <p><b>Stap 1:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere rijtjes naast elkaar te plakken en in bulk rijtjes toevoegen. Let wel goed op dat je in Excel geen lege kolommen hebt, alle rijtjes moeten naast elkaar staan. Goed om te weten dat de rijtjes in de cookies opgeslagen worden en dat er al standaard rijtjes voor je zijn toegevoegd.</p>
+      <p><b>Stap 2:</b> Geef in het input veld 'bulk zoekwoorden mixen' aan welke rijtjes je wil laten mixen. Dit moet in onderstaand format:</p>
+      <p>1,naam rijtje 1,naam rijtje 2,1,naam rijtje 3,1</p>
+      <p>Met het eerste cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je op welk rijtje als rijtje 1 moet functioneren, welke als rijtje 2 en optioneel rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.</p>
+      <p><b>Stap 3:</b> Log in met DataForSEO account, dit kan rechtsboven. Als je 'Onthouden' aanvinkt dan worden de waardes opgeslagen in de cookies.</p>
+      <p><b>Stap 4:</b> Klik op 'Mix rijtjes' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.</p>
+      <p><b>Stap 5:</b> Download de Excel door op 'Download Excel te klikken', nu heb je al je data!</p>
     </div>
-    <div class="row">
-      <div class="col-sm">
-        <button type="button" class="btn btn-primary" onclick="mixLists()">Mix rijtjes</button>
-      </div>
-      <div class="col-sm">
-        <button type="button" class="btn btn-primary" onclick="generateExcel()">Download Excel</button>
-      </div>
-    </div>
-  </div>
-  <div class="container-sm" id="keyword-container">
     <div class="row">
       <div class="col-sm">
         <div>
@@ -187,7 +214,7 @@
       <div class="row" id="alle-lijsten-row">
         <div class="col">
           <div class="accordion" id="accordion-list">
-            <div class="accordion-item">
+            <div class="accordion-item" id="standaard-accordion-item">
               <h4 class="accordion-header" id="heading10000000">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10000000" aria-expanded="false" aria-controls="collapse10000000">kopen</button>
               </h4>
@@ -207,8 +234,22 @@
       </div>
     </div>   
   </div>
+  <div class="container-sm" id="keyword-container">
+    <div>
+      <label for="list-values">Bulk zoekwoorden mixen</label>
+      <textarea class="keywords-input" id="bulk-input"></textarea>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <button type="button" class="btn btn-primary" onclick="mixLists()">Mix rijtjes</button>
+      </div>
+      <div class="col-sm">
+        <button type="button" class="btn btn-primary" onclick="generateExcel()">Download Excel</button>
+      </div>
+    </div>
+  </div>
   <div class="container-sm">
-    <div class="table-responsive" id="zoekwoorden-tabel"></div>
+    <div class="bulk-mixer-status"></div>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>

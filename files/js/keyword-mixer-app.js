@@ -10,22 +10,25 @@ const keywordsInput3 = document.getElementById('lijst-3');
 // Alert voor meer dan 10.000 zoekwoorden
 let showAlert = true;
 
-function showMaxWordCountAlert() {
-  if (showAlert) {
-    if (document.documentElement.lang === 'nl') {
-        window.alert('In Google Ads kun je maximaal 10.000 woorden plakken, pas je zoekwoordlijsten aan!');
-    } else if (document.documentElement.lang === 'en') {
-        window.alert('You can only paste up to 10.000 keywords in Google Ads, change your keyword lists!');
+function showMaxWordCountAlert(mixedKeywords) {
+    const string = mixedKeywords.toString();
+    const newlineIndex = string.indexOf('\n');
+    const eerste_zoekwoord = string.substring(0, newlineIndex);
+    if (showAlert) {
+        if (document.documentElement.lang === 'nl') {
+            window.alert('In Google Ads kun je maximaal 10.000 woorden plakken, pas de zoekwoordlijst met als eerste zoekwoord "' + eerste_zoekwoord + '" aan!');
+        } else if (document.documentElement.lang === 'en') {
+            window.alert('You can only paste up to 10.000 keywords in Google Ads, change the keyword list with the first keyword "' + eerste_zoekwoord + '" aan!');
+        }
+        showAlert = false;
     }
-    showAlert = false;
-  }
 }
 
 // Functie Length
 function getLength(mixedKeywords) {
-    const string = mixedKeywords.toString()
+    const string = mixedKeywords.toString();
     if (string.split('\n').length >= 10000) {
-        showMaxWordCountAlert();
+        showMaxWordCountAlert(mixedKeywords);
     }
     if (document.documentElement.lang === 'nl') {
         return new String(`${string.split('\n').length} Zoekwoorden`);
@@ -44,7 +47,7 @@ function mixKeywords(...lists) {
 
 // Functie voor verwijderen van dubbele zoekwoorden
 function removeDuplicates(mixedKeywords) {
-    let keywords = mixedKeywords.split("\n");
+    let keywords = mixedKeywords.toLowerCase().split("\n");
     let uniqueKeywords = new Map();
     for (let keyword of keywords) {
         uniqueKeywords.set(keyword, keyword);
@@ -229,7 +232,7 @@ if (listsCookie) {
     lists = JSON.parse(listsCookie);
     updateAccordion();
 }
-const accordionItems = document.querySelectorAll(".accordion-item");
+const accordionItems = document.querySelectorAll("#standaard-accordion-item");
 accordionItems.forEach((item) => {
   // get the button and list values for the current item
   const button = item.querySelector("button");
@@ -242,8 +245,9 @@ accordionItems.forEach((item) => {
     values.push(li.innerText.trim());
   });
 
-  // add the name and values to the lists array
-  lists.push({ name: listName, values: values });
+  if (!listsCookie) {
+    lists.push({ name: listName, values: values });
+  }
 });
 
 function addList() {
@@ -270,20 +274,14 @@ function bulkaddList() {
     const numCols = rows[0].split('\t').length;
     
     for (let col = 0; col < numCols; col++) {
-
       const listName = rows[0].split('\t')[col];
-
       const listValues = rows.slice(1).map(row => row.split('\t')[col]);
-
       const list = { name: listName, values: listValues };
-
       const listExists = lists.some(list => list.name === listName);
-
       if (listExists) {
         window.alert("Er is al een rijtje met deze naam! Pas de naam aan :)");
         continue;
       }
-
       lists.push(list);
     }
     updateAccordion();
@@ -378,35 +376,210 @@ function updateAccordion() {
     accordionLists.appendChild(rowContainer);
 }
 
+// login form
+var modal = document.getElementById("loginModal");
+var button = document.querySelector(".navbar-toggler");
+var span = document.getElementsByClassName("btn-close")[0];
+var loginButton = document.getElementById("loginButton");
+var rememberme = document.getElementById("rememberMe");
+const inlog_knop = document.getElementById("inlog_knop");
+inlog_knop.onclick = function() {
+    var ingelogd = document.getElementById("ingelogd");
+    let login_cookie = getCookie("login");
+    if (login_cookie) {
+        login = getCookie("login");
+        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
+    } else {
+        ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
+    }
+}
+
+button.onclick = function() {
+    modal.style.display = "block";
+};
+
+span.onclick = function() {
+    modal.style.display = "none";
+};
+
+// Store login and password in cookie
+loginButton.onclick = function() {
+    if (rememberme.checked) {
+        document.cookie = "login=" + encodeURIComponent(document.getElementById("inputEmail").value) + ";path=/";
+        document.cookie = "password=" + encodeURIComponent(document.getElementById("inputAPI").value) + ";path=/";
+    }
+};
+
 // Mixen van bulk lijsten
-function mixLists() {
+const mixedKeywordsArray = [];
+const statusElement = document.querySelector('.bulk-mixer-status');
+
+async function mixLists() {
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
-    const mixedKeywordsArray = [];
+    const totalLines = lines.length;
+    let currentLine = 1;
+    const confirmed = confirm("Weet je zeker dat je een API call gaat maken? Dit kost geld!");
   
-    lines.forEach(function (line) {
-      const values = line.split(",");
-      const nonEmptyValues = values.filter((value, index) => [1, 2, 4].includes(index) && value.trim() !== "");
-      document.getElementById("optional-list-mix").checked = values[0] === "1";
-      document.getElementById("lijst-1").value = getListValues(values[1]);
-      document.getElementById("lijst-2").value = getListValues(values[2]);
-      document.getElementById("optional-list-2").checked = values[3] === "1";
-      document.getElementById("lijst-3").value = getListValues(values[4]);
-      document.getElementById("optional-list-3").checked = values[5] === "1";
-      updateMixer();
-      const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
-      mixedKeywordsArray.push({
-        line: nonEmptyValues.join(" + "),
-        mixedKeywords: mixedKeywords,
-      });
-    });
-
-    let htmlTable = "<h1>Tabel gegenereerde zoekwoordlijsten</h1><table class='table table-bordered' id='tabel-zoekwoorden'><thead><tr>";
-    for (let i = 0; i < mixedKeywordsArray.length; i++) {
-      htmlTable += "<th>" + mixedKeywordsArray[i].line + "</th><th>Volume</th><th></th>";
+    if (!confirmed) {
+      return;
     }
-    htmlTable += "</tr></thead><tbody>";
+
+    function chunkArray(arr, chunkSize) {
+        const chunks = [];
+        for (let i = 0; i < arr.length; i += chunkSize) {
+            chunks.push(arr.slice(i, i + chunkSize));
+        }
+        return chunks;
+    }
   
+    for (const line of lines) {
+        const values = line.split(",");
+        const nonEmptyValues = values.filter((value, index) => [1, 2, 4].includes(index) && value.trim() !== "");
+        document.getElementById("optional-list-mix").checked = values[0] === "1";
+        document.getElementById("lijst-1").value = getListValues(values[1]);
+        document.getElementById("lijst-2").value = getListValues(values[2]);
+        document.getElementById("optional-list-2").checked = values[3] === "1";
+        document.getElementById("lijst-3").value = getListValues(values[4]);
+        document.getElementById("optional-list-3").checked = values[5] === "1";
+        updateMixer();
+        const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
+        mixedKeywordsArray.push({
+            line: nonEmptyValues.join(" + "),
+            mixedKeywords: mixedKeywords,
+            searchVolume: []
+        });
+
+        if (mixedKeywords.length > 0) {
+            const chunks = chunkArray(mixedKeywords, 1000);
+            const chunkLines = chunks.length;
+            let currentchunk = 1;
+    
+            for (const chunk of chunks) {
+
+                const post_array = [{
+                    "location_name": "Netherlands",
+                    "keywords": chunk
+                }];
+        
+                // login
+                let login_cookie = getCookie("login");
+                let login;
+                let password;
+                const email_login = document.getElementById("inputEmail").value;
+                const api_login = document.getElementById("inputAPI").value;
+        
+                if (login_cookie) {
+                    login = getCookie("login");
+                    password = getCookie("password");
+                } else if (api_login === "") {
+                    await window.alert('Je moet inloggen rechtsboven!');
+                    return;
+                } else {
+                    login = email_login;
+                    password = api_login;
+                }
+
+                async function getData() {
+                    try {
+                        const post_url = 'https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post';
+                        const requestPostOptions = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Basic ' + btoa(login + ':' + password)
+                            }
+                        };
+                
+                        const requestGetOptions = {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Basic ' + btoa(login + ':' + password)
+                            }
+                        };
+                
+                        const MAX_KEYWORDS_PER_POST = 1000;
+                        const numRequests = Math.ceil(mixedKeywords.length / MAX_KEYWORDS_PER_POST);
+                
+                        for (let i = 0; i < numRequests; i++) {
+                            const startIndex = i * MAX_KEYWORDS_PER_POST;
+                            const endIndex = Math.min(startIndex + MAX_KEYWORDS_PER_POST, mixedKeywords.length);
+                            const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
+                
+                            const post_array = [{
+                                "location_name": "Netherlands",
+                                "keywords": keywordsSlice
+                            }];
+                
+                            // POST request
+                            const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
+                            const post_result = await post_response.json();
+                            console.log(post_result.tasks);
+                
+                            // GET request
+                            let status = '';
+                            while (status !== 'Ok.') {
+                                const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_get/${post_result.tasks[0].id}`;
+                                const get_response = await fetch(get_url, requestGetOptions);
+                                const get_result = await get_response.json();
+                                console.log(get_result.tasks);
+                                status = get_result.tasks[0].status_message;
+                                if (status === 'Ok.') {
+                                    const results = get_result.tasks[0].result;
+                                    for (const result of results) {
+                                        const keyword = result.keyword;
+                                        const searchVolume = result.search_volume;
+                                        console.log(keyword + searchVolume);
+                                        const matchingKeywordIndex = mixedKeywordsArray.findIndex((k) => k.mixedKeywords.includes(keyword));
+                                        if (matchingKeywordIndex !== -1) {
+                                            const mixedKeywordObject = mixedKeywordsArray[matchingKeywordIndex];
+                                            if (mixedKeywordObject.searchVolume) {
+                                                mixedKeywordObject.searchVolume.push(searchVolume);
+                                            } else {
+                                                mixedKeywordObject.searchVolume = [searchVolume];
+                                            }
+                                        } else {
+                                            window.alert("Data komt niet overeen, neem contact op met de developer");
+                                        }
+                                    }
+                                    console.log(mixedKeywordsArray);
+                                } else {
+                                    await new Promise(resolve => setTimeout(resolve, 10000));
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                await getData();
+            }
+        }
+        const lijn = nonEmptyValues.join(" + ");
+        const statusMessage = `${currentLine} van ${totalLines} <b>${lijn}</b> is klaar met ophalen.`;
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${statusMessage}</p></div>`);
+        currentLine++;
+    }
+}
+
+function generateExcel() {
+    const workbook = XLSX.utils.book_new();
+  
+    // Create a worksheet
+    const worksheet = XLSX.utils.json_to_sheet([]);
+  
+    // Add headers to the worksheet
+    const headers = [];
+    for (let i = 0; i < mixedKeywordsArray.length; i++) {
+      headers.push(mixedKeywordsArray[i].line);
+      headers.push("Volume");
+      headers.push("");
+    }
+    XLSX.utils.sheet_add_aoa(worksheet, [headers], {origin: 'A1'});
+  
+    // Add data to the worksheet
+    const data = [];
     let maxMixedKeywords = 0;
     mixedKeywordsArray.forEach(function (item) {
       if (item.mixedKeywords.length > maxMixedKeywords) {
@@ -415,17 +588,30 @@ function mixLists() {
     });
   
     for (let i = 0; i < maxMixedKeywords; i++) {
-      htmlTable += "<tr>";
+      const row = [];
       mixedKeywordsArray.forEach(function (item) {
-        htmlTable += `<td>${item.mixedKeywords[i] ? item.mixedKeywords[i] : ""}</td><td class="volume"></td><td class="volume"></td>`;
+        row.push(item.mixedKeywords[i] ? item.mixedKeywords[i] : "");
+        row.push(item.searchVolume[i] ? item.searchVolume[i] : "");
+        row.push("");
       });
-      htmlTable += "</tr>";
+      data.push(row);
     }
   
-    htmlTable += "</tbody></table>";
+    XLSX.utils.sheet_add_aoa(worksheet, data, {origin: 'A2'});
   
-    document.getElementById("zoekwoorden-tabel").innerHTML = htmlTable;
-}       
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  
+    // Save the workbook as a file
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([buffer], { type: 'application/octet-stream' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'bulk-zoekwoordlijsten.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}  
 
 // Functie voor ophalen van waardes van de lijst op basis van de lijst naam
 function getListValues(listName) {
@@ -436,23 +622,3 @@ function getListValues(listName) {
     }
     return '';
 }
-
-// Excel download
-function generateExcel() {
-    const table = document.getElementById('tabel-zoekwoorden');
-
-    const workbook = XLSX.utils.table_to_book(table);
-
-    const buffer = XLSX.write(workbook, { type: 'array' });
-
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'bulk-zoekwoordlijsten.xlsx';
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-    
