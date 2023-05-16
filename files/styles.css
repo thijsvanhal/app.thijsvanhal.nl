@@ -254,4 +254,6 @@ a {
     display: block;
     margin: auto;
 }
-  
+#row {
+    padding-bottom: 20px;
+}
