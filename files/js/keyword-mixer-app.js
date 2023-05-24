@@ -66,7 +66,10 @@ for (var i = 0; i < elements.length; i++) {
     }
 }
 
+let SeeNotification = true;
+
 function updateMixer () {
+    SeeNotification = true;
     var textArea1 = document.getElementById("lijst-1").value;
     var keywords1 = textArea1 ? textArea1.split("\n").filter(Boolean) : [''];
     var textArea2 = document.getElementById("lijst-2").value;
@@ -186,17 +189,17 @@ resultTextarea.addEventListener('click', () => {
         }
     }
 });
+
 resultTextarea.addEventListener('focus', () => {
-    if (resultTextarea.value !== '') {
+    if (resultTextarea.value !== '' && SeeNotification) {
         resultTextarea.select();
         document.execCommand("copy");
         if (document.documentElement.lang === 'nl') {
             showNotification('Resultaten gekopieerd naar clipboard!', 3000);
-            showAlert = true;
         } else if(document.documentElement.lang === 'en') {
             showNotification('Results copied to clipboard!', 3000);
-            showAlert = true;
         }
+        SeeNotification = false;
     }
 });
 keywordsInput1.addEventListener('click', () => {
@@ -234,20 +237,18 @@ if (listsCookie) {
 }
 const accordionItems = document.querySelectorAll("#standaard-accordion-item");
 accordionItems.forEach((item) => {
-  // get the button and list values for the current item
-  const button = item.querySelector("button");
-  const listValues = item.querySelectorAll(".accordion-body li");
+    const button = item.querySelector("button");
+    const listValues = item.querySelectorAll(".accordion-body li");
 
-  // extract the name and values from the button and listValues
-  const listName = button.innerText.trim();
-  const values = [];
-  listValues.forEach((li) => {
-    values.push(li.innerText.trim());
-  });
+    const listName = button.innerText.trim();
+    const values = [];
+    listValues.forEach((li) => {
+        values.push(li.innerText.trim());
+    });
 
-  if (!listsCookie) {
-    lists.push({ name: listName, values: values });
-  }
+    if (!listsCookie) {
+        lists.push({ name: listName, values: values });
+    }
 });
 
 function addList() {
@@ -303,9 +304,6 @@ function removeLists() {
 
 // Maken en updaten van alle rijtjes als accordions
 function updateAccordion() {
-    if (lists.length === 0) {
-        return;
-    }
     let accordionLists = document.getElementById("alle-lijsten");
     accordionLists.innerHTML = "";
 
@@ -328,6 +326,7 @@ function updateAccordion() {
 
         let accordionItem = document.createElement("div");
         accordionItem.classList.add("accordion-item");
+        accordionItem.id = list.name;
 
         let listHeader = document.createElement("h4");
         listHeader.classList.add("accordion-header");
@@ -353,8 +352,7 @@ function updateAccordion() {
         let listContentBody = document.createElement("div");
         listContentBody.classList.add("accordion-body");
         let listValuesUL = document.createElement("ul");
-        listValuesUL.style.listStyle = "none";
-        listValuesUL.style.padding = "0";
+        listValuesUL.classList.add("accordion-unsorted-list");
 
         for (let j = 0; j < list.values.length; j++) {
             let listValueLI = document.createElement("li");
@@ -362,8 +360,101 @@ function updateAccordion() {
             listValueLI.textContent = list.values[j];
             listValuesUL.appendChild(listValueLI);
         }
-
         listContentBody.appendChild(listValuesUL);
+
+        // Edit Option
+        let editButton = document.createElement("button");
+        editButton.classList.add("btn", "btn-primary");
+        editButton.textContent = "Bewerk";
+        editButton.addEventListener("click", () => {
+            let editTextArea = document.createElement("textarea");
+            editTextArea.value = list.values.join("\n");
+        
+            let editModal = document.createElement("div");
+            editModal.classList.add("modal");
+            editModal.tabIndex = "-1";
+            editModal.role = "dialog";
+        
+            let editModalDialog = document.createElement("div");
+            editModalDialog.classList.add("modal-dialog");
+            editModalDialog.role = "document";
+        
+            let editModalContent = document.createElement("div");
+            editModalContent.classList.add("modal-content");
+        
+            let editModalHeader = document.createElement("div");
+            editModalHeader.classList.add("modal-header");
+        
+            let editModalTitle = document.createElement("h5");
+            editModalTitle.classList.add("modal-title");
+            editModalTitle.textContent = "Bewerk rijtje";
+        
+            let editModalBody = document.createElement("div");
+            editModalBody.classList.add("modal-body");
+            editModalBody.textContent = "Pas de zoekwoorden van het rijtje aan en klik op opslaan";
+        
+            let editModalFooter = document.createElement("div");
+            editModalFooter.classList.add("modal-footer");
+        
+            let saveButton = document.createElement("button");
+            saveButton.classList.add("btn", "btn-primary");
+            saveButton.textContent = "Opslaan";
+            saveButton.addEventListener("click", () => {
+                const newContent = editTextArea.value.split("\n");
+                list.values = newContent;
+                updateAccordion();
+                document.cookie = "lists=" + JSON.stringify(lists);
+                closeModal();
+            });
+        
+            let cancelButton = document.createElement("button");
+            cancelButton.classList.add("btn", "btn-primary", "secondbutton");
+            cancelButton.textContent = "Terug";
+            cancelButton.addEventListener("click", closeModal);
+        
+            editModalHeader.appendChild(editModalTitle);
+            editModalBody.appendChild(editTextArea);
+            editModalFooter.appendChild(saveButton);
+            editModalFooter.appendChild(cancelButton);
+        
+            editModalContent.appendChild(editModalHeader);
+            editModalContent.appendChild(editModalBody);
+            editModalContent.appendChild(editModalFooter);
+        
+            editModalDialog.appendChild(editModalContent);
+            editModal.appendChild(editModalDialog);
+        
+            document.body.appendChild(editModal);
+        
+            function closeModal() {
+                editModal.remove();
+                document.body.classList.remove("modal-open");
+                document.body.style.paddingRight = "";
+                document.body.style.overflow = "";
+                const backdrop = document.getElementsByClassName("modal-backdrop");
+                if (backdrop.length > 0) {
+                    backdrop[0].remove();
+                }
+            }
+        
+            const bootstrapModal = new bootstrap.Modal(editModal);
+            bootstrapModal.show();
+        });
+        listContentBody.appendChild(editButton);
+
+        let removeButton = document.createElement("button");
+        removeButton.classList.add("btn", "btn-primary", "secondbutton");
+        removeButton.textContent = "Verwijder";
+        removeButton.addEventListener("click", () => {
+            const confirmation = confirm("Weet je zeker dat je dit rijtje wilt verwijderen?");
+            if (confirmation) {
+                lists = lists.filter((item) => item.name !== list.name);
+                document.cookie = "lists=" + JSON.stringify(lists);
+                updateAccordion();
+            }
+        });
+        listContentBody.appendChild(removeButton);
+
         listContent.appendChild(listContentBody);
 
         accordionItem.appendChild(listHeader);
@@ -372,6 +463,7 @@ function updateAccordion() {
 
         colElement.appendChild(accordionElement);
         rowContainer.appendChild(colElement);
+        
     }
     accordionLists.appendChild(rowContainer);
 }
@@ -381,6 +473,7 @@ var modal = document.getElementById("loginModal");
 var button = document.querySelector(".navbar-toggler");
 var span = document.getElementsByClassName("btn-close")[0];
 var loginButton = document.getElementById("loginButton");
+var logoutButton = document.getElementById("logoutButton");
 var rememberme = document.getElementById("rememberMe");
 const inlog_knop = document.getElementById("inlog_knop");
 inlog_knop.onclick = function() {
@@ -413,6 +506,13 @@ loginButton.onclick = function() {
     }
 };
 
+logoutButton.onclick = function() {
+    document.getElementById("inputEmail").value = '';
+    document.getElementById("inputAPI").value = '';
+    document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
+    document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
+};
+
 // Mixen van bulk lijsten
 let mixedKeywordsArray = [];
 const statusElement = document.querySelector('.bulk-mixer-status');
@@ -428,13 +528,17 @@ async function mixLists() {
     let currentLine = 1;
     let login_cookie = getCookie("login");
     const api_key = document.getElementById("inputAPI").value;
-    
-    if (api_key && login_cookie == "") {
+
+    if (!api_key && login_cookie === "") {
         mixedKeywordsArray = lines.map((line) => {
             const values = line.split(",");
-            const nonEmptyValues = values.filter((value, index) => [1, 2, 4].includes(index) && value.trim() !== "");
+            const nonEmptyValues = values.filter((value, index) => [0, 1, 2, 4].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
             document.getElementById("optional-list-mix").checked = values[0] === "1";
-            document.getElementById("lijst-1").value = getListValues(values[1]);
+            if (values[0] !== "0" && values[0] !== "1") {
+                document.getElementById("lijst-1").value = getListValues(values[0]);
+            } else {
+                document.getElementById("lijst-1").value = getListValues(values[1]);
+            }
             document.getElementById("lijst-2").value = getListValues(values[2]);
             document.getElementById("optional-list-2").checked = values[3] === "1";
             document.getElementById("lijst-3").value = getListValues(values[4]);
@@ -447,7 +551,7 @@ async function mixLists() {
                 searchVolume: []
             };
         });
-        window.alert('Je bent niet ingelogd, daarom zijn er geen zoekvolumes beschikbaar gesteld en zijn enkel de rijtjes gemixt. Deze kun je nu downloaden via de Download Excel knop!');
+        window.alert('Je bent niet ingelogd, daarom zijn er geen zoekvolumes opgehaald en zijn enkel de rijtjes gemixt. Deze kun je nu downloaden via de Download Excel knop!');
     } else {
         const confirmed = confirm("Weet je zeker dat je een API call gaat maken? Dit kost geld!");
   
@@ -455,6 +559,7 @@ async function mixLists() {
         return;
         }
 
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool begint met het ophalen van de zoekvolumes...</p></div>`);
         function chunkArray(arr, chunkSize) {
             const chunks = [];
             for (let i = 0; i < arr.length; i += chunkSize) {
@@ -465,9 +570,13 @@ async function mixLists() {
     
         for (const line of lines) {
             const values = line.split(",");
-            const nonEmptyValues = values.filter((value, index) => [1, 2, 4].includes(index) && value.trim() !== "");
+            const nonEmptyValues = values.filter((value, index) => [0, 1, 2, 4].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
             document.getElementById("optional-list-mix").checked = values[0] === "1";
-            document.getElementById("lijst-1").value = getListValues(values[1]);
+            if (values[0] !== "0" && values[0] !== "1") {
+                document.getElementById("lijst-1").value = getListValues(values[0]);
+            } else {
+                document.getElementById("lijst-1").value = getListValues(values[1]);
+            }
             document.getElementById("lijst-2").value = getListValues(values[2]);
             document.getElementById("optional-list-2").checked = values[3] === "1";
             document.getElementById("lijst-3").value = getListValues(values[4]);
@@ -501,9 +610,6 @@ async function mixLists() {
                     if (login_cookie) {
                         login = getCookie("login");
                         password = getCookie("password");
-                    } else if (api_login === "") {
-                        await window.alert('Je moet inloggen rechtsboven!');
-                        return;
                     } else {
                         login = email_login;
                         password = api_login;
@@ -598,8 +704,7 @@ async function mixLists() {
                 searchVolume[i] = combined[i].value;
             }
         });
-        const finalMessage = `<b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden.`;
-        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${finalMessage}</p></div>`);
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden.</p></div>`);
     }
 }
 

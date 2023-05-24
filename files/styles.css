@@ -92,6 +92,22 @@ h3 {
     --bs-btn-active-border-color: #02343f;
     width: 100%;
 }
+.secondbutton {
+    font-family: madabold;
+    color:#02343f !important;
+    background-color: #fff;
+    border-color: #031c22;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    --bs-btn-hover-color:#f0edcc;
+    --bs-btn-hover-bg: #d0d0d0;
+    --bs-btn-hover-border-color: #031c22;
+    --bs-btn-active-color:#f0edcc;
+    --bs-btn-active-bg: #d0d0d0;
+    --bs-btn-active-border-color: #031c22;
+    width: 100%;
+}
 textarea {
     font-family: madaregular;
     width: 100%;
@@ -250,10 +266,11 @@ a {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
 }
-#loginButton {
-    display: block;
-    margin: auto;
-}
 #row {
     padding-bottom: 20px;
+}
+.accordion-unsorted-list {
+    list-style: none; 
+    padding: 0px; 
+    margin: 0px;
 }

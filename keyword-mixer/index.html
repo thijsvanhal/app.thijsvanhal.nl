@@ -107,18 +107,17 @@
           <p id="ingelogd"></p>
           <form>
             <div class="mb-3">
-              <label for="inputEmail" class="form-label">API Login</label>
               <input type="email" class="form-control" id="inputEmail" placeholder="Email">
             </div>
             <div class="mb-3">
-              <label for="inputAPI" class="form-label">API Wachtwoord</label>
-              <input type="password" class="form-control" id="inputAPI" placeholder="API">
+              <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe">
               <label class="form-check-label" for="rememberMe">Onthouden</label>
             </div>
             <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
+            <button type="button" class="btn btn-primary secondbutton" id="logoutButton" data-bs-dismiss="modal">Log uit</button>
           </form>
         </div>
       </div>
@@ -131,7 +130,7 @@
         <textarea class="keywords-input" id="lijst-1" tabindex="1"></textarea>
         <div class="form-check form-switch" id="wissel-lijsten">
           <input class="form-check-input" type="checkbox" id="optional-list-mix">
-          <label class="form-check-label" for="optional-list-mix">Verwissel alle lijsten</label>
+          <label class="form-check-label" for="optional-list-mix">Verwissel lijsten</label>
         </div>
       </div>
       <div class="col-sm">
@@ -153,7 +152,7 @@
     </div>
   </div>
   <div class="container-sm">
-    <label for="result-mixer">Automatisch gegenereerde resultaten</label>
+    <label for="result-mixer">Gegenereerde resultaten</label>
     <textarea class="textarea-results" id="result-mixer" tabindex="4"></textarea>
     <div class="woorden" id="woorden-totaal"></div>
   </div>
@@ -161,20 +160,23 @@
     <div class="body-text">
       <h1>Zoekwoorden Mixen</h1>
       <p>Met de zoekwoorden mixer mix je eenvoudig 3 lijsten met zoekwoorden tot alle mogelijke combinaties.</p>
-      <p>Het makkelijkste en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe waardes kunt plakken.</p>
-      <p>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke je met <b>ctrl + c</b> of <b>cmd + c</b> makkelijk kunt kopiëren om bijvoorbeeld in Google Ads te plakken!</p>
+      <p>Het makkelijkst en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe zoekwoorden kunt plakken.</p>
+      <p>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke <b>automatisch</b> worden gekopieerd om bijvoorbeeld in Google Ads te kunnen plakken!</p>
     </div>
   </div>
   <div class="container-sm" id="keyword-container">
     <div class="body-text">
       <h1>Bulk Zoekwoorden Mixen</h1>
-      <p>Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden maar hoe werkt de bulk keyword mixer precies?</p>
-      <p><b>Stap 1:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere rijtjes naast elkaar te plakken en in bulk rijtjes toevoegen. Let wel goed op dat je in Excel geen lege kolommen hebt, alle rijtjes moeten naast elkaar staan. Goed om te weten dat de rijtjes in de cookies opgeslagen worden en dat er al standaard rijtjes voor je zijn toegevoegd.</p>
-      <p><b>Stap 2:</b> Geef in het input veld 'bulk zoekwoorden mixen' aan welke rijtjes je wil laten mixen. Dit moet in onderstaand format:</p>
-      <p>1,naam rijtje 1,naam rijtje 2,1,naam rijtje 3,1</p>
-      <p>Met het eerste cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je op welk rijtje als rijtje 1 moet functioneren, welke als rijtje 2 en optioneel rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.</p>
-      <p><b>Stap 3:</b> Log in met DataForSEO account, dit kan rechtsboven. Als je 'Onthouden' aanvinkt dan worden de waardes opgeslagen in de cookies.</p>
-      <p><b>Stap 4:</b> Klik op 'Mix rijtjes' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.</p>
+      <p>Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden.</p>
+      <p>Hoe werkt de bulk keyword mixer precies?</p>
+      <p><b>Stap 1:</b> Log in met een DataForSEO account, dit kan rechtsboven</p>
+      <p><b>Stap 2:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere rijtjes naast elkaar te plakken en in bulk rijtjes toevoegen. Let wel goed op dat je in Excel geen lege kolommen hebt, dan krijg je ook lege rijtjes.</p> 
+      <p><b>Stap 3:</b> Geef in het input veld 'bulk zoekvolumes ophalen' aan welke rijtjes je wil laten mixen.</p>
+      <p>Wil je enkel de zoekvolumes ophalen van opgegeven rijtjes? Vul de namen van de rijtjes onder elkaar in.</p>
+      <p>Wil je zoekwoorden mixen én de zoekvolumes ophalen van opgegeven rijtjes? Vul per regel in welke rijtjes de tool voor je moet mixen in onderstaand format:</p>
+      <p>1,naam rijtje,naam rijtje,1,naam rijtje,1</p>
+      <p>Met het eerste cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je de naam op van het rijtje dat als rijtje 1 moet functioneren, welke als rijtje 2 en welke als rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.</p>
+      <p><b>Stap 4:</b> Klik op 'Zoekvolumes ophalen' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.</p>
       <p><b>Stap 5:</b> Download de Excel door op 'Download Excel te klikken', nu heb je al je data!</p>
     </div>
     <div class="row">
@@ -187,18 +189,11 @@
           <label for="list-values">Zoekwoorden</label>
           <textarea class="keywords-input" id="list-values"></textarea>
         </div>
-        <div class="row">
-          <div class="col-sm">
-            <button type="button" class="btn btn-primary" onclick="addList()">Voeg rijtje toe</button>
-          </div>
-          <div class="col-sm">
-            <button type="button" class="btn btn-primary" onclick="removeLists()">Verwijder alle rijtjes</button>
-          </div>
-        </div>
+        <button type="button" class="btn btn-primary" onclick="addList()">Voeg rijtje toe</button>
       </div>
       <div class="col-sm">
         <div>
-          <label for="bulk-list-values">Bulk lijst toevoegen</label>
+          <label for="bulk-list-values">Bulk rijtjes toevoegen</label>
           <textarea class="bulk-list-input" id="bulk-list-values"></textarea>
           <button type="button" class="btn btn-primary" onclick="bulkaddList()">Voeg bulk rijtjes toe</button>
         </div>
@@ -209,6 +204,7 @@
     <h2>Gegenereerde rijtjes</h2>
     <div class="lijsten" id="alle-lijsten">
     </div>
+    <a href="#alle-lijsten" onclick="removeLists()">Verwijder alle rijtjes</a>
     <div class="standaard-lijsten" id="alle-standaard-lijsten">
       <h2>Standaard rijtjes</h2>
       <div class="row" id="alle-lijsten-row">
@@ -220,7 +216,7 @@
               </h4>
               <div class="accordion-collapse collapse" id="collapse10000000" aria-labelledby="heading10000000" data-bs-parent="#accordion">
                 <div class="accordion-body">
-                  <ul style="list-style: none; padding: 0px;">
+                  <ul class="accordion-unsorted-list">
                     <li style="display: block;">kopen</li>
                     <li style="display: block;">online kopen</li>
                     <li style="display: block;">bestellen</li>
@@ -236,12 +232,12 @@
   </div>
   <div class="container-sm" id="keyword-container">
     <div>
-      <label for="list-values">Bulk zoekwoorden mixen</label>
+      <label for="list-values">Bulk zoekvolumes ophalen</label>
       <textarea class="keywords-input" id="bulk-input"></textarea>
     </div>
     <div class="row">
       <div class="col-sm">
-        <button type="button" class="btn btn-primary" onclick="mixLists()">Mix rijtjes</button>
+        <button type="button" class="btn btn-primary" onclick="mixLists()">Zoekvolumes ophalen</button>
       </div>
       <div class="col-sm">
         <button type="button" class="btn btn-primary" onclick="generateExcel()">Download Excel</button>
