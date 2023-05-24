@@ -614,10 +614,15 @@ async function mixLists() {
                         login = email_login;
                         password = api_login;
                     }
-
+                    
                     async function getData() {
                         try {
-                            const post_url = 'https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post';
+                            if (document.getElementById('zoekvolumes').checked == true) {
+                                var api_methode = "search_volume";
+                            } else {
+                                var api_methode = "keywords_for_keywords";
+                            }
+                            const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
                             const requestPostOptions = {
                                 method: 'POST',
                                 headers: {
@@ -655,7 +660,7 @@ async function mixLists() {
                                 // GET request
                                 let status = '';
                                 while (status !== 'Ok.') {
-                                    const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_get/${post_result.tasks[0].id}`;
+                                    const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_get/${post_result.tasks[0].id}`;
                                     const get_response = await fetch(get_url, requestGetOptions);
                                     const get_result = await get_response.json();
                                     console.log(get_result.tasks);
@@ -683,7 +688,7 @@ async function mixLists() {
                                 }
                             }
                         } catch (error) {
-                            console.log(error);
+                            window.alert("Er is een error, neem contact op met de devloper! Dit is de foutcode > " + error);
                         }
                     }
                     await getData();
