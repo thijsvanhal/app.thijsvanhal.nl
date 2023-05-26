@@ -625,15 +625,25 @@ async function mixLists() {
                         var MAX_KEYWORDS_PER_POST = 20;
                     }
                     const numRequests = Math.ceil(mixedKeywords.length / MAX_KEYWORDS_PER_POST);
-            
                     for (let i = 0; i < numRequests; i++) {
                         const startIndex = i * MAX_KEYWORDS_PER_POST;
                         const endIndex = Math.min(startIndex + MAX_KEYWORDS_PER_POST, mixedKeywords.length);
                         const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
 
+                        const selectElement = document.querySelector('.form-select');
+                        const lookupTable = {
+                            Nederland: { country: 'Netherlands', language: 'Dutch' },
+                            vlaanderen: { country: 'Belgium', language: 'Dutch' },
+                            wallonie: { country: 'Belgium', language: 'French' },
+                            duitsland: { country: 'Germany', language: 'German' },
+                            frankrijk: { country: 'France', language: 'French' }
+                        };
+                        const selectedOption = selectElement.value;
+                        const { country, language } = lookupTable[selectedOption];
+
                         const post_array = [{
-                            "location_name": "Netherlands",
-                            "language_name": "Dutch",
+                            "location_name": country,
+                            "language_name": language,
                             "keywords": keywordsSlice,
                         }];
             

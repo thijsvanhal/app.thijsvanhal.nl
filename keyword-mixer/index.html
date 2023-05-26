@@ -232,15 +232,29 @@
   </div>
   <div class="container-sm" id="keyword-container">
     <div>
-      <label for="list-values">Bulk zoekvolumes ophalen</label>
-      <label>
-        <input type="radio" name="optionsRadios" id="zoekvolumes" value="option1" checked="" data-np-checked="1">
-        Zoekvolumes
-      </label>
-      <label>
-        <input type="radio" name="optionsRadios" id="suggesties" value="option2" data-np-checked="1">
-        Suggesties
-      </label>
+      <h2>Bulk zoekvolumes ophalen</h2>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="zoekvolumes" checked>
+        <label class="form-check-label" for="zoekvolumes">
+          Zoekvolumes
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="suggesties">
+        <label class="form-check-label" for="suggesties">
+          Suggesties
+        </label>
+      </div>
+      <select class="form-select" id="select-option" aria-label="Default select example">
+        <option selected>Nederland</option>
+        <option value="vlaanderen">Vlaanderen</option>
+        <option value="wallonie">Wallonië</option>
+        <option value="duitsland">Duitsland</option>
+        <option value="frankrijk">Frankrijk</option>
+      </select>
+    </div>
+    <div>
+      <label for="list-values">Lijst met rijtjes</label>
       <textarea class="keywords-input" id="bulk-input"></textarea>
     </div>
     <div class="row">
