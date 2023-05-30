@@ -514,12 +514,19 @@ logoutButton.onclick = function() {
 
 // Mixen van bulk lijsten
 let mixedKeywordsArray = [];
+let taskIds = [];
+let lineNames = [];
+let login;
+let password;
+let api_methode;
 const statusElement = document.querySelector('.bulk-mixer-status');
 
 async function mixLists() {
     // verwijder huidige waardes
     document.querySelector('.bulk-mixer-status').innerHTML = '';
     mixedKeywordsArray = [];
+    taskIds = [];
+    lineNames = [];
 
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
@@ -563,6 +570,7 @@ async function mixLists() {
         for (const line of lines) {
             const values = line.split(",");
             const nonEmptyValues = values.filter((value, index) => [0, 1, 2, 4].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
+            lineNames.push(nonEmptyValues.join(" + "));
             document.getElementById("optional-list-mix").checked = values[0] === "1";
             if (values[0] !== "0" && values[0] !== "1") {
                 document.getElementById("lijst-1").value = getListValues(values[0]);
@@ -582,8 +590,6 @@ async function mixLists() {
             });
 
             // login
-            let login;
-            let password;
             const email_login = document.getElementById("inputEmail").value;
             const api_login = document.getElementById("inputAPI").value;
     
@@ -594,125 +600,128 @@ async function mixLists() {
                 login = email_login;
                 password = api_login;
             }
-            
-            async function getData() {
-                try {
-                    if (document.getElementById('zoekvolumes').checked == true) {
-                        var api_methode = "search_volume";
-                    } else {
-                        var api_methode = "keywords_for_keywords";
-                    }
-                    const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
-                    const requestPostOptions = {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic ' + btoa(login + ':' + password)
-                        }
-                    };
-            
-                    const requestGetOptions = {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic ' + btoa(login + ':' + password)
-                        }
-                    };
-                    
-                    if (document.getElementById('zoekvolumes').checked == true) {
-                        var MAX_KEYWORDS_PER_POST = 1000;
-                    } else {
-                        var MAX_KEYWORDS_PER_POST = 20;
-                    }
-                    const numRequests = Math.ceil(mixedKeywords.length / MAX_KEYWORDS_PER_POST);
-                    for (let i = 0; i < numRequests; i++) {
-                        const startIndex = i * MAX_KEYWORDS_PER_POST;
-                        const endIndex = Math.min(startIndex + MAX_KEYWORDS_PER_POST, mixedKeywords.length);
-                        const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
 
-                        const selectElement = document.querySelector('.form-select');
-                        const lookupTable = {
-                            Nederland: { country: 'Netherlands', language: 'Dutch' },
-                            vlaanderen: { country: 'Belgium', language: 'Dutch' },
-                            wallonie: { country: 'Belgium', language: 'French' },
-                            duitsland: { country: 'Germany', language: 'German' },
-                            frankrijk: { country: 'France', language: 'French' }
-                        };
-                        const selectedOption = selectElement.value;
-                        const { country, language } = lookupTable[selectedOption];
+            if (document.getElementById('zoekvolumes').checked == true) {
+                api_methode = "search_volume";
+            } else {
+                api_methode = "keywords_for_keywords";
+            }
+            const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
+            const requestPostOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(login + ':' + password)
+                }
+            };
+            
+            if (document.getElementById('zoekvolumes').checked == true) {
+                var MAX_KEYWORDS_PER_POST = 1000;
+            } else {
+                var MAX_KEYWORDS_PER_POST = 20;
+            }
 
-                        const post_array = [{
-                            "location_name": country,
-                            "language_name": language,
-                            "keywords": keywordsSlice,
-                        }];
-            
-                        // POST request
-                        const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
-                        const post_result = await post_response.json();
-                        console.log(post_result.tasks);
-            
-                        // GET request
-                        let status = '';
-                        while (status !== 'Ok.') {
-                            const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_get/${post_result.tasks[0].id}`;
-                            const get_response = await fetch(get_url, requestGetOptions);
-                            const get_result = await get_response.json();
-                            console.log(get_result.tasks);
-                            status = get_result.tasks[0].status_message;
-                            if (status === 'Ok.') {
-                                const results = get_result.tasks[0].result;
-                                for (const result of results) {
-                                    const keyword = result.keyword;
-                                    const searchVolume = result.search_volume;
-                                    const matchingKeywordIndex = mixedKeywordsArray.findIndex((k) =>
-                                        k.mixedKeywords.includes(keyword)
-                                    );
-                                    if (matchingKeywordIndex !== -1) {
-                                        const mixedKeywordObject = mixedKeywordsArray[matchingKeywordIndex];
-                                        if (mixedKeywordObject.searchVolume) {
-                                            mixedKeywordObject.searchVolume.push(searchVolume);
-                                        } else {
-                                            mixedKeywordObject.searchVolume = [searchVolume];
-                                        }
-                                    } else {
-                                        const targetLine = nonEmptyValues.join(" + ");
-                                        const existingObject = mixedKeywordsArray.find(obj => obj.line === targetLine);
-                                        if (existingObject) {
-                                            existingObject.mixedKeywords.push(keyword);
-                                            existingObject.searchVolume.push(searchVolume);
-                                        }
-                                    }
-                                }
-                            } else {
-                                await new Promise(resolve => setTimeout(resolve, 7000));
-                            }
-                        }
+            const numRequests = Math.ceil(mixedKeywords.length / MAX_KEYWORDS_PER_POST);
+            for (let i = 0; i < numRequests; i++) {
+                const startIndex = i * MAX_KEYWORDS_PER_POST;
+                const endIndex = Math.min(startIndex + MAX_KEYWORDS_PER_POST, mixedKeywords.length);
+                const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
+
+                const selectElement = document.querySelector('.form-select');
+                const lookupTable = {
+                    Nederland: { country: 'Netherlands', language: 'Dutch' },
+                    vlaanderen: { country: 'Belgium', language: 'Dutch' },
+                    wallonie: { country: 'Belgium', language: 'French' },
+                    duitsland: { country: 'Germany', language: 'German' },
+                    frankrijk: { country: 'France', language: 'French' },
+                    engeland: { country: 'United Kingdom', language: 'English' }
+                };
+                const selectedOption = selectElement.value;
+                const { country, language } = lookupTable[selectedOption];
+
+                const post_array = [{
+                    "location_name": country,
+                    "language_name": language,
+                    "keywords": keywordsSlice,
+                }];
+    
+                // POST request
+                const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
+                const post_result = await post_response.json();
+                console.log(post_result.tasks);
+                taskIds.push(post_result.tasks[0].id);
+            }
+        }
+        for (let i = 0; i < taskIds.length; i++) {
+            console.log(taskIds);
+            console.log(lineNames);
+            const taskId = taskIds[i];
+            const line_name = lineNames[i];
+            const results = await fetchData(taskId, login, password, api_methode);
+            for (const result of results) {
+                const keyword = result.keyword;
+                const searchVolume = result.search_volume;
+                const matchingKeywordIndex = mixedKeywordsArray.findIndex((k) =>
+                    k.mixedKeywords.includes(keyword)
+                );
+                if (matchingKeywordIndex !== -1) {
+                    const mixedKeywordObject = mixedKeywordsArray[matchingKeywordIndex];
+                    if (mixedKeywordObject.searchVolume) {
+                        mixedKeywordObject.searchVolume.push(searchVolume);
+                    } else {
+                        mixedKeywordObject.searchVolume = [searchVolume];
                     }
-                } catch (error) {
-                    window.alert("Er is een error, neem contact op met de devloper! Dit is de foutcode > " + error);
+                } else {
+                    const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
+                    if (existingObject) {
+                        existingObject.mixedKeywords.push(keyword);
+                        existingObject.searchVolume.push(searchVolume);
+                    }
                 }
             }
-            await getData();
-            const lijn = nonEmptyValues.join(" + ");
-            const statusMessage = `${currentLine} van ${totalLines} <b>${lijn}</b> is klaar met ophalen.`;
+            const statusMessage = `${currentLine} van ${totalLines} <b>${line_name}</b> is klaar met ophalen.`;
             statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${statusMessage}</p></div>`);
             currentLine++;
-        }
-        if (document.getElementById('zoekvolumes').checked == true) {
-            mixedKeywordsArray.forEach(function(keywordObj) {
-                const searchVolume = keywordObj.searchVolume;
-                const mixedKeywords = keywordObj.mixedKeywords;
-                const combined = searchVolume.map((value, index) => ({ value, index, mixedKeyword: mixedKeywords[index] }));
-                combined.sort((a, b) => b.value - a.value);
-                for (let i = 0; i < mixedKeywords.length; i++) {
-                    mixedKeywords[i] = combined[i].mixedKeyword;
-                    searchVolume[i] = combined[i].value;
-                }
-            });
+            if (document.getElementById('zoekvolumes').checked == true) {
+                mixedKeywordsArray.forEach(function(keywordObj) {
+                    const searchVolume = keywordObj.searchVolume;
+                    const mixedKeywords = keywordObj.mixedKeywords;
+                    const combined = searchVolume.map((value, index) => ({ value, index, mixedKeyword: mixedKeywords[index] }));
+                    combined.sort((a, b) => b.value - a.value);
+                    for (let i = 0; i < mixedKeywords.length; i++) {
+                        mixedKeywords[i] = combined[i].mixedKeyword;
+                        searchVolume[i] = combined[i].value;
+                    }
+                });
+            }
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden!</p></div>`);
     }
+}
+
+async function fetchData(taskId, login, password, api_methode) {
+    let status = '';
+    let results = [];
+    while (status !== 'Ok.') {
+        const requestGetOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(login + ':' + password)
+            }
+        };
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_get/${taskId}`;
+        const get_response = await fetch(get_url, requestGetOptions);
+        const get_result = await get_response.json();
+        console.log(get_result.tasks);
+        status = get_result.tasks[0].status_message;
+        if (status === 'Ok.') {
+            results = get_result.tasks[0].result;
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 4000));
+        }
+    }
+    return results;
 }
 
 function generateExcel() {
