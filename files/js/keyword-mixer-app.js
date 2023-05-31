@@ -143,7 +143,7 @@ function updateMixer () {
                 mixKeywords(keywords1, keywords2, keywords3),
                 mixKeywords(keywords1, keywords2),
             ].join("\n");
-        } else  if (optional2) {
+        } else if (optional2) {
             mixedKeywords = [
                 mixKeywords(keywords1, keywords2, keywords3),
                 mixKeywords(keywords1, keywords3),
@@ -516,6 +516,7 @@ logoutButton.onclick = function() {
 let mixedKeywordsArray = [];
 let taskIds = [];
 let lineNames = [];
+let apiMethodes = [];
 let login;
 let password;
 let api_methode;
@@ -527,6 +528,7 @@ async function mixLists() {
     mixedKeywordsArray = [];
     taskIds = [];
     lineNames = [];
+    apiMethodes = [];
 
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
@@ -538,17 +540,17 @@ async function mixLists() {
     if (!api_key && login_cookie === "") {
         mixedKeywordsArray = lines.map((line) => {
             const values = line.split(",");
-            const nonEmptyValues = values.filter((value, index) => [0, 1, 2, 4].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
-            document.getElementById("optional-list-mix").checked = values[0] === "1";
+            const nonEmptyValues = values.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
+            document.getElementById("optional-list-mix").checked = values[1] === "1";
             if (values[0] !== "0" && values[0] !== "1") {
                 document.getElementById("lijst-1").value = getListValues(values[0]);
             } else {
-                document.getElementById("lijst-1").value = getListValues(values[1]);
+                document.getElementById("lijst-1").value = getListValues(values[2]);
             }
-            document.getElementById("lijst-2").value = getListValues(values[2]);
-            document.getElementById("optional-list-2").checked = values[3] === "1";
-            document.getElementById("lijst-3").value = getListValues(values[4]);
-            document.getElementById("optional-list-3").checked = values[5] === "1";
+            document.getElementById("lijst-2").value = getListValues(values[3]);
+            document.getElementById("optional-list-2").checked = values[4] === "1";
+            document.getElementById("lijst-3").value = getListValues(values[5]);
+            document.getElementById("optional-list-3").checked = values[6] === "1";
             updateMixer();
             const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
             return {
@@ -565,22 +567,35 @@ async function mixLists() {
         return;
         }
 
+        for (const line of lines) {
+            const checkvalues = line.split(",");
+            const checknonEmptyValues = checkvalues.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
+            const checkExist = checknonEmptyValues.every(value => {
+                return lists.some(list => list.name === value);
+            });
+            
+            if (!checkExist) {
+                window.alert(`De naam ${checknonEmptyValues.join(" + ")} komt niet overeen met de naam van het rijtje. Pas deze aan en probeer opnieuw!`);
+                return;
+            }
+        }
+
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool begint met het ophalen van de zoekvolumes...</p></div>`);
     
         for (const line of lines) {
             const values = line.split(",");
-            const nonEmptyValues = values.filter((value, index) => [0, 1, 2, 4].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
+            const nonEmptyValues = values.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
             lineNames.push(nonEmptyValues.join(" + "));
-            document.getElementById("optional-list-mix").checked = values[0] === "1";
+            document.getElementById("optional-list-mix").checked = values[1] === "1";
             if (values[0] !== "0" && values[0] !== "1") {
                 document.getElementById("lijst-1").value = getListValues(values[0]);
             } else {
-                document.getElementById("lijst-1").value = getListValues(values[1]);
+                document.getElementById("lijst-1").value = getListValues(values[2]);
             }
-            document.getElementById("lijst-2").value = getListValues(values[2]);
-            document.getElementById("optional-list-2").checked = values[3] === "1";
-            document.getElementById("lijst-3").value = getListValues(values[4]);
-            document.getElementById("optional-list-3").checked = values[5] === "1";
+            document.getElementById("lijst-2").value = getListValues(values[3]);
+            document.getElementById("optional-list-2").checked = values[4] === "1";
+            document.getElementById("lijst-3").value = getListValues(values[5]);
+            document.getElementById("optional-list-3").checked = values[6] === "1";
             updateMixer();
             const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
             mixedKeywordsArray.push({
@@ -601,11 +616,12 @@ async function mixLists() {
                 password = api_login;
             }
 
-            if (document.getElementById('zoekvolumes').checked == true) {
-                api_methode = "search_volume";
-            } else {
+            if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
                 api_methode = "keywords_for_keywords";
+            } else {
+                api_methode = "search_volume";
             }
+            apiMethodes.push(api_methode);
             const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
             const requestPostOptions = {
                 method: 'POST',
@@ -615,16 +631,16 @@ async function mixLists() {
                 }
             };
             
-            if (document.getElementById('zoekvolumes').checked == true) {
-                var MAX_KEYWORDS_PER_POST = 1000;
+            if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
+                var max_keywords = 20;
             } else {
-                var MAX_KEYWORDS_PER_POST = 20;
+                var max_keywords = 1000;
             }
 
-            const numRequests = Math.ceil(mixedKeywords.length / MAX_KEYWORDS_PER_POST);
+            const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
             for (let i = 0; i < numRequests; i++) {
-                const startIndex = i * MAX_KEYWORDS_PER_POST;
-                const endIndex = Math.min(startIndex + MAX_KEYWORDS_PER_POST, mixedKeywords.length);
+                const startIndex = i * max_keywords;
+                const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
                 const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
 
                 const selectElement = document.querySelector('.form-select');
@@ -652,56 +668,43 @@ async function mixLists() {
                 taskIds.push(post_result.tasks[0].id);
             }
         }
+
         for (let i = 0; i < taskIds.length; i++) {
-            console.log(taskIds);
-            console.log(lineNames);
             const taskId = taskIds[i];
             const line_name = lineNames[i];
-            const results = await fetchData(taskId, login, password, api_methode);
+            const apiMethode = apiMethodes[i];
+            const results = await fetchData(taskId, login, password, apiMethode);
             for (const result of results) {
                 const keyword = result.keyword;
-                const searchVolume = result.search_volume;
-                const matchingKeywordIndex = mixedKeywordsArray.findIndex((k) =>
-                    k.mixedKeywords.includes(keyword)
-                );
-                if (matchingKeywordIndex !== -1) {
-                    const mixedKeywordObject = mixedKeywordsArray[matchingKeywordIndex];
-                    if (mixedKeywordObject.searchVolume) {
-                        mixedKeywordObject.searchVolume.push(searchVolume);
-                    } else {
-                        mixedKeywordObject.searchVolume = [searchVolume];
-                    }
+                if (result.search_volume !== null) {
+                    var NewSearchVolume = result.search_volume;
                 } else {
-                    const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
-                    if (existingObject) {
+                    var NewSearchVolume = 0;
+                }
+                const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
+                if (existingObject) {
+                    const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
+                        k === keyword
+                    );
+                    if (matchingKeywordIndex !== -1) {
+                        existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
+                    } else {
                         existingObject.mixedKeywords.push(keyword);
-                        existingObject.searchVolume.push(searchVolume);
+                        existingObject.searchVolume.push(NewSearchVolume);
                     }
                 }
+                
             }
-            const statusMessage = `${currentLine} van ${totalLines} <b>${line_name}</b> is klaar met ophalen.`;
-            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${statusMessage}</p></div>`);
+            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${currentLine} van ${totalLines} <b>${line_name}</b> is klaar met ophalen.</p></div>`);
             currentLine++;
-            if (document.getElementById('zoekvolumes').checked == true) {
-                mixedKeywordsArray.forEach(function(keywordObj) {
-                    const searchVolume = keywordObj.searchVolume;
-                    const mixedKeywords = keywordObj.mixedKeywords;
-                    const combined = searchVolume.map((value, index) => ({ value, index, mixedKeyword: mixedKeywords[index] }));
-                    combined.sort((a, b) => b.value - a.value);
-                    for (let i = 0; i < mixedKeywords.length; i++) {
-                        mixedKeywords[i] = combined[i].mixedKeyword;
-                        searchVolume[i] = combined[i].value;
-                    }
-                });
-            }
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden!</p></div>`);
     }
 }
 
-async function fetchData(taskId, login, password, api_methode) {
+async function fetchData(taskId, login, password, apiMethode) {
     let status = '';
-    let results = [];
+    let fetchResults = [];
     while (status !== 'Ok.') {
         const requestGetOptions = {
             method: 'GET',
@@ -710,60 +713,65 @@ async function fetchData(taskId, login, password, api_methode) {
                 'Authorization': 'Basic ' + btoa(login + ':' + password)
             }
         };
-        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_get/${taskId}`;
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${apiMethode}/task_get/${taskId}`;
         const get_response = await fetch(get_url, requestGetOptions);
         const get_result = await get_response.json();
         console.log(get_result.tasks);
         status = get_result.tasks[0].status_message;
         if (status === 'Ok.') {
-            results = get_result.tasks[0].result;
+            fetchResults = get_result.tasks[0].result;
         } else {
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
         }
     }
-    return results;
+    return fetchResults;
 }
 
 function generateExcel() {
+    mixedKeywordsArray.forEach(function(keywordObj) {
+        if (keywordObj.searchVolume.length > 0) {
+            const searchVolume = keywordObj.searchVolume;
+            const mixedKeywords = keywordObj.mixedKeywords;
+            const combined = searchVolume.map((value, index) => ({ value, index, mixedKeyword: mixedKeywords[index] }));
+            combined.sort((a, b) => b.value - a.value);
+            for (let i = 0; i < mixedKeywords.length; i++) {
+                mixedKeywords[i] = combined[i].mixedKeyword;
+                searchVolume[i] = combined[i].value;
+            }
+        }
+    });
     const workbook = XLSX.utils.book_new();
-  
-    // Create a worksheet
     const worksheet = XLSX.utils.json_to_sheet([]);
-  
-    // Add headers to the worksheet
+
     const headers = [];
     for (let i = 0; i < mixedKeywordsArray.length; i++) {
-      headers.push(mixedKeywordsArray[i].line);
-      headers.push("Volume");
-      headers.push("");
+        headers.push(mixedKeywordsArray[i].line);
+        headers.push("Volume");
+        headers.push(null);
     }
     XLSX.utils.sheet_add_aoa(worksheet, [headers], {origin: 'A1'});
   
-    // Add data to the worksheet
     const data = [];
     let maxMixedKeywords = 0;
     mixedKeywordsArray.forEach(function (item) {
-      if (item.mixedKeywords.length > maxMixedKeywords) {
-        maxMixedKeywords = item.mixedKeywords.length;
-      }
+        if (item.mixedKeywords.length > maxMixedKeywords) {
+            maxMixedKeywords = item.mixedKeywords.length;
+        }
     });
   
     for (let i = 0; i < maxMixedKeywords; i++) {
-      const row = [];
-      mixedKeywordsArray.forEach(function (item) {
-        row.push(item.mixedKeywords[i] ? item.mixedKeywords[i] : "");
-        row.push(item.searchVolume[i] ? item.searchVolume[i] : "");
-        row.push("");
-      });
-      data.push(row);
+        const row = [];
+        mixedKeywordsArray.forEach(function (item) {
+            row.push(item.mixedKeywords[i]);
+            row.push(item.searchVolume[i] !== undefined ? String(item.searchVolume[i]) : null);
+            row.push(null);
+        });
+        data.push(row);
     }
-  
+
     XLSX.utils.sheet_add_aoa(worksheet, data, {origin: 'A2'});
-  
-    // Add the worksheet to the workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   
-    // Save the workbook as a file
     const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([buffer], { type: 'application/octet-stream' });
     const link = document.createElement('a');
