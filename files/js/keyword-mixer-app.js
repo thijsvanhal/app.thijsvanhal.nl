@@ -252,12 +252,14 @@ accordionItems.forEach((item) => {
 });
 
 function addList() {
+    const list_name = document.getElementById("list-name");
+    const list_values = document.getElementById("list-values");
     let listName = document.getElementById("list-name").value;
     let listValues = document.getElementById("list-values").value.split("\n");
 
     let listExists = lists.some(list => list.name === listName);
     if (listExists) {
-        window.alert("Er is al een rijtje met deze naam! Pas de naam aan :)");
+        window.alert(`Rijtje ${listName} bestaat al, pas de naam aan :)`);
         return;
     }
 
@@ -266,26 +268,42 @@ function addList() {
 
     // Opslaan van lijsten in cookie
     document.cookie = "lists=" + JSON.stringify(lists);
+    list_name.value = "";
+    list_values.value = "";
 }
 
 function bulkaddList() {
     const textarea = document.getElementById('bulk-list-values');
-    const rows = textarea.value.split('\n');
-    const numCols = rows[0].split('\t').length;
-    
-    for (let col = 0; col < numCols; col++) {
-      const listName = rows[0].split('\t')[col];
-      const listValues = rows.slice(1).map(row => row.split('\t')[col]);
-      const list = { name: listName, values: listValues };
-      const listExists = lists.some(list => list.name === listName);
-      if (listExists) {
-        window.alert("Er is al een rijtje met deze naam! Pas de naam aan :)");
-        continue;
-      }
-      lists.push(list);
+    const rawRows = textarea.value.split('\n');
+    const filteredRows = rawRows.filter(row => row.trim() !== "");
+    const maxNumCols = Math.max(...filteredRows.map(row => row.split('\t').length));
+
+    for (let col = 0; col < maxNumCols; col++) {
+        const listName = filteredRows[0].split('\t')[col];
+        const listValues = filteredRows.slice(1).map(row => {
+            const columns = row.split('\t');
+            return col < columns.length ? columns[col].trim() : "";
+        });
+
+        const isEmptyColumn = listValues.every(value => value.trim() === "");
+        if (isEmptyColumn) {
+            continue;
+        }
+
+        const list = { name: listName, values: listValues };
+        const listExists = lists.some(list => list.name === listName);
+
+        if (listExists) {
+            window.alert(`Rijtje ${listName} bestaat al, pas de naam aan :)`);
+            continue;
+        }
+
+        lists.push(list);
     }
+
     updateAccordion();
     document.cookie = "lists=" + JSON.stringify(lists);
+    textarea.value = "";
 }     
 
 // Verwijderen van alle lijsten
@@ -475,15 +493,29 @@ var loginButton = document.getElementById("loginButton");
 var logoutButton = document.getElementById("logoutButton");
 var rememberme = document.getElementById("rememberMe");
 const inlog_knop = document.getElementById("inlog_knop");
-inlog_knop.onclick = function() {
+inlog_knop.onclick = inlogUpdate();
+window.onload = inlogUpdate();
+
+function inlogUpdate() {
     var ingelogd = document.getElementById("ingelogd");
+    var ingelogd_text = document.getElementById("ingelogd_text");
     let login_cookie = getCookie("login");
+    const login_email_veld = document.getElementById("inputEmail");
+    const login_api_veld = document.getElementById("inputAPI");
     const login_email = document.getElementById("inputEmail").value;
+    const login_api = document.getElementById("inputAPI").value;
     if (login_cookie) {
-        login = getCookie("login");
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
+        var login_email_cookie = getCookie("login");
+        var login_api_cookie = getCookie("password");
+        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email_cookie;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email_cookie;
+        login_email_veld.value = login_email_cookie;
+        login_api_veld.value = login_api_cookie;
     } else if (login_email != "") {
         ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email;
+        login_email_veld.value = login_email;
+        login_api_veld.value = login_api;
     } else {
         ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
     }
@@ -503,11 +535,13 @@ loginButton.onclick = function() {
         document.cookie = "login=" + encodeURIComponent(document.getElementById("inputEmail").value) + ";path=/";
         document.cookie = "password=" + encodeURIComponent(document.getElementById("inputAPI").value) + ";path=/";
     }
+    inlogUpdate();
 };
 
 logoutButton.onclick = function() {
     document.getElementById("inputEmail").value = '';
     document.getElementById("inputAPI").value = '';
+    document.getElementById("ingelogd_text").textContent = '';
     document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
     document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
 };
@@ -695,7 +729,7 @@ async function mixLists() {
                 }
                 
             }
-            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${currentLine} van ${totalLines} <b>${line_name}</b> is klaar met ophalen.</p></div>`);
+            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${currentLine} van ${totalLines} <b>${line_name}</b> is klaar.</p></div>`);
             currentLine++;
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden!</p></div>`);
