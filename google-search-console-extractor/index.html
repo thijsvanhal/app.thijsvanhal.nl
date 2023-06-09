@@ -3,9 +3,12 @@
   <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apps van Thijs van Hal</title>
+  <title>Zoekwoorden mixen voor zoekwoorden onderzoek - Keyword Mixer</title>
   <meta name="robots" content="index, follow">
-  <meta name="description" content="Alle gratis apps voor SEO, data & analytics, SEA of iets anders!">
+  <meta name="description" content="Zoekwoorden mixen voor je zoekwoorden onderzoek of voor Google Ads? Gebruik de zoekwoorden mixer en genereer alle mogelijke combinaties!">
+  <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/keyword-mixer/">
+  <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/keyword-mixer/">
+  <link rel="alternate" hreflang="x-default" href="https://app.thijsvanhal.nl/keyword-mixer/">
   <link rel="stylesheet" href="/files/bootstrap.min.css" type="text/css">
   <link rel="stylesheet" href="/files/styles.css" type="text/css">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -22,7 +25,7 @@
          url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
-
+      font-display: swap;
     }
     @font-face {
       font-family: 'madabold';
@@ -30,11 +33,14 @@
          url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
-
+      font-display: swap;
     }
   </style>
+  <script async src="https://accounts.google.com/gsi/client"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -67,69 +73,34 @@
   <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <nav class="navbar navbar-expand-md">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="navbar-collapse collapse" id="navContent">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/regex-builder/">RegEx Builder</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/keyword-mixer/">Keyword Mixer</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/keyword-wrapper/">Keyword Wrapper</a>
-          </li>
-        </ul>
-      </div>
     </div>
   </nav>
-  <div class="container-sm" id="top-container">
-    <p>Op zoek naar handige apps voor online marketing? Gebruik onderstaande gratis apps :)</p>
-  </div>
-  <div class="container-sm" id="apps">
-    <div class="row" id="row">
-      <div class="col-sm">
-        <div class="card">
-          <div class="card-body d-flex flex-column">
-            <h2 class="card-title">RegEx Builder</h2>
-            <p class="card-text">RegEx opbouwen voor Google Analytics of Google Search Console op basis van een set pagina's of zoekwoorden.</p>
-            <a href="/regex-builder/" class="btn btn-primary mt-auto">Naar tool</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm">
-        <div class="card">
-          <div class="card-body d-flex flex-column">
-            <h2 class="card-title">Keyword Mixer</h2>
-            <p class="card-text">Zoekwoorden mixen voor zoekwoorden onderzoek of Google Ads op basis van maximaal 3 lijsten aan zoekwoorden.</p>
-            <a href="/keyword-mixer/" class="btn mt-auto">Naar tool</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row" id="row">
-      <div class="col-sm">
-        <div class="card">
-          <div class="card-body d-flex flex-column">
-            <h2 class="card-title">Keyword Wrapper</h2>
-            <p class="card-text">Zoekwoorden wrappen voor Google Ads: Exact, Phrase en Broad match.</p>
-            <a href="/keyword-wrapper/" class="btn btn-primary mt-auto">Naar tool</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="container-sm">
-    <br>
-    <p>Deze tools zijn als hobby projecten gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+    <div class="row">
+      <div class="col-sm">
+        <button type="button" class="btn btn-primary" onclick="handleSignIn()">Autoriseer</button>
+        <div id="signin-button"></div>
+      </div>
+      <div class="col-sm">
+        <button type="button" class="btn btn-primary" onclick="getSitesList()">Krijg sites list</button>
+      </div>
+    </div>
+    <select class="form-select" id="all-sites">
+        <option selected>Selecteer het property</option>
+    </select>
+  </div>
+  <div class="container-sm" id="keyword-container">
+    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <script type="text/javascript" async src="/files/bootstrap.min.js"></script>
+  <script type="text/javascript" defer src="/files/js/google-search-console-app.js"></script>
   </body>
 </html>
