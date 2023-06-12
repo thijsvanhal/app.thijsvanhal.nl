@@ -532,8 +532,10 @@ span.onclick = function() {
 // Store login and password in cookie
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        document.cookie = "login=" + encodeURIComponent(document.getElementById("inputEmail").value) + ";path=/";
-        document.cookie = "password=" + encodeURIComponent(document.getElementById("inputAPI").value) + ";path=/";
+        var expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 365);
+        document.cookie = "login=" + encodeURIComponent(document.getElementById("inputEmail").value) + ";path=/; expires=" + expirationDate.toUTCString();
+        document.cookie = "password=" + encodeURIComponent(document.getElementById("inputAPI").value) + "; path=/; expires=" + expirationDate.toUTCString();
     }
     inlogUpdate();
 };
@@ -732,7 +734,8 @@ async function mixLists() {
             statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${currentLine} van ${totalLines} <b>${line_name}</b> is klaar.</p></div>`);
             currentLine++;
         }
-        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je kunt nu het Excel bestand downloaden!</p></div>`);
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
+        generateExcel();
     }
 }
 

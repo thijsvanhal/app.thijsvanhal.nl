@@ -78,20 +78,21 @@
       </button>
     </div>
   </nav>
-  <div class="container-sm">
-    <h1>Google Search Console Extractor</h1>
-  </div>
-  <div class="container-sm">
-    <button type="button" class="btn btn-primary" onclick="handleSignIn()">Login met Google</button>
+  <div class="container-sm" id="keyword-container">
+    <h2 id="login-header">Login met Google</h2>
+    <button type="button" class="btn btn-primary" id="login-button" onclick="initClient()">Login</button>
     <h2 id="naam"></h2>
-    <img id="foto" src="">
-    <p id="email"></p>
+    <p id="login-info"></p>
+  </div>
+  <div class="container-sm" id="keyword-container">
+    <h2>Selecteer een property</h2>
     <input type="text" placeholder="Zoek property" class="form-control" id="searchproperty" data-np-intersection-state="visible">
     <select class="form-select" id="all-sites">
         <option selected>Selecteer het property</option>
     </select>
   </div>
-  <div class="container-sm">
+  <div class="container-sm" id="keyword-container">
+    <h2>Selecteer start- en einddatum</h2>
     <div class="row">
       <div class="col-sm">
         <label for="start-date">Wat is de startdatum?</label>
@@ -103,9 +104,41 @@
       </div>
     </div>
   </div>
-  <div class="container-sm">
+  <div class="container-sm" id="keyword-container">
+    <h2>Stel een filter in (optioneel)</h2>
+    <div class="callout"><div class="body-text"><b>Tip! </b>Met de <a href="/regex-builder/">RegEx builder</a> maak je gemakkelijk een reguliere expressie voor meerdere zoekwoorden of pagina's!</div></div>
+    <div class="row">
+      <div class="col-sm">
+        <select class="form-select" id="filter-type">
+          <option selected>Filter Type</option>
+          <option value="page">Pagina</option>
+          <option value="query">Zoekwoord</option>
+        </select>
+      </div>
+      <div class="col-sm">
+        <select class="form-select" id="filter-match">
+          <option selected>Filter Match</option>
+          <option value="contains">Bevat</option>
+          <option value="notContains">Bevat niet</option>
+          <option value="equals">Komt overeen met</option>
+          <option value="notEquals">Komt niet overeen met</option>
+          <option value="includingRegex">Komt overeen met RegEx</option>
+          <option value="excludingRegex">Komt niet overeen met RegEx</option>
+        </select>
+      </div>
+    </div>
+    <input type="text" class="form-control" id="filter" placeholder="Filter waarde: zoekwoord, pagina of RegEx">
+  </div>
+  <div class="container-sm" id="keyword-container">
     <button type="button" class="btn btn-primary" onclick="getData()">Data ophalen</button>
     <div class="status"></div>
+  </div>
+  <div class="container-sm" id="keyword-container">
+    <h1>Google Search Console Extractor</h1>
+    <p>Met de Google Search Console Extractor haal je gemakkelijk data op met door middel van de Google Search Console API.</p>
+    <h2>Hoe werkt de tool?</h2>
+    <p>Vrij simpel. Je logt namelijk in met Google, selecteert een property, datum range &eacute;n eventuele filter en klikt vevolgens op 'Data ophalen' !</p>
+    <p>De tool gaat de data voor je ophalen en er wordt automatisch een Excel bestand gedownload met alle data, happy analyzing!</p>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>

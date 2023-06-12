@@ -83,15 +83,16 @@ const endDateInput = document.getElementById("endDate");
 endDateInput.addEventListener("change", getDate);
 
 // Constanten
-const button = document.getElementById('generate-button');
 const textField = document.getElementById('input-area');
 const resultTextareaGSC = document.getElementById('result-gsc');
 const resultTextareaGA = document.getElementById('result-ga');
 const resultLengthGSC = document.getElementById('tekens-gsc');
 const resultLengthGA = document.getElementById('tekens-ga');
+const radioBevat = document.getElementById('bevat');
+const radioExact = document.getElementById('exact');
 
 // Button click
-button.addEventListener('click', () => {
+function generateRegEx() {
     const values = textField.value;
     const regexgsc = generateRegexGSC(values);
     const regexga = generateRegexGA(values);
@@ -103,7 +104,19 @@ button.addEventListener('click', () => {
     resultLengthGA.textContent = lengthGA.toString();
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'regex_pagina'});
+}
+
+textField.addEventListener('input', () => {
+    generateRegEx();
 });
+
+radioBevat.addEventListener('click', () => {
+    generateRegEx();
+})
+
+radioExact.addEventListener('click', () => {
+    generateRegEx();
+})
 
 // Zorg dat output geselecteerd wordt
 resultTextareaGSC.addEventListener('click', () => {

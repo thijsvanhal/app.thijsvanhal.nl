@@ -277,3 +277,13 @@ a {
     margin-bottom: 20px;
     width: 291px;
 }
+.callout {
+    padding: 1rem;
+    border: 1px solid #02343f;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+}
+.form-select {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

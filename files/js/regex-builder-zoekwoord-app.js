@@ -63,7 +63,6 @@ const endDateInput = document.getElementById("endDate");
 endDateInput.addEventListener("change", getDate);
 
 // Constanten
-const button = document.getElementById('generate-button');
 const textField = document.getElementById('input-area');
 const resultTextareaBevat = document.getElementById('result-bevat');
 const resultTextareaExact = document.getElementById('result-exact');
@@ -71,7 +70,7 @@ const resultLengthBevat = document.getElementById('tekens-bevat');
 const resultLengthExact = document.getElementById('tekens-exact');
 
 // Button click
-button.addEventListener('click', () => {
+textField.addEventListener('input', () => {
     const values = textField.value;
     const regexBevat = generateRegexBevat(values);
     const regexExact = generateRegexExact(values);
