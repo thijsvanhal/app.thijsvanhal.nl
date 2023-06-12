@@ -3,12 +3,9 @@
   <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zoekwoorden mixen voor zoekwoorden onderzoek - Keyword Mixer</title>
+  <title>Google Search Console Extractor - Gebruik de GSC API</title>
   <meta name="robots" content="index, follow">
-  <meta name="description" content="Zoekwoorden mixen voor je zoekwoorden onderzoek of voor Google Ads? Gebruik de zoekwoorden mixer en genereer alle mogelijke combinaties!">
-  <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/keyword-mixer/">
-  <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/keyword-mixer/">
-  <link rel="alternate" hreflang="x-default" href="https://app.thijsvanhal.nl/keyword-mixer/">
+  <meta name="description" content="Haal data op van één van je properties door gebruik te maken van de Google Search Console API">
   <link rel="stylesheet" href="/files/bootstrap.min.css" type="text/css">
   <link rel="stylesheet" href="/files/styles.css" type="text/css">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -37,10 +34,8 @@
     }
   </style>
   <script async src="https://accounts.google.com/gsi/client"></script>
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -84,23 +79,39 @@
     </div>
   </nav>
   <div class="container-sm">
-    <div class="row">
-      <div class="col-sm">
-        <button type="button" class="btn btn-primary" onclick="handleSignIn()">Autoriseer</button>
-        <div id="signin-button"></div>
-      </div>
-      <div class="col-sm">
-        <button type="button" class="btn btn-primary" onclick="getSitesList()">Krijg sites list</button>
-      </div>
-    </div>
+    <h1>Google Search Console Extractor</h1>
+  </div>
+  <div class="container-sm">
+    <button type="button" class="btn btn-primary" onclick="handleSignIn()">Login met Google</button>
+    <h2 id="naam"></h2>
+    <img id="foto" src="">
+    <p id="email"></p>
+    <input type="text" placeholder="Zoek property" class="form-control" id="searchproperty" data-np-intersection-state="visible">
     <select class="form-select" id="all-sites">
         <option selected>Selecteer het property</option>
     </select>
+  </div>
+  <div class="container-sm">
+    <div class="row">
+      <div class="col-sm">
+        <label for="start-date">Wat is de startdatum?</label>
+        <input id="start-date" class="form-control" type="date" />  
+      </div>
+      <div class="col-sm">
+        <label for="end-date">Wat is de einddatum?</label>
+        <input id="end-date" class="form-control" type="date"/>
+      </div>
+    </div>
+  </div>
+  <div class="container-sm">
+    <button type="button" class="btn btn-primary" onclick="getData()">Data ophalen</button>
+    <div class="status"></div>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <script type="text/javascript" async src="/files/bootstrap.min.js"></script>
   <script type="text/javascript" defer src="/files/js/google-search-console-app.js"></script>
+  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
   </body>
 </html>
