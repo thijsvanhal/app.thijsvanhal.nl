@@ -7,6 +7,17 @@ let access_token
 let aantal_properties
 let allData = [];
 
+// Datum selecties
+var today = new Date();
+var beginDate = new Date(today.getFullYear(), today.getMonth() - 16, today.getDate());
+var beginDateString = beginDate.toISOString().split("T")[0];
+document.getElementById("start-date").setAttribute("min", beginDateString);
+
+var yesterday = new Date(today);
+yesterday.setDate(today.getDate() - 1);
+var yesterdayString = yesterday.toISOString().split("T")[0];
+document.getElementById("end-date").setAttribute("max", yesterdayString);
+
 async function initClient() {
   const client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
@@ -88,6 +99,7 @@ async function listSites() {
 }
 
 async function getData() {
+  allData = [];
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
   const siteUrl = encodeURIComponent(document.getElementById('all-sites').value);
@@ -97,6 +109,7 @@ async function getData() {
   let totalRows = 0;
   let data;
   const statusElement = document.querySelector('.status');
+  statusElement.innerHTML = '';
   statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool begint met het ophalen van de data...</p></div>`);
 
   do {
@@ -107,9 +120,9 @@ async function getData() {
       var requestBody = {
         startDate: startDate,
         endDate: endDate,
-        dimensions: ["page", "query"],
+        dimensions: ["PAGE", "QUERY"],
         dimensionFilterGroups: [{
-          filters: [{
+          "filters": [{
             "dimension": filter_type_value,
             "operator": filter_match_value,
             "expression": filter_value

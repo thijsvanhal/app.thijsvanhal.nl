@@ -96,11 +96,11 @@
     <div class="row">
       <div class="col-sm">
         <label for="start-date">Wat is de startdatum?</label>
-        <input id="start-date" class="form-control" type="date" />  
+        <input id="start-date" class="form-control" type="date" min="yyyy-mm-dd"/>  
       </div>
       <div class="col-sm">
         <label for="end-date">Wat is de einddatum?</label>
-        <input id="end-date" class="form-control" type="date"/>
+        <input id="end-date" class="form-control" type="date" max="yyyy-mm-dd"/>
       </div>
     </div>
   </div>
@@ -111,19 +111,19 @@
       <div class="col-sm">
         <select class="form-select" id="filter-type">
           <option selected>Filter Type</option>
-          <option value="page">Pagina</option>
-          <option value="query">Zoekwoord</option>
+          <option value="PAGE">Pagina</option>
+          <option value="QUERY">Zoekwoord</option>
         </select>
       </div>
       <div class="col-sm">
         <select class="form-select" id="filter-match">
           <option selected>Filter Match</option>
-          <option value="contains">Bevat</option>
-          <option value="notContains">Bevat niet</option>
-          <option value="equals">Komt overeen met</option>
-          <option value="notEquals">Komt niet overeen met</option>
-          <option value="includingRegex">Komt overeen met RegEx</option>
-          <option value="excludingRegex">Komt niet overeen met RegEx</option>
+          <option value="CONTAINS">Bevat</option>
+          <option value="NOT_CONTAINS">Bevat niet</option>
+          <option value="EQUALS">Komt overeen met</option>
+          <option value="NOT_EQUALS">Komt niet overeen met</option>
+          <option value="INCLUDING_REGEX">Komt overeen met RegEx</option>
+          <option value="EXCLUDING_REGEX">Komt niet overeen met RegEx</option>
         </select>
       </div>
     </div>
