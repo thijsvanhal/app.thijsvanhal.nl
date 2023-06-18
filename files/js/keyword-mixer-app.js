@@ -487,7 +487,7 @@ function updateAccordion() {
 
 // login form
 var modal = document.getElementById("loginModal");
-var button = document.querySelector(".navbar-toggler");
+var button = document.querySelector("#inlog_knop");
 var span = document.getElementsByClassName("btn-close")[0];
 var loginButton = document.getElementById("loginButton");
 var logoutButton = document.getElementById("logoutButton");

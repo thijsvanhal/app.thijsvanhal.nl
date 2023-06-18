@@ -70,15 +70,12 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <nav class="navbar navbar-expand-md">
+  <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
     </div>
   </nav>
-  <div class="container-sm" id="keyword-container">
+  <div class="container-sm" id="top-container">
     <h2 id="login-header">Login met Google</h2>
     <button type="button" class="btn btn-primary" id="login-button" onclick="initClient()">Login</button>
     <h2 id="naam"></h2>
@@ -94,7 +91,7 @@
   <div class="container-sm" id="keyword-container">
     <h2>Selecteer start- en einddatum</h2>
     <div class="row">
-      <div class="col-sm">
+      <div class="col-sm" id="pad-col">
         <label for="start-date">Wat is de startdatum?</label>
         <input id="start-date" class="form-control" type="date" min="yyyy-mm-dd"/>  
       </div>

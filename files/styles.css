@@ -1,43 +1,4 @@
-@font-face {
-    font-family: madaregular;
-    src: url(https://mixer.thijsvanhal.nl/files/files/font/mada-regular-webfont.woff2) format('woff2'), url(https://mixer.thijsvanhal.nl/files/files/font/mada-regular-webfont.woff) format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: madabold;
-    src: url(https://mixer.thijsvanhal.nl/files/files/font/mada-bold-webfont.woff2) format('woff2'), url(https://mixer.thijsvanhal.nl/files/files/font/mada-bold-webfont.woff) format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-@media (min-width:600px) {
-    #bulk-list-values {
-        height: 349px;
-    }
-}
-
-@media (min-width:1280px) {
-    .container {
-    max-width: 1250px;
-    }
-}
-@media (min-width:1440px) {
-    .container {
-    max-width: 1410px;
-}
-}
-@media (min-width:1600px) {
-    .container {
-    max-width: 1570px;
-}
-}
-@media (min-width:1920px) {
-    .container {
-    max-width: 1890px;
-}
-}
+/* Mobiel */
 @media only screen and (max-width: 600px) {
     #second-menu {
         flex-direction: row;
@@ -45,16 +6,58 @@
     #second-menu a {
         margin-right: 5px;
     }
-    .col-sm {
-        margin-bottom: 30px;
+    #pad-col {
+        margin-bottom: 20px;
     }
     .card {
         height: 100%;
+        margin-bottom: 30px;
     }
     .notification {
         width: 330px !important;
     }
+    #alle-lijsten-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
+/* Desktop */
+@media (min-width:600px) {
+    #bulk-list-values {
+        height: 349px;
+    }
+    #alle-lijsten-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    #row {
+        padding-bottom: 20px;
+    }
+    #keyword-container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+}
+/* Bootstrap containers */
+@media (min-width:1280px) {
+    .container {
+        max-width: 1250px;
+    }
+}
+@media (min-width:1440px) {
+    .container {
+        max-width: 1410px;
+    }
+}
+@media (min-width:1600px) {
+    .container {
+        max-width: 1570px;
+    }
+}
+@media (min-width:1920px) {
+    .container {
+        max-width: 1890px;
+    }
+}
+/* Custom CSS */
 body {
     font-family: madaregular;
     background-color: #f0edcc;
@@ -135,6 +138,10 @@ textarea {
     overflow: auto;
     padding-right: 15px;
 }
+#alle-lijsten {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 .textarea-results {
     height: 200px;
 }
@@ -155,12 +162,8 @@ input[type=radio] {
 .tekens {
     height: 24px;
 }
-#keyword-container, #alle-lijsten {
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
 #top-container {
-    margin-top: 30px;
+    margin-top: 80px;
 }
 .navbar-brand {
     font-family: madabold;
@@ -192,8 +195,8 @@ input[type=radio] {
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 2, 52, 63' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
-.ml-auto {
-    margin-left: auto!important;
+.me-auto {
+    margin-right: 0px!important;
 }
 a {
     font-family: madabold !important;
@@ -202,9 +205,6 @@ a {
 .form-check-input:checked {
     background-color: #02343f;
     border-color: #031c22;
-}
-#apps {
-    padding: auto;
 }
 #date-text {
     white-space: pre-line;
@@ -261,11 +261,7 @@ a {
 }
 #alle-lijsten-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
-}
-#row {
-    padding-bottom: 20px;
 }
 .accordion-unsorted-list {
     list-style: none; 
@@ -275,7 +271,6 @@ a {
 #select-option {
     margin-top: 20px;
     margin-bottom: 20px;
-    width: 291px;
 }
 .callout {
     padding: 1rem;
