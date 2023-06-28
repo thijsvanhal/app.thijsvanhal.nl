@@ -6,6 +6,7 @@ const login_header = document.getElementById('login-header');
 let access_token
 let aantal_properties
 let allData = [];
+let dimensions = [];
 
 // Datum selecties
 var today = new Date();
@@ -100,6 +101,7 @@ async function listSites() {
 
 async function getData() {
   allData = [];
+  dimensions = [];
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
   const siteUrl = encodeURIComponent(document.getElementById('all-sites').value);
@@ -116,11 +118,24 @@ async function getData() {
     const filter_type_value = document.getElementById("filter-type").value;
     const filter_match_value = document.getElementById("filter-match").value;
     const filter_value = document.getElementById("filter").value;
+    const paginaCheckbox = document.getElementById("dimensie-pagina");
+    const zoekwoordCheckbox = document.getElementById("dimensie-zoekwoord");
+    const apparaatCheckbox = document.getElementById("dimensie-apparaat");
+
+    if (paginaCheckbox.checked) {
+      dimensions.push("PAGE");
+    }
+    if (zoekwoordCheckbox.checked) {
+      dimensions.push("QUERY");
+    }
+    if (apparaatCheckbox.checked) {
+      dimensions.push("DEVICE");
+    }
     if (filter_type_value !== 'Filter Type') {
       var requestBody = {
         startDate: startDate,
         endDate: endDate,
-        dimensions: ["PAGE", "QUERY"],
+        dimensions: dimensions,
         dimensionFilterGroups: [{
           "filters": [{
             "dimension": filter_type_value,
@@ -136,7 +151,7 @@ async function getData() {
       var requestBody = {
         startDate: startDate,
         endDate: endDate,
-        dimensions: ["page", "query"],
+        dimensions: dimensions,
         type: "web",
         rowLimit: maxRows,
         startRow: startRow
@@ -171,18 +186,32 @@ async function getData() {
 
 function formatDataForExcel() {
   const formattedData = [];
-
   allData.forEach((data) => {
     const formattedArray = data.map((row) => {
-      return {
-        URL: row.keys[0],
-        Keyword: row.keys[1],
-        Clicks: row.clicks,
-        Impressions: row.impressions,
-        CTR: (row.ctr * 100).toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%',
-        Position: row.position.toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-      };
+      const formattedRow = {};
+
+      if (dimensions.includes("PAGE")) {
+        formattedRow.Pagina = dimensions.includes("PAGE") ? row.keys[0] : "";
+      }
+
+      if (dimensions.includes("QUERY") && !dimensions.includes("PAGE")) {
+        formattedRow.Zoekwoord = row.keys[0];
+      } else if (dimensions.includes("QUERY")) {
+        formattedRow.Zoekwoord = row.keys[1];
+      }
+
+      if (dimensions.includes("DEVICE")) {
+        formattedRow.Device = dimensions.includes("DEVICE") ? (row.keys.length === 3 ? row.keys[2] : row.keys.length === 2 ? row.keys[1] : row.keys.length === 1 ? row.keys[0] : "") : "";
+      }
+
+      formattedRow.Klikken = row.clicks;
+      formattedRow.Impressies = row.impressions;
+      formattedRow.CTR = (row.ctr * 100).toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+      formattedRow.Positie = row.position.toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      return formattedRow;
     });
+
     formattedData.push(...formattedArray);
   });
 
