@@ -568,8 +568,6 @@ async function mixLists() {
 
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
-    const totalLines = lines.length;
-    let currentLine = 1;
     let login_cookie = getCookie("login");
     const api_key = document.getElementById("inputAPI").value;
 
@@ -621,7 +619,6 @@ async function mixLists() {
         for (const line of lines) {
             const values = line.split(",");
             const nonEmptyValues = values.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
-            lineNames.push(nonEmptyValues.join(" + "));
             document.getElementById("optional-list-mix").checked = values[1] === "1";
             if (values[0] !== "0" && values[0] !== "1") {
                 document.getElementById("lijst-1").value = getListValues(values[0]);
@@ -653,21 +650,6 @@ async function mixLists() {
             }
 
             if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
-                api_methode = "keywords_for_keywords";
-            } else {
-                api_methode = "search_volume";
-            }
-            apiMethodes.push(api_methode);
-            const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
-            const requestPostOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(login + ':' + password)
-                }
-            };
-            
-            if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
                 var max_keywords = 20;
             } else {
                 var max_keywords = 1000;
@@ -696,11 +678,27 @@ async function mixLists() {
                     "language_name": language,
                     "keywords": keywordsSlice,
                 }];
+
+                if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
+                    api_methode = "keywords_for_keywords";
+                } else {
+                    api_methode = "search_volume";
+                }
+                apiMethodes.push(api_methode);
+                const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
+                const requestPostOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa(login + ':' + password)
+                    }
+                };
     
                 // POST request
                 const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
                 const post_result = await post_response.json();
                 console.log(post_result.tasks);
+                lineNames.push(nonEmptyValues.join(" + "));
                 taskIds.push(post_result.tasks[0].id);
             }
         }
@@ -708,8 +706,8 @@ async function mixLists() {
         for (let i = 0; i < taskIds.length; i++) {
             const taskId = taskIds[i];
             const line_name = lineNames[i];
-            const apiMethode = apiMethodes[i];
-            const results = await fetchData(taskId, login, password, apiMethode);
+            const getApiMethode = apiMethodes[i];
+            const results = await fetchData(taskId, login, password, getApiMethode);
             for (const result of results) {
                 const keyword = result.keyword;
                 if (result.search_volume !== null) {
@@ -731,15 +729,14 @@ async function mixLists() {
                 }
                 
             }
-            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>${currentLine} van ${totalLines} <b>${line_name}</b> is klaar.</p></div>`);
-            currentLine++;
+            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor <b>${line_name}</b> opgehaald.</p></div>`);
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
         generateExcel();
     }
 }
 
-async function fetchData(taskId, login, password, apiMethode) {
+async function fetchData(taskId, login, password, getApiMethode) {
     let status = '';
     let fetchResults = [];
     while (status !== 'Ok.') {
@@ -750,7 +747,7 @@ async function fetchData(taskId, login, password, apiMethode) {
                 'Authorization': 'Basic ' + btoa(login + ':' + password)
             }
         };
-        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${apiMethode}/task_get/${taskId}`;
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
         const get_response = await fetch(get_url, requestGetOptions);
         const get_result = await get_response.json();
         console.log(get_result.tasks);
@@ -765,15 +762,27 @@ async function fetchData(taskId, login, password, apiMethode) {
 }
 
 function generateExcel() {
-    mixedKeywordsArray.forEach(function(keywordObj) {
+    mixedKeywordsArray.forEach(function (keywordObj) {
+        const mixedKeywords = keywordObj.mixedKeywords;
+        const searchVolume = keywordObj.searchVolume;
+    
+        if (mixedKeywords.length !== searchVolume.length) {
+          const minLength = Math.min(mixedKeywords.length, searchVolume.length);
+          keywordObj.mixedKeywords = mixedKeywords.slice(0, minLength);
+          keywordObj.searchVolume = searchVolume.slice(0, minLength);
+        }
+    
         if (keywordObj.searchVolume.length > 0) {
-            const searchVolume = keywordObj.searchVolume;
-            const mixedKeywords = keywordObj.mixedKeywords;
-            const combined = searchVolume.map((value, index) => ({ value, index, mixedKeyword: mixedKeywords[index] }));
-            combined.sort((a, b) => b.value - a.value);
-            for (let i = 0; i < mixedKeywords.length; i++) {
-                mixedKeywords[i] = combined[i].mixedKeyword;
-                searchVolume[i] = combined[i].value;
+            const combined = keywordObj.searchVolume.map((value, index) => ({
+                value,
+                index,
+                mixedKeyword: keywordObj.mixedKeywords[index],
+            }));
+            combined.sort((a, b) => b.value - a.value || keywordObj.mixedKeywords.indexOf(a.mixedKeyword) - keywordObj.mixedKeywords.indexOf(b.mixedKeyword));
+    
+            for (let i = 0; i < keywordObj.mixedKeywords.length; i++) {
+                keywordObj.mixedKeywords[i] = combined[i].mixedKeyword;
+                keywordObj.searchVolume[i] = combined[i].value;
             }
         }
     });
