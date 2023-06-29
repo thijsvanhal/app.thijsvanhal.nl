@@ -1,133 +1,77 @@
 function handleSuggestions(data) {
-    // Retrieve the existing suggestions array from the global scope
-    const suggestions = window.suggestions || [];
+  const suggestions = window.suggestions || [];
+  console.log(suggestions);
+  for (let i = 1; i < data.length; i++) {
+    const suggestionSet = data[i];
+    suggestions.push.apply(suggestions, suggestionSet);
+  }
+  
+  window.suggestions = suggestions;
 
-    // Process the fetched data and add suggestions to the array
-    for (let i = 1; i < data.length; i++) {
-        const suggestionSet = data[i];
-        suggestions.push.apply(suggestions, suggestionSet);
-    }
-
-    // Store the updated suggestions array in the global scope
-    window.suggestions = suggestions;
-
-    // Perform clustering
-    const clusters = clusterSuggestions();
-    clusters.sort((a, b) => a.cluster.localeCompare(b.cluster));
-    console.log(clusters);
+  const clusters = clusterSuggestions();
+  clusters.sort((a, b) => a.cluster.localeCompare(b.cluster));
+  // console.log(clusters);
 }
 
 function clusterSuggestions() {
-    const suggestions = window.suggestions || [];
-    const clusters = [];
-  
-    const queryInputs = document.getElementsByClassName('queryInput');
-    const queries = Array.from(queryInputs).map(input => input.value.trim().toLowerCase());
-  
-    const querySet = new Set(queries);
-  
-    const wordCounts = {};
-    suggestions.forEach(suggestion => {
-      const lowercaseSuggestion = suggestion.toLowerCase();
-      const words = lowercaseSuggestion.split(' ');
-  
-      if (words.every(word => !querySet.has(word))) {
-        words.forEach(word => {
-          if (!wordCounts[word]) {
-            wordCounts[word] = 1;
-          } else {
-            wordCounts[word]++;
-          }
-        });
-      }
-    });
-  
-    const sortedWords = Object.keys(wordCounts).sort((a, b) => {
-        if (wordCounts[a] === 1 && wordCounts[b] === 1) {
-          return 0; // If both words have count 1, maintain their original order
-        } else if (wordCounts[a] === 1) {
-          return 1; // If 'a' has count 1, it should come after 'b'
-        } else if (wordCounts[b] === 1) {
-          return -1; // If 'b' has count 1, it should come after 'a'
-        } else {
-          return wordCounts[a] - wordCounts[b]; // Sort by count in ascending order
-        }
-    });
-    console.log(sortedWords);
-  
-    suggestions.forEach(suggestion => {
-      const lowercaseSuggestion = suggestion.toLowerCase();
-  
-      if (lowercaseSuggestion.split(' ').every(word => !querySet.has(word))) {
-        const matchingClusters = sortedWords.filter(word => lowercaseSuggestion.includes(word));
-  
-        if (matchingClusters.length === 0) {
-          clusters.push({
-            suggestion,
-            cluster: 'Unclassified'
-          });
-        } else {
-          const mostRelevantCluster = matchingClusters[0]; // Get the most relevant cluster
-          clusters.push({
-            suggestion,
-            cluster: mostRelevantCluster
-          });
-        }
-      }
-    });
-  
-    return clusters;
-}
+  const suggestions = window.suggestions || [];
+  const clusters = [];
 
-function clusterSuggestions1() {
-    const suggestions = window.suggestions || [];
-    const clusters = [];
-  
-    const queryInputs = document.getElementsByClassName('queryInput');
-    const queries = Array.from(queryInputs).map(input => input.value.trim().toLowerCase());
-  
-    const querySet = new Set(queries); // Create a set of unique query inputs
-  
-    const wordCounts = {};
-    suggestions.forEach(suggestion => {
-      const lowercaseSuggestion = suggestion.toLowerCase();
-      const words = lowercaseSuggestion.split(' ');
-  
-      if (words.every(word => !querySet.has(word))) {
-        words.forEach(word => {
-          if (!wordCounts[word]) {
-            wordCounts[word] = 1;
-          } else {
-            wordCounts[word]++;
-          }
+  const queryInputs = document.getElementsByClassName('queryInput');
+  const queries = Array.from(queryInputs).map(input => input.value.trim().toLowerCase());
+
+  const querySet = new Set(queries);
+
+  const wordCounts = {};
+  suggestions.forEach(suggestion => {
+    const lowercaseSuggestion = suggestion.toLowerCase();
+    const words = lowercaseSuggestion.split(' ');
+
+    if (words.every(word => !querySet.has(word))) {
+      words.forEach(word => {
+        if (!wordCounts[word]) {
+          wordCounts[word] = 1;
+        } else {
+          wordCounts[word]++;
+        }
+      });
+    }
+  });
+
+  const sortedWords = Object.keys(wordCounts).sort((a, b) => {
+      if (wordCounts[a] === 1 && wordCounts[b] === 1) {
+        return 0; // If both words have count 1, maintain their original order
+      } else if (wordCounts[a] === 1) {
+        return 1; // If 'a' has count 1, it should come after 'b'
+      } else if (wordCounts[b] === 1) {
+        return -1; // If 'b' has count 1, it should come after 'a'
+      } else {
+        return wordCounts[a] - wordCounts[b]; // Sort by count in ascending order
+      }
+  });
+
+  suggestions.forEach(suggestion => {
+    const lowercaseSuggestion = suggestion.toLowerCase();
+
+    if (lowercaseSuggestion.split(' ').every(word => !querySet.has(word))) {
+      const matchingClusters = sortedWords.filter(word => lowercaseSuggestion.includes(word));
+
+      if (matchingClusters.length === 0) {
+        clusters.push({
+          suggestion,
+          cluster: 'Unclassified'
+        });
+      } else {
+        const mostRelevantCluster = matchingClusters[0]; // Get the most relevant cluster
+        clusters.push({
+          suggestion,
+          cluster: mostRelevantCluster
         });
       }
-    });
-  
-    const sortedWords = Object.keys(wordCounts).sort((a, b) => wordCounts[b] - wordCounts[a]);
-  
-    suggestions.forEach(suggestion => {
-      const lowercaseSuggestion = suggestion.toLowerCase();
-  
-      if (lowercaseSuggestion.split(' ').every(word => !querySet.has(word))) {
-        const matchingClusters = sortedWords.filter(word => lowercaseSuggestion.includes(word));
-        if (matchingClusters.length === 0) {
-          clusters.push({
-            suggestion,
-            cluster: 'Unclassified'
-          });
-        } else {
-          matchingClusters.forEach(cluster => {
-            clusters.push({
-              suggestion,
-              cluster
-            });
-          });
-        }
-      }
-    });
-  
-    return clusters;
+    }
+  });
+
+  return clusters;
 }
   
 function fetchSuggestions() {
@@ -169,6 +113,7 @@ function fetchSuggestions() {
         const alphanumeric = 'abcdefghijklmnopqrstuvwxyz0123456789';
         for (let i = 0; i < alphanumeric.length; i++) {
             const alphanumericChar = alphanumeric[i];
+            console.log(alphanumericChar);
     
             // Create a unique callback function name for each combination
             const combinationCallbackName = `jsonp_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
@@ -184,4 +129,4 @@ function fetchSuggestions() {
             document.body.appendChild(combinationScript);
         }
       });
-}  
+}

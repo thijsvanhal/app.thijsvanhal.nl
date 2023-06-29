@@ -101,7 +101,6 @@ async function listSites() {
 
 async function getData() {
   allData = [];
-  dimensions = [];
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
   const siteUrl = encodeURIComponent(document.getElementById('all-sites').value);
@@ -115,6 +114,7 @@ async function getData() {
   statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool begint met het ophalen van de data...</p></div>`);
 
   do {
+    dimensions = [];
     const filter_type_value = document.getElementById("filter-type").value;
     const filter_match_value = document.getElementById("filter-match").value;
     const filter_value = document.getElementById("filter").value;
