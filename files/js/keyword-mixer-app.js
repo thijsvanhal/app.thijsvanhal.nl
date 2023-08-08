@@ -242,36 +242,37 @@ keywordsInput3.addEventListener('focus', () => {
 });
 document.getElementsByTagName('div')[0].focus();
 
-// Ophalen van cookies & localstorage
-function getCookie(name) {
-    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    return cookieValue ? decodeURIComponent(cookieValue.pop()) : '';
-}
-
+// Ophalen van localstorage
 function getLocalStorage(name) {
     const localStorageValue = localStorage.getItem(name);
     return localStorageValue ? localStorageValue : '';
 }
 
 // Maken van lijsten , ophalen van lijsten in cookies and updaten van accordions en standaard lijsten in lists pushen.
-let lists = [];
-const listsCookie = getCookie("lists");
-if (listsCookie) {
-    lists = JSON.parse(listsCookie);
+function getSessionStorage(name) {
+    const sessionStorageValue = sessionStorage.getItem(name);
+    return sessionStorageValue ? JSON.parse(sessionStorageValue) : null;
+}
+
+function setSessionStorage(name, value) {
+    sessionStorage.setItem(name, JSON.stringify(value));
+}
+
+let lists = getSessionStorage("lists") || [];
+if (lists) {
     updateAccordion();
 }
+
 const accordionItems = document.querySelectorAll("#standaard-accordion-item");
 accordionItems.forEach((item) => {
     const button = item.querySelector("button");
     const listValues = item.querySelectorAll(".accordion-body li");
 
     const listName = button.innerText.trim();
-    const values = [];
-    listValues.forEach((li) => {
-        values.push(li.innerText.trim());
-    });
+    const values = Array.from(listValues).map((li) => li.innerText.trim());
 
-    if (!listsCookie) {
+    const existingList = lists.find((list) => list.name === listName);
+    if (!existingList) {
         lists.push({ name: listName, values: values });
     }
 });
@@ -279,10 +280,10 @@ accordionItems.forEach((item) => {
 function addList() {
     const list_name = document.getElementById("list-name");
     const list_values = document.getElementById("list-values");
-    let listName = document.getElementById("list-name").value;
-    let listValues = document.getElementById("list-values").value.split("\n");
+    const listName = list_name.value;
+    const listValues = list_values.value.split("\n");
 
-    let listExists = lists.some(list => list.name === listName);
+    const listExists = lists.some((list) => list.name === listName);
     if (listExists) {
         window.alert(`Rijtje ${listName} bestaat al, pas de naam aan :)`);
         return;
@@ -290,9 +291,8 @@ function addList() {
 
     lists.push({ name: listName, values: listValues });
     updateAccordion();
+    setSessionStorage("lists", lists);
 
-    // Opslaan van lijsten in cookie
-    document.cookie = "lists=" + JSON.stringify(lists);
     list_name.value = "";
     list_values.value = "";
 }
@@ -327,26 +327,22 @@ function bulkaddList() {
     }
 
     updateAccordion();
-    document.cookie = "lists=" + JSON.stringify(lists);
+    setSessionStorage("lists", lists);
     textarea.value = "";
 }     
 
 // Verwijderen van alle lijsten
 function removeLists() {
     lists = [];
-
-    document.cookie = "lists=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/keyword-mixer; SameSite=Lax;";
+    sessionStorage.removeItem("lists");
     
     const container = document.querySelector("#alle-lijsten");
-    const accordions = container.querySelectorAll(".accordion");
-    accordions.forEach((accordion) => {
-        accordion.remove();
-    });
+    container.innerHTML = "";
 }
 
 // Maken en updaten van alle rijtjes als accordions
 function updateAccordion() {
-    let accordionLists = document.getElementById("alle-lijsten");
+    const accordionLists = document.getElementById("alle-lijsten");
     accordionLists.innerHTML = "";
 
     let rowContainer = document.createElement("div");
@@ -445,7 +441,7 @@ function updateAccordion() {
                 const newContent = editTextArea.value.split("\n");
                 list.values = newContent;
                 updateAccordion();
-                document.cookie = "lists=" + JSON.stringify(lists);
+                setSessionStorage("lists", lists);
                 closeModal();
             });
         
@@ -491,7 +487,7 @@ function updateAccordion() {
             const confirmation = confirm("Weet je zeker dat je dit rijtje wilt verwijderen?");
             if (confirmation) {
                 lists = lists.filter((item) => item.name !== list.name);
-                document.cookie = "lists=" + JSON.stringify(lists);
+                setSessionStorage("lists", lists);
                 updateAccordion();
             }
         });
