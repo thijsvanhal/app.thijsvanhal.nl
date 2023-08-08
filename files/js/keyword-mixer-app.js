@@ -6,6 +6,7 @@ const resultLength = document.getElementById('woorden-totaal');
 const keywordsInput1 = document.getElementById('lijst-1');
 const keywordsInput2 = document.getElementById('lijst-2');
 const keywordsInput3 = document.getElementById('lijst-3');
+
 let mixedKeywordsArray = [];
 let taskIds = [];
 let lineNames = [];
@@ -13,11 +14,10 @@ let apiMethodes = [];
 let login;
 let password;
 let api_methode;
-const statusElement = document.querySelector('.bulk-mixer-status');
+let parsed_login_storage;
 let login_storage = getLocalStorage("userData");
 let email_login = document.getElementById("inputEmail").value;
 let api_login = document.getElementById("inputAPI").value;
-let parsed_login_storage;
 if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
@@ -27,6 +27,7 @@ if (login_storage) {
     password = api_login;
 }
 
+    
 // Alert voor meer dan 10.000 zoekwoorden
 let showAlert = true;
 function showMaxWordCountAlert(mixedKeywords) {
@@ -258,7 +259,7 @@ function setSessionStorage(name, value) {
     sessionStorage.setItem(name, JSON.stringify(value));
 }
 
-let lists = getSessionStorage("lists") || [];
+let lists = getSessionStorage("lists");
 if (lists) {
     updateAccordion();
 }
@@ -325,7 +326,6 @@ function bulkaddList() {
 
         lists.push(list);
     }
-
     updateAccordion();
     setSessionStorage("lists", lists);
     textarea.value = "";
@@ -586,6 +586,7 @@ async function mixLists(login_storage, login, password, api_login) {
     apiMethodes = [];
 
     const inputTextarea = document.getElementById("bulk-input");
+    const statusElement = document.querySelector('.bulk-mixer-status');
     const lines = inputTextarea.value.split("\n");
 
     if (!api_login && login_storage === "") {
