@@ -9,8 +9,8 @@
   <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/keyword-mixer/">
   <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/keyword-mixer/">
   <link rel="alternate" hreflang="x-default" href="https://app.thijsvanhal.nl/keyword-mixer/">
-  <link rel="stylesheet" href="/files/bootstrap.min.css" type="text/css">
-  <link rel="stylesheet" href="/files/styles.css" type="text/css">
+  <link rel="stylesheet" href="/files/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="/files/css/styles.css" type="text/css">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -236,6 +236,7 @@
     <div>
       <h2>Bulk zoekvolumes ophalen</h2>
       <p id="ingelogd_text"></p>
+      <h3>API Methode</h3>
       <div class="form-check">
         <input class="form-check-input" type="radio" name="flexRadioDefault" id="zoekvolumes" checked>
         <label class="form-check-label" for="zoekvolumes">
@@ -254,20 +255,28 @@
           Verschilt per regel
         </label>
       </div>
-      <select class="form-select" id="select-option" aria-label="Default select example">
-        <option selected>Nederland</option>
-        <option value="vlaanderen">Vlaanderen</option>
-        <option value="wallonie">Wallonië</option>
-        <option value="duitsland">Duitsland</option>
-        <option value="frankrijk">Frankrijk</option>
-        <option value="engeland">Engeland</option>
-      </select>
+      <div class="row">
+        <div class="col-sm">
+          <h3>Locatie</h3>
+          <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+          <select class="form-select" id="location-option">
+            <option selected>Selecteer de locatie</option>
+          </select>
+        </div>
+        <div class="col-sm">
+          <h3>Taal</h3>
+          <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+          <select class="form-select" id="language-option">
+            <option selected>Selecteer de taal</option>
+          </select>
+        </div>
+      </div>
     </div>
     <div>
       <label for="list-values">Lijst met rijtjes</label>
       <textarea class="keywords-input" id="bulk-input"></textarea>
     </div>
-    <button type="button" class="btn btn-primary" onclick="mixLists()">Zoekvolumes ophalen</button>
+    <button type="button" class="btn btn-primary" onclick="mixLists(login_storage, login, password, api_login)">Zoekvolumes ophalen</button>
   </div>
   <div class="container-sm">
     <div class="bulk-mixer-status"></div>
@@ -275,7 +284,7 @@
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
-  <script type="text/javascript" async src="/files/bootstrap.min.js"></script>
+  <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
   <script type="text/javascript" defer src="/files/js/keyword-mixer-app.js"></script>
   <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
   </body>

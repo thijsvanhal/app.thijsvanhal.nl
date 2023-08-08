@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Analytics Data Extractor</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="/files/css/bootstrap.min.css" rel="stylesheet">
+  <script async src="https://accounts.google.com/gsi/client"></script>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Google Analytics Data Extractor</h1>
+    <form id="gaDataForm">
+      <div class="mb-3">
+        <label for="ids" class="form-label">IDs (ga:xxxx)</label>
+        <input type="text" class="form-control" id="ids" required>
+      </div>
+      <div class="mb-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="startDate" required>
+      </div>
+      <div class="mb-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="endDate" required>
+      </div>
+      <div class="mb-3">
+        <label for="metrics" class="form-label">Metrics (ga:xxxx,ga:yyyy)</label>
+        <input type="text" class="form-control" id="metrics" required>
+      </div>
+      <div class="mb-3">
+        <label for="dimensions" class="form-label">Dimensions (ga:zzzz,ga:wwww)</label>
+        <input type="text" class="form-control" id="dimensions">
+      </div>
+      <div class="mb-3">
+        <label for="segments" class="form-label">Segments</label>
+        <input type="text" class="form-control" id="segments">
+      </div>
+      <button type="button" class="btn btn-primary" onclick="initClient()">Fetch Data</button>
+    </form>
+  </div>
+
+  <!-- Include Bootstrap JS -->
+  <script src="/files/js/bootstrap.min.js"></script>
+  <!-- Include your JavaScript code -->
+  <script src="/files/js/google-analytics-app.js"></script>
+</body>
+</html>

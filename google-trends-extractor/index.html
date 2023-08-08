@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
   <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mix keywords  for keyword research - Keyword Mixer</title>
-  <meta name="robots" content="index, follow">
-  <meta name="description" content="Want to mix keywords for your keyword research or for Google Ads? Use the keywords mixer and generate all possible variations!">
-  <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/keyword-mixer/">
-  <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/keyword-mixer/">
-  <link rel="alternate" hreflang="x-default" href="https://app.thijsvanhal.nl/keyword-mixer/">
+  <title>Google Trends Extractor</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Haal gemakkelijk Google Trends waarden op in bulk met de Google Trends Extractor!">
   <link rel="stylesheet" href="/files/css/bootstrap.min.css" type="text/css">
   <link rel="stylesheet" href="/files/css/styles.css" type="text/css">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -37,7 +34,7 @@
     }
   </style>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -81,61 +78,59 @@
       <div class="navbar-collapse collapse" id="navContent">
         <ul class="navbar-nav ms-auto" id="second-menu">
           <li class="nav-item">
-            <a class="nav-link" href="/keyword-mixer/">NL</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">/</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/en/keyword-mixer/">EN</a>
+            <a class="nav-link" id="inlog_knop" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div class="container-sm" id="top-container">
-    <div class="row">
-      <div class="col-sm" id="pad-col">
-        <label for="lijst-1">List 1</label>
-        <textarea class="keywords-input" id="lijst-1" tabindex="1"></textarea>
-        <div class="form-check form-switch" id="wissel-lijsten">
-          <input class="form-check-input" type="checkbox" id="optional-list-mix">
-          <label class="form-check-label" for="optional-list-mix">Permute all lists</label>
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Inloggen bij DataForSEO</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
-      </div>
-      <div class="col-sm" id="pad-col">
-        <label for="lijst-2">List 2</label>
-        <textarea class="keywords-input" id="lijst-2" tabindex="2"></textarea>
-        <div class="form-check form-switch" id="checklijst2">
-          <input class="form-check-input" type="checkbox" id="optional-list-2">
-          <label class="form-check-label" for="optional-list-2">Optional</label>
-        </div>
-      </div>
-      <div class="col-sm" id="pad-col">
-        <label for="lijst-3">List 3</label>
-        <textarea class="keywords-input" id="lijst-3" tabindex="3"></textarea>
-        <div class="form-check form-switch" id="checklijst3">
-          <input class="form-check-input" type="checkbox" id="optional-list-3">
-          <label class="form-check-label" for="optional-list-3">Optional</label>
+        <div class="modal-body">
+          <p id="ingelogd"></p>
+          <form>
+            <div class="mb-3">
+              <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">Onthouden</label>
+            </div>
+            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
+            <button type="button" class="btn btn-primary secondbutton" id="logoutButton" data-bs-dismiss="modal">Log uit</button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
+  <div class="container-sm" id="top-container">
+    <h1>Google Trends API Extractor</h1>
   </div>
   <div class="container-sm" id="keyword-container">
-    <label for="result-mixer">Automatic generated results</label>
-    <textarea class="textarea-results" id="result-mixer" tabindex="4"></textarea>
-    <div class="woorden" id="woorden-totaal"></div>
-  </div>
-  <div class="container-sm">
-    <div class="body-text">
-      <h1>Keyword Mixer</h1>
-      <p>With the keyword mixer, you can easily combine three lists of keywords into all possible combinations.</p>
-      <p>The easiest and most efficient way to quickly generate keywords is by using the <b>TAB</b> key. The tool automatically selects all values in a list, making it easy to paste new values each time.</p>
-      <p>By navigating with the <b>TAB</b> key, you will automatically be taken to the result after pasting the lists. The lists then can easily be copied using <b>ctrl + c</b> or <b>cmd + c</b> to paste into Google Ads for example.</p>
-      <p>This tool was created as a hobby project. If you find a bug or have an idea for how to improve the tool, do not hesitate to <a href="https://www.thijsvanhal.nl/contact/">contact me!</a></p>
+    <select class="form-select" id="select-option" aria-label="Default select example">
+        <option selected>Nederland</option>
+        <option value="vlaanderen">Vlaanderen</option>
+        <option value="wallonie">Wallonië</option>
+      </select>
+    <div>
+      <label for="list-values">Lijst met zoekwoorden</label>
+      <textarea class="keywords-input" id="bulk-input"></textarea>
     </div>
+    <button type="button" class="btn btn-primary" onclick="getData()">Ophalen</button>
+  </div>
+  <div class="container-sm" id="keyword-container">
+    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" defer src="/files/js/keyword-mixer-app.js"></script>    
+  <script type="text/javascript" defer src="/files/js/google-trends-app.js"></script>
+  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
   </body>
 </html>

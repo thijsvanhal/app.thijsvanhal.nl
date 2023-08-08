@@ -6,10 +6,29 @@ const resultLength = document.getElementById('woorden-totaal');
 const keywordsInput1 = document.getElementById('lijst-1');
 const keywordsInput2 = document.getElementById('lijst-2');
 const keywordsInput3 = document.getElementById('lijst-3');
+let mixedKeywordsArray = [];
+let taskIds = [];
+let lineNames = [];
+let apiMethodes = [];
+let login;
+let password;
+let api_methode;
+const statusElement = document.querySelector('.bulk-mixer-status');
+let login_storage = getLocalStorage("userData");
+let email_login = document.getElementById("inputEmail").value;
+let api_login = document.getElementById("inputAPI").value;
+let parsed_login_storage;
+if (login_storage) {
+    parsed_login_storage = JSON.parse(login_storage);
+    login = parsed_login_storage.email;
+    password = parsed_login_storage.password;
+} else {
+    login = email_login;
+    password = api_login;
+}
 
 // Alert voor meer dan 10.000 zoekwoorden
 let showAlert = true;
-
 function showMaxWordCountAlert(mixedKeywords) {
     const string = mixedKeywords.toString();
     const newlineIndex = string.indexOf('\n');
@@ -161,6 +180,7 @@ function updateMixer () {
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
 };
+
 // Functie notificatie
 function showNotification(message, duration) {
     const notification = document.createElement('div');
@@ -222,10 +242,15 @@ keywordsInput3.addEventListener('focus', () => {
 });
 document.getElementsByTagName('div')[0].focus();
 
-// Ophalen van cookies
+// Ophalen van cookies & localstorage
 function getCookie(name) {
     const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
     return cookieValue ? decodeURIComponent(cookieValue.pop()) : '';
+}
+
+function getLocalStorage(name) {
+    const localStorageValue = localStorage.getItem(name);
+    return localStorageValue ? localStorageValue : '';
 }
 
 // Maken van lijsten , ophalen van lijsten in cookies and updaten van accordions en standaard lijsten in lists pushen.
@@ -492,32 +517,27 @@ var span = document.getElementsByClassName("btn-close")[0];
 var loginButton = document.getElementById("loginButton");
 var logoutButton = document.getElementById("logoutButton");
 var rememberme = document.getElementById("rememberMe");
-const inlog_knop = document.getElementById("inlog_knop");
-inlog_knop.onclick = inlogUpdate();
-window.onload = inlogUpdate();
+window.onload = inlogUpdate(login_storage, login, password, email_login, api_login);
 
-function inlogUpdate() {
+function inlogUpdate(login_storage, login, password, email_login, api_login) {
     var ingelogd = document.getElementById("ingelogd");
     var ingelogd_text = document.getElementById("ingelogd_text");
-    let login_cookie = getCookie("login");
     const login_email_veld = document.getElementById("inputEmail");
     const login_api_veld = document.getElementById("inputAPI");
-    const login_email = document.getElementById("inputEmail").value;
-    const login_api = document.getElementById("inputAPI").value;
-    if (login_cookie) {
-        var login_email_cookie = getCookie("login");
-        var login_api_cookie = getCookie("password");
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email_cookie;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email_cookie;
-        login_email_veld.value = login_email_cookie;
-        login_api_veld.value = login_api_cookie;
-    } else if (login_email != "") {
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login_email;
-        login_email_veld.value = login_email;
-        login_api_veld.value = login_api;
+    if (login_storage) {
+        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
+        login_email_veld.value = login;
+        login_api_veld.value = password;
+        fetchLocationLanguageData(login, password);
+    } else if (email_login != "") {
+        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
+        login_email_veld.value = email_login;
+        login_api_veld.value = api_login;
     } else {
         ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
+        ingelogd_text.textContent = "Je bent op dit moment nog niet ingelogd!";
     }
 }
 
@@ -532,33 +552,36 @@ span.onclick = function() {
 // Store login and password in cookie
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        var expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 365);
-        document.cookie = "login=" + encodeURIComponent(document.getElementById("inputEmail").value) + ";path=/; expires=" + expirationDate.toUTCString();
-        document.cookie = "password=" + encodeURIComponent(document.getElementById("inputAPI").value) + "; path=/; expires=" + expirationDate.toUTCString();
+        var userData = {
+            email: document.getElementById("inputEmail").value,
+            password: document.getElementById("inputAPI").value
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
+        login_storage = getLocalStorage("userData");
+        parsed_login_storage = JSON.parse(login_storage);
+        login = parsed_login_storage.email;
+        password = parsed_login_storage.password;
+    } else {
+        login = document.getElementById("inputEmail").value;
+        password = document.getElementById("inputAPI").value;
+        email_login = login;
+        api_login = password;
     }
-    inlogUpdate();
+    inlogUpdate(login_storage, login, password, email_login, api_login);
+    fetchLocationLanguageData(login, password);
 };
 
 logoutButton.onclick = function() {
     document.getElementById("inputEmail").value = '';
     document.getElementById("inputAPI").value = '';
     document.getElementById("ingelogd_text").textContent = '';
-    document.cookie = "login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
-    document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax;";
+    localStorage.removeItem('userData');
+    login_storage = '';
+    inlogUpdate(login_storage, login, password, email_login, api_login);
 };
 
 // Mixen van bulk lijsten
-let mixedKeywordsArray = [];
-let taskIds = [];
-let lineNames = [];
-let apiMethodes = [];
-let login;
-let password;
-let api_methode;
-const statusElement = document.querySelector('.bulk-mixer-status');
-
-async function mixLists() {
+async function mixLists(login_storage, login, password, api_login) {
     // verwijder huidige waardes
     document.querySelector('.bulk-mixer-status').innerHTML = '';
     mixedKeywordsArray = [];
@@ -568,32 +591,9 @@ async function mixLists() {
 
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
-    let login_cookie = getCookie("login");
-    const api_key = document.getElementById("inputAPI").value;
 
-    if (!api_key && login_cookie === "") {
-        mixedKeywordsArray = lines.map((line) => {
-            const values = line.split(",");
-            const nonEmptyValues = values.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
-            document.getElementById("optional-list-mix").checked = values[1] === "1";
-            if (values[0] !== "0" && values[0] !== "1") {
-                document.getElementById("lijst-1").value = getListValues(values[0]);
-            } else {
-                document.getElementById("lijst-1").value = getListValues(values[2]);
-            }
-            document.getElementById("lijst-2").value = getListValues(values[3]);
-            document.getElementById("optional-list-2").checked = values[4] === "1";
-            document.getElementById("lijst-3").value = getListValues(values[5]);
-            document.getElementById("optional-list-3").checked = values[6] === "1";
-            updateMixer();
-            const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
-            return {
-                line: nonEmptyValues.join(" + "),
-                mixedKeywords: mixedKeywords,
-                searchVolume: []
-            };
-        });
-        window.alert('Je bent niet ingelogd, daarom zijn er geen zoekvolumes opgehaald en zijn enkel de rijtjes gemixt. Deze kun je nu downloaden via de Download Excel knop!');
+    if (!api_login && login_storage === "") {
+        window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
     } else {
         const confirmed = confirm("Weet je zeker dat je een API call gaat maken? Dit kost geld!");
   
@@ -637,18 +637,6 @@ async function mixLists() {
                 searchVolume: []
             });
 
-            // login
-            const email_login = document.getElementById("inputEmail").value;
-            const api_login = document.getElementById("inputAPI").value;
-    
-            if (login_cookie) {
-                login = getCookie("login");
-                password = getCookie("password");
-            } else {
-                login = email_login;
-                password = api_login;
-            }
-
             if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
                 var max_keywords = 20;
             } else {
@@ -661,21 +649,12 @@ async function mixLists() {
                 const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
                 const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
 
-                const selectElement = document.querySelector('.form-select');
-                const lookupTable = {
-                    Nederland: { country: 'Netherlands', language: 'Dutch' },
-                    vlaanderen: { country: 'Belgium', language: 'Dutch' },
-                    wallonie: { country: 'Belgium', language: 'French' },
-                    duitsland: { country: 'Germany', language: 'German' },
-                    frankrijk: { country: 'France', language: 'French' },
-                    engeland: { country: 'United Kingdom', language: 'English' }
-                };
-                const selectedOption = selectElement.value;
-                const { country, language } = lookupTable[selectedOption];
+                const selectedCountry = document.getElementById('location-option').value;
+                const selectedLanguage = document.getElementById('language-option').value;
 
                 const post_array = [{
-                    "location_name": country,
-                    "language_name": language,
+                    "location_name": selectedCountry,
+                    "language_name": selectedLanguage,
                     "keywords": keywordsSlice,
                 }];
 
@@ -761,7 +740,7 @@ async function fetchData(taskId, login, password, getApiMethode) {
     return fetchResults;
 }
 
-function generateExcel() {
+async function generateExcel() {
     mixedKeywordsArray.forEach(function (keywordObj) {
         const mixedKeywords = keywordObj.mixedKeywords;
         const searchVolume = keywordObj.searchVolume;
@@ -836,4 +815,95 @@ function getListValues(listName) {
         }
     }
     return '';
+}
+
+// Language & location
+async function fetchLocationLanguageData(login, password) {   
+    const locationRequestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa(login + ':' + password)
+        }
+    };
+    const locationUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/locations';
+    const locationResponse = await fetch(locationUrl, locationRequestOptions);
+    const locationData = await locationResponse.json();
+    const locationEntries = locationData.tasks[0].result;
+
+    const desiredCountries = ['Netherlands', 'Belgium'];
+    const filteredLocationEntries = locationEntries.filter(location => {
+        return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
+      });
+
+    const locationOptions = filteredLocationEntries.map(location => location.location_name);
+    const locationSelect = document.getElementById('location-option');
+    locationOptions.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.text = location;
+        locationSelect.appendChild(option);
+    });
+  
+    const languageRequestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa(login + ':' + password)
+        }
+    };
+    const languageUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/languages';
+    const languageResponse = await fetch(languageUrl, languageRequestOptions);
+    const languageData = await languageResponse.json();
+    const languageOptions = languageData.tasks[0].result.map(language => language.language_name);
+  
+    const languageSelect = document.getElementById('language-option');
+    languageOptions.forEach(language => {
+        const option = document.createElement('option');
+        option.value = language;
+        option.text = language;
+        languageSelect.appendChild(option);
+    });
+
+    var locationOptionsForm = document.getElementById('location-option').getElementsByTagName('option');
+    var originalLocationOptions = [...locationOptionsForm];
+
+    var searchLocationInput = document.getElementById('search-location');
+    searchLocationInput.addEventListener('input', function () {
+        var filter = searchLocationInput.value.toLowerCase();
+
+        locationOptionsForm = [...originalLocationOptions]; // Reset options
+
+        var matchedLocationOptions = locationOptionsForm.filter(function (option) {
+            return option.text.toLowerCase().indexOf(filter) > -1;
+        });
+
+        var locationSelect = document.getElementById('location-option');
+        locationSelect.innerHTML = '';
+
+        matchedLocationOptions.forEach(function (option) {
+            locationSelect.appendChild(option);
+        });
+    });
+
+    var languageOptionsForm = document.getElementById('language-option').getElementsByTagName('option');
+    var originalLanguageOptions = [...languageOptionsForm];
+
+    var searchLanguageInput = document.getElementById('search-language');
+    searchLanguageInput.addEventListener('input', function () {
+        var filter = searchLanguageInput.value.toLowerCase();
+
+        languageOptionsForm = [...originalLanguageOptions];
+
+        var matchedLanguageOptions = languageOptionsForm.filter(function (option) {
+            return option.text.toLowerCase().indexOf(filter) > -1;
+        });
+
+        var languageSelect = document.getElementById('language-option');
+        languageSelect.innerHTML = '';
+
+        matchedLanguageOptions.forEach(function (option) {
+            languageSelect.appendChild(option);
+        });
+    });
 }
