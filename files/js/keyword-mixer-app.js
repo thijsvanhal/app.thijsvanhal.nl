@@ -259,8 +259,10 @@ function setSessionStorage(name, value) {
     sessionStorage.setItem(name, JSON.stringify(value));
 }
 
-let lists = getSessionStorage("lists");
-if (lists) {
+let lists = [];
+const listsStorage = getSessionStorage("lists");
+if (listsStorage) {
+    lists = JSON.parse(listsStorage);
     updateAccordion();
 }
 
