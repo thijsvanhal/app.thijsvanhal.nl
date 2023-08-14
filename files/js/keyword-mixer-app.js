@@ -262,23 +262,9 @@ function setSessionStorage(name, value) {
 let lists = [];
 const listsStorage = getSessionStorage("lists");
 if (listsStorage) {
-    lists = JSON.parse(listsStorage);
+    lists = listsStorage;
     updateAccordion();
 }
-
-const accordionItems = document.querySelectorAll("#standaard-accordion-item");
-accordionItems.forEach((item) => {
-    const button = item.querySelector("button");
-    const listValues = item.querySelectorAll(".accordion-body li");
-
-    const listName = button.innerText.trim();
-    const values = Array.from(listValues).map((li) => li.innerText.trim());
-
-    const existingList = lists.find((list) => list.name === listName);
-    if (!existingList) {
-        lists.push({ name: listName, values: values });
-    }
-});
 
 function addList() {
     const list_name = document.getElementById("list-name");
