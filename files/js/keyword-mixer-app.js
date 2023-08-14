@@ -527,6 +527,7 @@ function inlogUpdate(login_storage, login, password, email_login, api_login) {
         ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
         login_email_veld.value = login;
         login_api_veld.value = password;
+        rememberme.checked = true;
         fetchLocationLanguageData(login, password);
     } else if (email_login != "") {
         ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
@@ -573,6 +574,7 @@ logoutButton.onclick = function() {
     document.getElementById("inputEmail").value = '';
     document.getElementById("inputAPI").value = '';
     document.getElementById("ingelogd_text").textContent = '';
+    rememberme.checked = false;
     localStorage.removeItem('userData');
     login_storage = '';
     inlogUpdate(login_storage, login, password, email_login, api_login);
