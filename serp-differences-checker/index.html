@@ -123,10 +123,22 @@
     </div>
   </div>
   <div class="container-sm" id="top-container">
+    <h1>SERP Differences Checker</h1>
+    <p>Met de SERP Differences Checker check je eenvoudig de overeenkomsten tussen de zoekresultaten van twee zoekwoorden.</p>
+    <div class="row">
+      <div class="col-sm">
+        <h3>Zoekwoord 1</h3>
+        <input type="text" placeholder="Zoekwoord 1" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+      </div>
+      <div class="col-sm">
+        <h3>Zoekwoord 2</h3>
+        <input type="text" placeholder="Zoekwoord 2" class="form-control" id="zoekwoord-2" data-np-intersection-state="visible">
+      </div>
+    </div>
+  </div>
+  <div class="container-sm">
       <div class="row">
         <div class="col-sm">
-          <h3>Zoekwoord 1</h3>
-          <input type="text" placeholder="Zoekwoord 1" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
           <h3>Locatie</h3>
           <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
           <select class="form-select" id="location-option">
@@ -134,8 +146,6 @@
           </select>
         </div>
         <div class="col-sm">
-          <h3>Zoekwoord 2</h3>
-          <input type="text" placeholder="Zoekwoord 2" class="form-control" id="zoekwoord-2" data-np-intersection-state="visible">
           <h3>Taal</h3>
           <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
           <select class="form-select" id="language-option">
@@ -145,13 +155,7 @@
       </div>
       <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
   </div>
-  <div class="container-sm">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>SERP Results</h2>
-            <div id="serp-results"></div>
-        </div>
-    </div>
+  <div class="container-sm" id="serps">
   </div>
   <div class="container-sm">
     <div class="bulk-mixer-status"></div>

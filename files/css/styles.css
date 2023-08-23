@@ -182,7 +182,7 @@ input[type=radio] {
 .img-fluid {
     margin-bottom:30px;
 }
-.body-text b {
+.body-text b, strong {
     font-family: madabold !important;
     color: #02343f !important;
 }
@@ -283,4 +283,11 @@ a {
 .form-select {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+.result {
+    height: 230px;
+    overflow: hidden;
+}
+.common-result {
+    --bs-list-group-bg: #dfdfdf;
 }

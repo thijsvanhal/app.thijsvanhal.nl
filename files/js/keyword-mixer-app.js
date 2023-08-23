@@ -893,4 +893,8 @@ async function fetchLocationLanguageData(login, password) {
             languageSelect.appendChild(option);
         });
     });
+    const defaultLocation = 'Netherlands';
+    const defaultLanguage = 'Dutch';
+    locationSelect.value = defaultLocation;
+    languageSelect.value = defaultLanguage;
 }
