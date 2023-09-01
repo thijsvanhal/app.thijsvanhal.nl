@@ -122,6 +122,8 @@ async function getData() {
     const zoekwoordCheckbox = document.getElementById("dimensie-zoekwoord");
     const apparaatCheckbox = document.getElementById("dimensie-apparaat");
 
+    const type_results = document.getElementById("type-results").value;
+
     if (paginaCheckbox.checked) {
       dimensions.push("PAGE");
     }
@@ -143,7 +145,7 @@ async function getData() {
             "expression": filter_value
           }]
         }],
-        type: "web",
+        type: type_results,
         rowLimit: maxRows,
         startRow: startRow
       };
@@ -152,7 +154,7 @@ async function getData() {
         startDate: startDate,
         endDate: endDate,
         dimensions: dimensions,
-        type: "web",
+        type: type_results,
         rowLimit: maxRows,
         startRow: startRow
       };
@@ -186,6 +188,7 @@ async function getData() {
 
 function formatDataForExcel() {
   const formattedData = [];
+  console.log(allData);
   allData.forEach((data) => {
     const formattedArray = data.map((row) => {
       const formattedRow = {};
@@ -207,7 +210,9 @@ function formatDataForExcel() {
       formattedRow.Klikken = row.clicks;
       formattedRow.Impressies = row.impressions;
       formattedRow.CTR = (row.ctr * 100).toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
-      formattedRow.Positie = row.position.toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (formattedRow.Positie) {
+        formattedRow.Positie = row.position.toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
+      }
 
       return formattedRow;
     });

@@ -94,6 +94,9 @@ logoutButton.onclick = function() {
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
+    const container = document.getElementById('serps');
+    container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>'
+
     const keyword1 = document.getElementById("zoekwoord-1").value;
     const keyword2 = document.getElementById("zoekwoord-2").value;
 
@@ -181,7 +184,7 @@ async function renderResults(keyword1, keyword2, results1, results2) {
     const { similarityPercentage, commonResults } = calculateSimilarity(results1, results2);
 
     container.innerHTML = `
-        <h2>SERP Results</h2>
+        <h2>SERP Resultaten</h2>
         <p>De SERP's komen voor <strong>${similarityPercentage.toFixed(2)}%</strong> met elkaar overeen.</p>
         <p>Overeenkomende URLs:</p>
         <ul>
