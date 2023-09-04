@@ -269,7 +269,18 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
                 </div>
             </div>
         `;
-    }    
+    }
+    const commonResultElements = container.querySelectorAll('.common-result');
+    commonResultElements.forEach(result => {
+        result.addEventListener('click', handleResultClick);
+    });
+
+    container.addEventListener('click', () => {
+        const commonResultElements = container.querySelectorAll('.list-group');
+        commonResultElements.forEach(result => {
+            result.classList.remove('inactive');
+        });
+    });   
 }
 
 function renderPositionResults(results, commonResults) {
@@ -285,9 +296,9 @@ function renderPositionResults(results, commonResults) {
         const highlightClass = isCommon ? 'common-result' : '';
 
         return `
-            <div class="result result-${index + 1}" data-url="${item.url}">
+            <div class="result result-${index + 1}">
                 <h3>Positie ${index + 1}</h3>
-                <ul class="list-group ${highlightClass}">
+                <ul class="list-group ${highlightClass}" data-url="${item.url}">
                     <li class="list-group-item">
                         <strong>${item.title}</strong>
                         <br>
@@ -301,7 +312,6 @@ function renderPositionResults(results, commonResults) {
 }
 
 function calculateSimilarity(results1, results2, results3) {
-    console.log(results1, results2, results3);
     const allItems1 = results1.reduce((acc, result) => acc.concat(result.items), []);
     const allItems2 = results2.reduce((acc, result) => acc.concat(result.items), []);
     
@@ -437,4 +447,26 @@ async function fetchLocationLanguageData(login, password) {
     const defaultLanguage = 'Dutch';
     locationSelect.value = defaultLocation;
     languageSelect.value = defaultLanguage;
+}
+
+// Function to handle the click event on common results
+function handleResultClick(event) {
+    event.stopPropagation();
+    const clickedResult = event.currentTarget;
+    const url = clickedResult.getAttribute('data-url');
+
+    const allResults = document.querySelectorAll('.list-group');
+    allResults.forEach(result => {
+        if (result !== clickedResult) {
+            result.classList.add('inactive');
+        }
+    });
+
+    const ResultSERP2 = document.querySelectorAll(`.common-result[data-url="${url}"]`)[1];
+    const ResultSERP3 = document.querySelectorAll(`.common-result[data-url="${url}"]`)[2];
+    clickedResult.classList.remove('inactive');
+    ResultSERP2.classList.remove('inactive');
+    if (ResultSERP3) {
+        ResultSERP3.classList.remove('inactive');
+    }
 }
