@@ -36,20 +36,25 @@ window.onload = inlogUpdate(login_storage, login, password, email_login, api_log
 
 function inlogUpdate(login_storage, login, password, email_login, api_login) {
     var ingelogd = document.getElementById("ingelogd");
+    var ingelogd_text = document.getElementById("ingelogd_text");
     const login_email_veld = document.getElementById("inputEmail");
     const login_api_veld = document.getElementById("inputAPI");
     if (login_storage) {
         ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
         login_email_veld.value = login;
         login_api_veld.value = password;
         rememberme.checked = true;
         fetchLocationLanguageData(login, password);
     } else if (email_login != "") {
         ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
+        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
         login_email_veld.value = email_login;
         login_api_veld.value = api_login;
+        fetchLocationLanguageData(login, password);
     } else {
         ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
+        ingelogd_text.textContent = "Je bent op dit moment nog niet ingelogd!";
     }
 }
 
@@ -191,11 +196,11 @@ async function renderResults(keyword1, keyword2, results1, results2) {
             ${commonResults.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
         </ul>
         <div class="row">
-            <div class="col-sm">
+            <div class="col-sm" style="overflow-x: auto">
                 <h2>SERP 1: ${keyword1}</h2>
                 ${renderPositionResults(results1, commonResults)}
             </div>
-            <div class="col-sm">
+            <div class="col-sm" style="overflow-x: auto">
                 <h2>SERP 2: ${keyword2}</h2>
                 ${renderPositionResults(results2, commonResults)}
             </div>
