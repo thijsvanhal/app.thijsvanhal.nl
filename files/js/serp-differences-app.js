@@ -235,6 +235,7 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
                     </ul>
                 </div>
             </div>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie in SERP 2 en 3!</p>
             <div class="row">
                 <div class="col-sm" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
@@ -258,6 +259,7 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             <ul>
                 ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
             </ul>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie in SERP 2 en 3!</p>
             <div class="row">
                 <div class="col-sm" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
