@@ -213,29 +213,29 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             </ul>
             <h3>Overeenkomende URLs:</h3>
             <ul>
-                ${commonResults.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+                ${commonResults.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
             </ul>
             <div class="row">
                 <div class="col-sm" style="overflow-x: auto">
                     <h3>SERP ${keyword1} en ${keyword2}</h3>
                     <ul>
-                        ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+                        ${commonResults1.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
                     </ul>
                 </div>
                 <div class="col-sm" style="overflow-x: auto">
                     <h3>SERP ${keyword1} en ${keyword3}</h3>
                     <ul>
-                        ${commonResults2.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+                        ${commonResults2.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
                     </ul>
                 </div>
                 <div class="col-sm" style="overflow-x: auto">
                     <h3>SERP ${keyword2} en ${keyword3}</h3>
                     <ul>
-                        ${commonResults3.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+                        ${commonResults3.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
                     </ul>
                 </div>
             </div>
-            <p>Klik op een overeenkomend resultaat en ontdek de positie in SERP 2 en 3!</p>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
             <div class="row">
                 <div class="col-sm" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
@@ -259,7 +259,7 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             <ul>
                 ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
             </ul>
-            <p>Klik op een overeenkomend resultaat en ontdek de positie in SERP 2 en 3!</p>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
             <div class="row">
                 <div class="col-sm" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
