@@ -210,7 +210,8 @@ function formatDataForExcel() {
       formattedRow.Klikken = row.clicks;
       formattedRow.Impressies = row.impressions;
       formattedRow.CTR = (row.ctr * 100).toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
-      if (formattedRow.Positie) {
+      
+      if (row.position) {
         formattedRow.Positie = row.position.toLocaleString('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
       }
 
