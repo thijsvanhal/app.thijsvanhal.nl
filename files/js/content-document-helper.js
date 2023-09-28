@@ -26,17 +26,17 @@ function getLocalStorage(name) {
 }
 
 // login form
-var modal = document.getElementById("loginModal");
-var button = document.querySelector("#inlog_knop");
-var span = document.getElementsByClassName("btn-close")[0];
-var loginButton = document.getElementById("loginButton");
-var logoutButton = document.getElementById("logoutButton");
-var rememberme = document.getElementById("rememberMe");
+const modal = document.getElementById("loginModal");
+const button = document.querySelector("#inlog_knop");
+const span = document.getElementsByClassName("btn-close")[0];
+const loginButton = document.getElementById("loginButton");
+const logoutButton = document.getElementById("logoutButton");
+const rememberme = document.getElementById("rememberMe");
 window.onload = inlogUpdate(login_storage, login, password, email_login, api_login);
 
 function inlogUpdate(login_storage, login, password, email_login, api_login) {
-    var ingelogd = document.getElementById("ingelogd");
-    var ingelogd_text = document.getElementById("ingelogd_text");
+    const ingelogd = document.getElementById("ingelogd");
+    const ingelogd_text = document.getElementById("ingelogd_text");
     const login_email_veld = document.getElementById("inputEmail");
     const login_api_veld = document.getElementById("inputAPI");
     if (login_storage) {
@@ -69,7 +69,7 @@ span.onclick = function() {
 // Store login and password in cookie
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        var userData = {
+        const userData = {
             email: document.getElementById("inputEmail").value,
             password: document.getElementById("inputAPI").value
         };
@@ -291,20 +291,20 @@ async function fetchLocationLanguageData(login, password) {
         languageSelect.appendChild(option);
     });
 
-    var locationOptionsForm = document.getElementById('location-option').getElementsByTagName('option');
-    var originalLocationOptions = [...locationOptionsForm];
+    const locationOptionsForm = document.getElementById('location-option').getElementsByTagName('option');
+    const originalLocationOptions = [...locationOptionsForm];
 
-    var searchLocationInput = document.getElementById('search-location');
+    const searchLocationInput = document.getElementById('search-location');
     searchLocationInput.addEventListener('input', function () {
-        var filter = searchLocationInput.value.toLowerCase();
+        const filter = searchLocationInput.value.toLowerCase();
 
         locationOptionsForm = [...originalLocationOptions]; // Reset options
 
-        var matchedLocationOptions = locationOptionsForm.filter(function (option) {
+        const matchedLocationOptions = locationOptionsForm.filter(function (option) {
             return option.text.toLowerCase().indexOf(filter) > -1;
         });
 
-        var locationSelect = document.getElementById('location-option');
+        const locationSelect = document.getElementById('location-option');
         locationSelect.innerHTML = '';
 
         matchedLocationOptions.forEach(function (option) {
@@ -312,20 +312,20 @@ async function fetchLocationLanguageData(login, password) {
         });
     });
 
-    var languageOptionsForm = document.getElementById('language-option').getElementsByTagName('option');
-    var originalLanguageOptions = [...languageOptionsForm];
+    const languageOptionsForm = document.getElementById('language-option').getElementsByTagName('option');
+    const originalLanguageOptions = [...languageOptionsForm];
 
-    var searchLanguageInput = document.getElementById('search-language');
+    const searchLanguageInput = document.getElementById('search-language');
     searchLanguageInput.addEventListener('input', function () {
-        var filter = searchLanguageInput.value.toLowerCase();
+        const filter = searchLanguageInput.value.toLowerCase();
 
         languageOptionsForm = [...originalLanguageOptions];
 
-        var matchedLanguageOptions = languageOptionsForm.filter(function (option) {
+        const matchedLanguageOptions = languageOptionsForm.filter(function (option) {
             return option.text.toLowerCase().indexOf(filter) > -1;
         });
 
-        var languageSelect = document.getElementById('language-option');
+        const languageSelect = document.getElementById('language-option');
         languageSelect.innerHTML = '';
 
         matchedLanguageOptions.forEach(function (option) {
@@ -344,7 +344,7 @@ async function getSummary(taskId, login, password) {
 
     const post_array = [{
         "task_id": taskId,
-        "prompt": "De samenvatting is voor een SEO'er. Geef aan wat de intentie van de gebruiker is. Geef ook een samenvatting van de serp en geef ook aan welke vragen er beantwoord worden in de SERP.",
+        "prompt": "Geef een uitgebreide samenvatting van de SERP. Geef daarnaast antwoord op de volgende vragen: Voor welk segment is deze SERP? Wat is de behoefte van de gebruiker? Wat doen de resultaten aan expertise op hun pagina? Welke vragen worden er beantwoord in de SERP? Beschrijf van de top 5 resultaat voor elk resultaat wat deze pagina uniek maakt.",
         "include_links": true,
         "fetch_content": true,
         "suport_extra": true
@@ -362,6 +362,7 @@ async function getSummary(taskId, login, password) {
     // POST request
     const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
     const post_result = await post_response.json();
+    console.log(post_result);
     const summary = post_result.tasks[0].result[0].items[0].summary;
     container.innerHTML = `
         <h2>SERP Samenvatting</h2>
@@ -391,7 +392,7 @@ async function getScreenshot(taskId, login, password) {
 }
 
 //Database
-const dbName = "historicDataDB";
+const dbName = "historicDataCDH";
 const dbVersion = 1;
 
 const openDBRequest = indexedDB.open(dbName, dbVersion);
@@ -399,8 +400,8 @@ const openDBRequest = indexedDB.open(dbName, dbVersion);
 openDBRequest.onupgradeneeded = function (event) {
     const db = event.target.result;
     
-    if (!db.objectStoreNames.contains("historicDataStore")) {
-        db.createObjectStore("historicDataStore", { keyPath: "id", autoIncrement: true });
+    if (!db.objectStoreNames.contains("historicData")) {
+        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
     }
 };
 
@@ -410,8 +411,8 @@ openDBRequest.onsuccess = function (event) {
     document.getElementById("save-button").addEventListener("click", () => {
         const dataHTML = document.getElementById("data").innerHTML;
         
-        const transaction = db.transaction(["historicDataStore"], "readwrite");
-        const store = transaction.objectStore("historicDataStore");
+        const transaction = db.transaction(["historicData"], "readwrite");
+        const store = transaction.objectStore("historicData");
         const titel = document.getElementById("zoekwoord").innerText;
         
         const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
@@ -419,7 +420,6 @@ openDBRequest.onsuccess = function (event) {
         store.add(newData);
         
         transaction.oncomplete = () => {
-            console.log("Data saved to IndexedDB.");
             loadStoredData();
         };
     });
@@ -427,8 +427,8 @@ openDBRequest.onsuccess = function (event) {
 
 // Function to load and display stored data automatically
 function loadStoredData() {
-    const transaction = openDBRequest.result.transaction(["historicDataStore"], "readonly");
-    const store = transaction.objectStore("historicDataStore");
+    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
+    const store = transaction.objectStore("historicData");
 
     const getDataRequest = store.getAll();
 
@@ -468,7 +468,6 @@ function loadStoredData() {
             console.log("Data loaded from IndexedDB.");
         } else if (getDataRequest.readyState === "done" && historicData.length === 0) {
             dataList.innerHTML = "<p>Op dit moment heb je nog geen data opgeslagen.</p>";
-            console.log("No data found in IndexedDB.");
         }
     };
 }
@@ -477,12 +476,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 openDBRequest.onerror = function (event) {
-    console.error("Error opening IndexedDB:", event.target.error);
+    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
 };
 
 function viewData(id) {
-    const transaction = openDBRequest.result.transaction(["historicDataStore"], "readonly");
-    const store = transaction.objectStore("historicDataStore");
+    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
+    const store = transaction.objectStore("historicData");
     
     const getDataRequest = store.get(id);
     
@@ -500,13 +499,12 @@ function viewData(id) {
 }
 
 function deleteData(id) {
-    const transaction = openDBRequest.result.transaction(["historicDataStore"], "readwrite");
-    const store = transaction.objectStore("historicDataStore");
+    const transaction = openDBRequest.result.transaction(["historicData"], "readwrite");
+    const store = transaction.objectStore("historicData");
     
     const deleteRequest = store.delete(id);
     
     deleteRequest.onsuccess = function () {
-        console.log(`Data with ID ${id} deleted.`);
         loadStoredData();
     };
 }

@@ -27,29 +27,9 @@ if (login_storage) {
     password = api_login;
 }
 
-    
-// Alert voor meer dan 10.000 zoekwoorden
-let showAlert = true;
-function showMaxWordCountAlert(mixedKeywords) {
-    const string = mixedKeywords.toString();
-    const newlineIndex = string.indexOf('\n');
-    const eerste_zoekwoord = string.substring(0, newlineIndex);
-    if (showAlert) {
-        if (document.documentElement.lang === 'nl') {
-            window.alert('In Google Ads kun je maximaal 10.000 woorden plakken, pas de zoekwoordlijst met als eerste zoekwoord "' + eerste_zoekwoord + '" aan!');
-        } else if (document.documentElement.lang === 'en') {
-            window.alert('You can only paste up to 10.000 keywords in Google Ads, change the keyword list with the first keyword "' + eerste_zoekwoord + '" aan!');
-        }
-        showAlert = false;
-    }
-}
-
 // Functie Length
 function getLength(mixedKeywords) {
     const string = mixedKeywords.toString();
-    if (string.split('\n').length >= 10000) {
-        showMaxWordCountAlert(mixedKeywords);
-    }
     if (document.documentElement.lang === 'nl') {
         return new String(`${string.split('\n').length} Zoekwoorden`);
     } else if(document.documentElement.lang === 'en') {
@@ -631,6 +611,7 @@ async function mixLists(login_storage, login, password, api_login) {
             }
 
             const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
+            console.log(numRequests);
             for (let i = 0; i < numRequests; i++) {
                 const startIndex = i * max_keywords;
                 const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
