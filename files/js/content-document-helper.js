@@ -3,9 +3,17 @@
 let mixedKeywordsArray = [];
 let taskIds = [];
 let keywords = [];
+
+// Ophalen van localstorage
+function getLocalStorage(name) {
+    const localStorageValue = localStorage.getItem(name);
+    return localStorageValue ? localStorageValue : '';
+}
+
+// login form
+// Login met DataForSEO
 let login;
 let password;
-let api_methode;
 let parsed_login_storage;
 let login_storage = getLocalStorage("userData");
 let email_login = document.getElementById("inputEmail").value;
@@ -19,57 +27,34 @@ if (login_storage) {
     password = api_login;
 }
 
-// Ophalen van localstorage
-function getLocalStorage(name) {
-    const localStorageValue = localStorage.getItem(name);
-    return localStorageValue ? localStorageValue : '';
-}
-
-// login form
 const modal = document.getElementById("loginModal");
-const button = document.querySelector("#inlog_knop");
-const span = document.getElementsByClassName("btn-close")[0];
+const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const logoutButton = document.getElementById("logoutButton");
+const welcomeText = document.getElementById("welcomeText");
 const rememberme = document.getElementById("rememberMe");
-window.onload = inlogUpdate(login_storage, login, password, email_login, api_login);
+const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
-function inlogUpdate(login_storage, login, password, email_login, api_login) {
-    const ingelogd = document.getElementById("ingelogd");
-    const ingelogd_text = document.getElementById("ingelogd_text");
-    const login_email_veld = document.getElementById("inputEmail");
-    const login_api_veld = document.getElementById("inputAPI");
-    if (login_storage) {
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
-        login_email_veld.value = login;
-        login_api_veld.value = password;
-        rememberme.checked = true;
-        fetchLocationLanguageData(login, password);
-    } else if (email_login != "") {
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
-        login_email_veld.value = email_login;
-        login_api_veld.value = api_login;
-        fetchLocationLanguageData(login, password);
-    } else {
-        ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
-        ingelogd_text.textContent = "Je bent op dit moment nog niet ingelogd!";
-    }
+function updateNavbar() {
+  if (login) {
+    loginLink.style.display = "none";
+    welcomeText.textContent = "Welkom, " + login;
+    logoutButtonContainer.style.display = "block";
+    fetchLocationLanguageData(login, password);
+  } else {
+    loginLink.style.display = "block";
+    welcomeText.textContent = '';
+    logoutButtonContainer.style.display = "none";
+  }
 }
 
-button.onclick = function() {
-    modal.style.display = "block";
+loginLink.onclick = function() {
+  modal.style.display = "block";
 };
 
-span.onclick = function() {
-    modal.style.display = "none";
-};
-
-// Store login and password in cookie
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        const userData = {
+        var userData = {
             email: document.getElementById("inputEmail").value,
             password: document.getElementById("inputAPI").value
         };
@@ -81,21 +66,19 @@ loginButton.onclick = function() {
     } else {
         login = document.getElementById("inputEmail").value;
         password = document.getElementById("inputAPI").value;
-        email_login = login;
-        api_login = password;
     }
-    inlogUpdate(login_storage, login, password, email_login, api_login);
+    updateNavbar();
     fetchLocationLanguageData(login, password);
 };
 
 logoutButton.onclick = function() {
-    document.getElementById("inputEmail").value = '';
-    document.getElementById("inputAPI").value = '';
-    rememberme.checked = false;
-    localStorage.removeItem('userData');
-    login_storage = '';
-    inlogUpdate(login_storage, login, password, email_login, api_login);
+  localStorage.removeItem('userData');
+  login = '';
+  password = '';
+  updateNavbar();
 };
+
+window.onload = updateNavbar();
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {

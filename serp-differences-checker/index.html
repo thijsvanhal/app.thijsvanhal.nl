@@ -77,8 +77,13 @@
       </button>
       <div class="navbar-collapse collapse" id="navContent">
         <ul class="navbar-nav ms-auto" id="second-menu">
+          <li class="nav-item" id="welcomeText">
+          </li>
+          <li class="nav-item" style="display: none;" id="logoutButtonContainer">
+            <button class="btn btn-primary secondbutton" id="logoutButton">Log uit</button>
+          </li>
           <li class="nav-item">
-            <a class="nav-link" id="inlog_knop" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</a>
+            <button class="btn btn-primary secondbutton" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</button>
           </li>
         </ul>
       </div>
@@ -105,7 +110,6 @@
               <label class="form-check-label" for="rememberMe">Onthouden</label>
             </div>
             <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
-            <button type="button" class="btn btn-primary secondbutton" id="logoutButton" data-bs-dismiss="modal">Log uit</button>
           </form>
         </div>
       </div>
@@ -149,7 +153,6 @@
       <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
   </div>
   <div class="container-sm" id="serps">
-    <p id="ingelogd_text"></p>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>

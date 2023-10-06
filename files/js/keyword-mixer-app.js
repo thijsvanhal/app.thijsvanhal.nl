@@ -11,21 +11,7 @@ let mixedKeywordsArray = [];
 let taskIds = [];
 let lineNames = [];
 let apiMethodes = [];
-let login;
-let password;
 let api_methode;
-let parsed_login_storage;
-let login_storage = getLocalStorage("userData");
-let email_login = document.getElementById("inputEmail").value;
-let api_login = document.getElementById("inputAPI").value;
-if (login_storage) {
-    parsed_login_storage = JSON.parse(login_storage);
-    login = parsed_login_storage.email;
-    password = parsed_login_storage.password;
-} else {
-    login = email_login;
-    password = api_login;
-}
 
 // Functie Length
 function getLength(mixedKeywords) {
@@ -474,47 +460,57 @@ function updateAccordion() {
     accordionLists.appendChild(rowContainer);
 }
 
-// login form
-var modal = document.getElementById("loginModal");
-var button = document.querySelector("#inlog_knop");
-var span = document.getElementsByClassName("btn-close")[0];
-var loginButton = document.getElementById("loginButton");
-var logoutButton = document.getElementById("logoutButton");
-var rememberme = document.getElementById("rememberMe");
-window.onload = inlogUpdate(login_storage, login, password, email_login, api_login);
-
-function inlogUpdate(login_storage, login, password, email_login, api_login) {
-    var ingelogd = document.getElementById("ingelogd");
-    var ingelogd_text = document.getElementById("ingelogd_text");
-    const login_email_veld = document.getElementById("inputEmail");
-    const login_api_veld = document.getElementById("inputAPI");
-    if (login_storage) {
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + login;
-        login_email_veld.value = login;
-        login_api_veld.value = password;
-        rememberme.checked = true;
-        fetchLocationLanguageData(login, password);
-    } else if (email_login != "") {
-        ingelogd.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
-        ingelogd_text.textContent = "Je bent op dit moment ingelogd met e-mail: " + email_login;
-        login_email_veld.value = email_login;
-        login_api_veld.value = api_login;
-    } else {
-        ingelogd.textContent = "Je bent op dit moment nog niet ingelogd!";
-        ingelogd_text.textContent = "Je bent op dit moment nog niet ingelogd!";
+// Functie voor ophalen van waardes van de lijst op basis van de lijst naam
+function getListValues(listName) {
+    for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === listName) {
+            return lists[i].values.join('\n');
+        }
     }
+    return '';
 }
 
-button.onclick = function() {
-    modal.style.display = "block";
+// Login met DataForSEO
+let login;
+let password;
+let parsed_login_storage;
+let login_storage = getLocalStorage("userData");
+let email_login = document.getElementById("inputEmail").value;
+let api_login = document.getElementById("inputAPI").value;
+if (login_storage) {
+    parsed_login_storage = JSON.parse(login_storage);
+    login = parsed_login_storage.email;
+    password = parsed_login_storage.password;
+} else {
+    login = email_login;
+    password = api_login;
+}
+
+const modal = document.getElementById("loginModal");
+const loginLink = document.getElementById("loginLink");
+const loginButton = document.getElementById("loginButton");
+const logoutButton = document.getElementById("logoutButton");
+const welcomeText = document.getElementById("welcomeText");
+const rememberme = document.getElementById("rememberMe");
+const logoutButtonContainer = document.getElementById("logoutButtonContainer");
+
+function updateNavbar() {
+  if (login) {
+    loginLink.style.display = "none";
+    welcomeText.textContent = "Welkom, " + login;
+    logoutButtonContainer.style.display = "block";
+    fetchLocationLanguageData(login, password);
+  } else {
+    loginLink.style.display = "block";
+    welcomeText.textContent = '';
+    logoutButtonContainer.style.display = "none";
+  }
+}
+
+loginLink.onclick = function() {
+  modal.style.display = "block";
 };
 
-span.onclick = function() {
-    modal.style.display = "none";
-};
-
-// Store login and password in cookie
 loginButton.onclick = function() {
     if (rememberme.checked) {
         var userData = {
@@ -529,21 +525,72 @@ loginButton.onclick = function() {
     } else {
         login = document.getElementById("inputEmail").value;
         password = document.getElementById("inputAPI").value;
-        email_login = login;
-        api_login = password;
     }
-    inlogUpdate(login_storage, login, password, email_login, api_login);
+    updateNavbar();
     fetchLocationLanguageData(login, password);
 };
 
 logoutButton.onclick = function() {
-    document.getElementById("inputEmail").value = '';
-    document.getElementById("inputAPI").value = '';
-    document.getElementById("ingelogd_text").textContent = '';
-    rememberme.checked = false;
-    localStorage.removeItem('userData');
-    login_storage = '';
-    inlogUpdate(login_storage, login, password, email_login, api_login);
+  localStorage.removeItem('userData');
+  login = '';
+  password = '';
+  updateNavbar();
+};
+
+window.onload = updateNavbar();
+
+function calculateCost(lines) {
+    let totalCost = 0;
+
+    for (const line of lines) {
+        const values = line.split(",");
+        
+        if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
+            var max_keywords = 20;
+        } else {
+            var max_keywords = 1000;
+        }
+        document.getElementById("optional-list-mix").checked = values[1] === "1";
+        if (values[0] !== "0" && values[0] !== "1") {
+            document.getElementById("lijst-1").value = getListValues(values[0]);
+        } else {
+            document.getElementById("lijst-1").value = getListValues(values[2]);
+        }
+        document.getElementById("lijst-2").value = getListValues(values[3]);
+        document.getElementById("optional-list-2").checked = values[4] === "1";
+        document.getElementById("lijst-3").value = getListValues(values[5]);
+        document.getElementById("optional-list-3").checked = values[6] === "1";
+        updateMixer();
+        const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
+        const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
+        totalCost += numRequests * 0.05;
+    }
+    return new Promise((resolve) => {
+        const confirmPopup = document.getElementById("popup");
+        const costSpan = document.getElementById("cost");
+
+        costSpan.textContent = `$${totalCost.toFixed(2)}`;
+        confirmPopup.style.display = "block";
+
+        const hideConfirmation = () => {
+            confirmPopup.style.display = "none";
+        };
+
+        const cancelButton = document.getElementById("cancel");
+        cancelButton.addEventListener("click", hideConfirmation);
+
+        const confirm = document.getElementById("confirm");
+        confirm.removeEventListener("click", hideConfirmation);
+        confirm.addEventListener("click", async () => {
+            hideConfirmation();
+            resolve();
+        });
+    });
+}
+
+const error_sluiten_knop = document.querySelector("#error-modal .btn-close");
+error_sluiten_knop.onclick = function() {
+    document.getElementById("error-modal").style.display = "none";
 };
 
 // Mixen van bulk lijsten
@@ -558,16 +605,11 @@ async function mixLists(login_storage, login, password, api_login) {
     const inputTextarea = document.getElementById("bulk-input");
     const statusElement = document.querySelector('.bulk-mixer-status');
     const lines = inputTextarea.value.split("\n");
+    await calculateCost(lines);
 
     if (!api_login && login_storage === "") {
         window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
     } else {
-        const confirmed = confirm("Weet je zeker dat je een API call gaat maken? Dit kost geld!");
-  
-        if (!confirmed) {
-        return;
-        }
-
         for (const line of lines) {
             const checkvalues = line.split(",");
             const checknonEmptyValues = checkvalues.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
@@ -611,7 +653,7 @@ async function mixLists(login_storage, login, password, api_login) {
             }
 
             const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
-            console.log(numRequests);
+            
             for (let i = 0; i < numRequests; i++) {
                 const startIndex = i * max_keywords;
                 const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
@@ -632,7 +674,7 @@ async function mixLists(login_storage, login, password, api_login) {
                     api_methode = "search_volume";
                 }
                 apiMethodes.push(api_methode);
-                const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
+                const post_url = `https://sandbox.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
                 const requestPostOptions = {
                     method: 'POST',
                     headers: {
@@ -645,8 +687,21 @@ async function mixLists(login_storage, login, password, api_login) {
                 const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
                 const post_result = await post_response.json();
                 console.log(post_result.tasks);
-                lineNames.push(nonEmptyValues.join(" + "));
-                taskIds.push(post_result.tasks[0].id);
+                const status = post_result.tasks[0].status_code;
+                if (status === 20100) {
+                    lineNames.push(nonEmptyValues.join(" + "));
+                    taskIds.push(post_result.tasks[0].id);
+                } else {
+                    const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+                    error_modal.show();
+                    document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b> <br><br> De tool gaat verder maar je zult rijtje <b>${nonEmptyValues.join(" + ")}</b> moeten controleren en later opnieuw moeten ophalen!</p>`;
+                    const modalClosedPromise = new Promise((resolve) => {
+                        error_modal._element.addEventListener("hidden.bs.modal", function () {
+                            resolve();
+                        }, { once: true });
+                    });
+                    await modalClosedPromise;
+                }
             }
         }
 
@@ -694,7 +749,7 @@ async function fetchData(taskId, login, password, getApiMethode) {
                 'Authorization': 'Basic ' + btoa(login + ':' + password)
             }
         };
-        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
+        const get_url = `https://sandbox.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
         const get_response = await fetch(get_url, requestGetOptions);
         const get_result = await get_response.json();
         console.log(get_result.tasks);
@@ -702,7 +757,7 @@ async function fetchData(taskId, login, password, getApiMethode) {
         if (status === 'Ok.') {
             fetchResults = get_result.tasks[0].result;
         } else {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
         }
     }
     return fetchResults;
@@ -773,16 +828,6 @@ async function generateExcel() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-}  
-
-// Functie voor ophalen van waardes van de lijst op basis van de lijst naam
-function getListValues(listName) {
-    for (let i = 0; i < lists.length; i++) {
-        if (lists[i].name === listName) {
-            return lists[i].values.join('\n');
-        }
-    }
-    return '';
 }
 
 // Language & location
@@ -878,4 +923,45 @@ async function fetchLocationLanguageData(login, password) {
     const defaultLanguage = 'Dutch';
     locationSelect.value = defaultLocation;
     languageSelect.value = defaultLanguage;
+}
+
+// Data ophalen op basis van taskId's in html form.
+async function getData (login, password) {
+    mixedKeywordsArray = [];
+    const taskIdsInput = document.getElementById('bulk-get-data').value.split("\n");
+    const taskIds = [];
+    const apiMethodes = [];
+
+    for (let i = 0; i < taskIdsInput.length; i++) {
+        const line = taskIdsInput[i];
+    
+        const slash = line.split("/");
+        const space = line.split("\t");
+
+        const taskId = space[0];
+        const api_methode = slash[3];
+        taskIds.push(taskId);
+        apiMethodes.push(api_methode);
+
+        const getApiMethode = apiMethodes[i];
+        const results = await fetchData(taskId, login, password, getApiMethode);
+        console.log(results);
+        const keywords = [];
+        const searchVolumes = [];
+        for (const result of results) {
+            keywords.push(result.keyword);
+            if (result.search_volume !== null) {
+                var SearchVolume = result.search_volume;
+            } else {
+                var SearchVolume = 0;
+            }
+            searchVolumes.push(SearchVolume);
+        }
+        mixedKeywordsArray.push({
+            line: taskIds[i],
+            mixedKeywords: keywords,
+            searchVolume: searchVolumes
+        });
+    }
+    generateExcel();
 }
