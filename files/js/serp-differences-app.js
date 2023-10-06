@@ -339,98 +339,104 @@ function calculateSimilarity(results1, results2, results3) {
 }
 
 // Language & location
-async function fetchLocationLanguageData(login, password) {   
+async function fetchLocationLanguageData(login, password) {
     const locationRequestOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa(login + ':' + password)
-        }
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(login + ':' + password)
+      }
     };
+  
     const locationUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/locations';
     const locationResponse = await fetch(locationUrl, locationRequestOptions);
     const locationData = await locationResponse.json();
     const locationEntries = locationData.tasks[0].result;
-
+  
     const desiredCountries = ['Netherlands', 'Belgium'];
     const filteredLocationEntries = locationEntries.filter(location => {
-        return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
-      });
-
-    const locationOptions = filteredLocationEntries.map(location => location.location_name);
-    const locationSelect = document.getElementById('location-option');
-    locationOptions.forEach(location => {
-        const option = document.createElement('option');
-        option.value = location;
-        option.text = location;
-        locationSelect.appendChild(option);
+      return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
   
+    const locationOptions = filteredLocationEntries.map(location => location.location_name);
+    const locationDropdown = document.getElementById('location-dropdown');
+    createCustomDropdown(locationDropdown, 'location-options', 'search-location', locationOptions);
+  
     const languageRequestOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa(login + ':' + password)
-        }
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa(login + ':' + password)
+      }
     };
+  
     const languageUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/languages';
     const languageResponse = await fetch(languageUrl, languageRequestOptions);
     const languageData = await languageResponse.json();
     const languageOptions = languageData.tasks[0].result.map(language => language.language_name);
   
-    const languageSelect = document.getElementById('language-option');
-    languageOptions.forEach(language => {
-        const option = document.createElement('option');
-        option.value = language;
-        option.text = language;
-        languageSelect.appendChild(option);
-    });
-
-    var locationOptionsForm = document.getElementById('location-option').getElementsByTagName('option');
-    var originalLocationOptions = [...locationOptionsForm];
-
-    var searchLocationInput = document.getElementById('search-location');
-    searchLocationInput.addEventListener('input', function () {
-        var filter = searchLocationInput.value.toLowerCase();
-
-        locationOptionsForm = [...originalLocationOptions]; // Reset options
-
-        var matchedLocationOptions = locationOptionsForm.filter(function (option) {
-            return option.text.toLowerCase().indexOf(filter) > -1;
-        });
-
-        var locationSelect = document.getElementById('location-option');
-        locationSelect.innerHTML = '';
-
-        matchedLocationOptions.forEach(function (option) {
-            locationSelect.appendChild(option);
-        });
-    });
-
-    var languageOptionsForm = document.getElementById('language-option').getElementsByTagName('option');
-    var originalLanguageOptions = [...languageOptionsForm];
-
-    var searchLanguageInput = document.getElementById('search-language');
-    searchLanguageInput.addEventListener('input', function () {
-        var filter = searchLanguageInput.value.toLowerCase();
-
-        languageOptionsForm = [...originalLanguageOptions];
-
-        var matchedLanguageOptions = languageOptionsForm.filter(function (option) {
-            return option.text.toLowerCase().indexOf(filter) > -1;
-        });
-
-        var languageSelect = document.getElementById('language-option');
-        languageSelect.innerHTML = '';
-
-        matchedLanguageOptions.forEach(function (option) {
-            languageSelect.appendChild(option);
-        });
-    });
+    const languageDropdown = document.getElementById('language-dropdown');
+    createCustomDropdown(languageDropdown, 'language-options', 'search-language', languageOptions);
+  
     const defaultLocation = 'Netherlands';
     const defaultLanguage = 'Dutch';
-    locationSelect.value = defaultLocation;
-    languageSelect.value = defaultLanguage;
+  
+    document.querySelector('#location-dropdown input').value = defaultLocation;
+    document.querySelector('#language-dropdown input').value = defaultLanguage;
+}
+
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('.custom-dropdown')) {
+        closeOptions();
+    }
+});
+
+function closeOptions () {
+    const dropdowns = document.querySelectorAll('.custom-dropdown .dropdown-options');
+    dropdowns.forEach((dropdown) => {
+        dropdown.classList.remove('open');
+    });
+}
+
+function createCustomDropdown(dropdown, optionsId, searchInputId, data) {
+    const dropdownOptions = document.getElementById(optionsId);
+    const searchInput = document.getElementById(searchInputId);
+  
+    data.forEach(optionText => {
+        const option = document.createElement('li');
+        option.textContent = optionText;
+        option.dataset.value = optionText;
+        dropdownOptions.appendChild(option);
+    
+        option.addEventListener('click', () => {
+            document.querySelector(`#${dropdown.id} input`).value = optionText;
+            closeOptions();
+        });
+    });
+  
+    // Show/hide dropdown on input focus
+    searchInput.addEventListener('focus', () => {
+        document.getElementById(searchInputId).value = '';
+        const options = document.getElementById(optionsId);
+        options.classList.add('open');
+        filterOptions(optionsId, '')
+    });
+  
+    searchInput.addEventListener('input', () => {
+      filterOptions(optionsId, searchInput.value.toLowerCase());
+    });
+}
+  
+function filterOptions(optionsId, filter) {
+    const options = document.querySelectorAll(`#${optionsId} li[data-value]`);
+    options.forEach(option => {
+      const optionText = option.dataset.value.toLowerCase();
+      if (optionText.includes(filter)) {
+        option.style.display = 'block';
+      } else {
+        option.style.display = 'none';
+      }
+    });
 }
 
 // Function to handle the click event on common results

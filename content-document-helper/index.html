@@ -127,17 +127,19 @@
     <div class="row">
       <div class="col-sm">
         <h3>Locatie</h3>
-        <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
-        <select class="form-select" id="location-option">
-          <option selected>Selecteer de locatie</option>
-        </select>
+        <div class="custom-dropdown" id="location-dropdown">
+          <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+          <ul class="dropdown-options" id="location-options">
+          </ul>
+        </div>
       </div>
       <div class="col-sm">
         <h3>Taal</h3>
-        <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
-        <select class="form-select" id="language-option">
-          <option selected>Selecteer de taal</option>
-        </select>
+        <div class="custom-dropdown" id="language-dropdown">
+          <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+          <ul class="dropdown-options" id="language-options">
+          </ul>
+        </div>
       </div>
     </div>
     <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Genereer data</button>
