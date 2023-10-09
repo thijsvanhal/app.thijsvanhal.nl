@@ -8,6 +8,13 @@ let aantal_properties
 let allData = [];
 let dimensions = [];
 
+const loginLink = document.getElementById("loginLink");
+const welcomeText = document.getElementById("welcomeText");
+
+loginLink.onclick = function() {
+  initClient();
+};
+
 // Datum selecties
 var today = new Date();
 var beginDate = new Date(today.getFullYear(), today.getMonth() - 16, today.getDate());
@@ -27,6 +34,7 @@ async function initClient() {
       access_token = tokenResponse.access_token;
       localStorage.setItem('access_token', access_token);
       listSites();
+      updateNavbar();
     },
   });
   client.requestAccessToken();
@@ -58,45 +66,69 @@ async function listSites() {
     aantal_properties = siteEntries.length;
     getUserInfo();
 
-    var select = document.getElementById('all-sites');
-    select.innerHTML = '';
-
-    var standardOption = document.createElement('option');
-    standardOption.value = '';
-    standardOption.text = 'Selecteer het property';
-    standardOption.selected = true;
-    select.appendChild(standardOption);
-
-    siteEntries.forEach((siteEntry) => {
-      var option = document.createElement('option');
-      option.value = siteEntry.siteUrl;
-      option.text = siteEntry.siteUrl;
-      select.appendChild(option);
-    });
-
-    var options = select.getElementsByTagName('option');
-    var originalOptions = [...options];
-
-    var searchInput = document.getElementById('searchproperty');
-    searchInput.addEventListener('input', function () {
-      var filter = searchInput.value.toLowerCase();
-
-      select.innerHTML = '';
-
-      var matchedOptions = originalOptions.filter(function (option) {
-        return option.text.toLowerCase().indexOf(filter) > -1;
-      });
-
-      matchedOptions.forEach(function (option) {
-        select.appendChild(option);
-      });
-
-      select.selectedIndex = 0;
-    });
+    const originalOptions = [...siteEntries];
+    console.log(originalOptions);
+    const propertyDropdown = document.getElementById('property-dropdown');
+    createCustomDropdown(propertyDropdown, 'all-sites', 'searchproperty', originalOptions.map(option => option.siteUrl));
+    
   } else {
     const errorData = await response.json();
     window.alert('Error: ' + errorData.error.message + ' . Neem contact op met de developer!');
   }
+}
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.custom-dropdown')) {
+      closeOptions();
+  }
+});
+
+function closeOptions () {
+  const dropdowns = document.querySelectorAll('.custom-dropdown .dropdown-options');
+  dropdowns.forEach((dropdown) => {
+      dropdown.classList.remove('open');
+  });
+}
+
+function createCustomDropdown(dropdown, optionsId, searchInputId, data) {
+  const dropdownOptions = document.getElementById(optionsId);
+  const searchInput = document.getElementById(searchInputId);
+
+  data.forEach(optionText => {
+      const option = document.createElement('li');
+      option.textContent = optionText;
+      option.dataset.value = optionText;
+      dropdownOptions.appendChild(option);
+  
+      option.addEventListener('click', () => {
+          document.querySelector(`#${dropdown.id} input`).value = optionText;
+          closeOptions();
+      });
+  });
+
+  // Show/hide dropdown on input focus
+  searchInput.addEventListener('focus', () => {
+      document.getElementById(searchInputId).value = '';
+      const options = document.getElementById(optionsId);
+      options.classList.add('open');
+      filterOptions(optionsId, '')
+  });
+
+  searchInput.addEventListener('input', () => {
+    filterOptions(optionsId, searchInput.value.toLowerCase());
+  });
+}
+
+function filterOptions(optionsId, filter) {
+  const options = document.querySelectorAll(`#${optionsId} li[data-value]`);
+  options.forEach(option => {
+    const optionText = option.dataset.value.toLowerCase();
+    if (optionText.includes(filter)) {
+      option.style.display = 'block';
+    } else {
+      option.style.display = 'none';
+    }
+  });
 }
 
 async function getData() {
@@ -246,8 +278,9 @@ function downloadExcelFile() {
 }
 
 function updateInformation(data) {
-  naam.innerHTML = 'Hi ' + data.name + '!';
-  login_info.innerHTML = `Met ${data.email} heb je toegang tot ${aantal_properties} properties. Van welke wil je data ophalen? Zoek een property of selecteer handmatig.`;
-  login_button.style = "display:none";
-  login_header.style = "display:none";
+  loginLink.style.display = "none";
+  welcomeText.textContent = "Welkom, " + data.name;
 }
+
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))

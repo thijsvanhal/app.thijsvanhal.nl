@@ -77,29 +77,39 @@
       </button>
       <div class="navbar-collapse collapse" id="navContent">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/regex-builder/">RegEx Builder</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Google Search Console
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
+              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/keyword-mixer/">Keyword Mixer</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Zoekwoorden
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/keyword-mixer/">Keyword Mixer</a></li>
+              <li><a class="dropdown-item" href="/keyword-wrapper/">Keyword Wrapper</a></li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/keyword-wrapper/">Keyword Wrapper</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/google-search-console-extractor/">Google Search Console Extractor</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/serp-differences-checker/">SERP Differences Checker</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/content-document-helper/">Content Document Helper</a></li>
+              <li><a class="dropdown-item" href="/serp-differences-checker/">SERP Differences Checker</a></li>
+            </ul>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   <div class="container-sm" id="top-container">
-    <p>Op zoek naar handige apps voor online marketing? Gebruik onderstaande gratis apps :)</p>
-  </div>
-  <div class="container-sm">
     <h2>Tools voor Google Search Console</h2>
     <div class="row" id="row">
       <div class="col-sm" id="pad-col">
@@ -120,9 +130,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col col-sm-6" id="pad-col">
+      <div class="col-sm" id="pad-col">
         <div class="card">
           <div class="card-body d-flex flex-column">
             <h2 class="card-title">Google Search Console Date Selector</h2>
@@ -136,7 +144,7 @@
   <div class="container-sm">
     <h2>Tools voor zoekwoorden</h2>
     <div class="row" id="row">
-      <div class="col-sm" id="pad-col">
+      <div class="col col-sm-4" id="pad-col">
         <div class="card">
           <div class="card-body d-flex flex-column">
             <h2 class="card-title">Keyword Mixer</h2>
@@ -145,7 +153,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm" id="pad-col">
+      <div class="col col-sm-4" id="pad-col">
         <div class="card">
           <div class="card-body d-flex flex-column">
             <h2 class="card-title">Keyword Wrapper</h2>
@@ -154,9 +162,22 @@
           </div>
         </div>
       </div>
+      
     </div>
-    <div class="row">
-      <div class="col col-sm-6" id="pad-col">
+  </div>
+  <div class="container-sm">
+    <h2>Tools voor content</h2>
+    <div class="row" id="row">
+      <div class="col col-sm-4" id="pad-col">
+        <div class="card">
+          <div class="card-body d-flex flex-column">
+            <h2 class="card-title">Content document helper</h2>
+            <p class="card-text">Verkrijg data voor je content document.</p>
+            <a href="/content-document-helper/" class="btn btn-primary mt-auto">Naar tool</a>
+          </div>
+        </div>
+      </div>
+      <div class="col col-sm-4" id="pad-col">
         <div class="card">
           <div class="card-body d-flex flex-column">
             <h2 class="card-title">SERP Differences Checker</h2>
@@ -168,21 +189,6 @@
     </div>
   </div>
   <div class="container-sm">
-    <h2>Tools voor content</h2>
-    <div class="row" id="row">
-      <div class="col col-sm-6" id="pad-col">
-        <div class="card">
-          <div class="card-body d-flex flex-column">
-            <h2 class="card-title">Content document helper</h2>
-            <p class="card-text">Verkrijg data voor je content document.</p>
-            <a href="/content-document-helper/" class="btn btn-primary mt-auto">Naar tool</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container-sm">
-    <br>
     <p>Deze tools zijn als hobby projecten gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>

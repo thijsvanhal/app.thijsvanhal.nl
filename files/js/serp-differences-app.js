@@ -463,19 +463,6 @@ function handleResultClick(event) {
     }
 }
 
-function showNotification(message, duration) {
-    const notification = document.createElement('div');
-    notification.classList.add('notification');
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, duration);
-}
-
 //Database
 const dbName = "historicDataSDC";
 const dbVersion = 1;
@@ -512,7 +499,9 @@ openDBRequest.onsuccess = function (event) {
         store.add(newData);
         
         transaction.oncomplete = () => {
-            showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
+            const successToast = document.getElementById("success-toast");
+            const bootstrapToast = new bootstrap.Toast(successToast);
+            bootstrapToast.show();
         };
         document.getElementById("save-button").style = "width: auto; display:none;";
     });

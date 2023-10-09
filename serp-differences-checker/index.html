@@ -76,6 +76,36 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navContent">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Google Search Console
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
+              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Zoekwoorden
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/keyword-mixer/">Keyword Mixer</a></li>
+              <li><a class="dropdown-item" href="/keyword-wrapper/">Keyword Wrapper</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/content-document-helper/">Content Document Helper</a></li>
+              <li><a class="dropdown-item" href="/serp-differences-checker/">SERP Differences Checker</a></li>
+            </ul>
+          </li>
+        </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
           <li class="nav-item" id="welcomeText">
           </li>
@@ -97,7 +127,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
         <div class="modal-body">
-          <p id="ingelogd"></p>
           <form>
             <div class="mb-3">
               <input type="email" class="form-control" id="inputEmail" placeholder="Email">
@@ -173,6 +202,19 @@
     <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/serp-differences-checker/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
   </div>
   <div class="container-sm" id="serps">
+  </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="/files/images/favicon/favicon-32x32.png" class="rounded me-2">
+        <strong class="me-auto">app.thijsvanhal.nl</strong>
+        <small>nu</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <p style="margin-bottom: 0px;">De data is opgeslagen en kun je nu bekijken!</p>
+      </div>
+    </div>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>

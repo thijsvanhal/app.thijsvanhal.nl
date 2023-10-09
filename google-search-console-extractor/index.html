@@ -73,34 +73,78 @@
   <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse" id="navContent">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Google Search Console
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
+              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Zoekwoorden
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/keyword-mixer/">Keyword Mixer</a></li>
+              <li><a class="dropdown-item" href="/keyword-wrapper/">Keyword Wrapper</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/content-document-helper/">Content Document Helper</a></li>
+              <li><a class="dropdown-item" href="/serp-differences-checker/">SERP Differences Checker</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto" id="second-menu">
+          <li class="nav-item" id="welcomeText">
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary secondbutton" id="loginLink">Log in</button>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
   <div class="container-sm" id="top-container">
-    <h2 id="login-header">Login met Google</h2>
-    <button type="button" class="btn btn-primary" id="login-button" onclick="initClient()">Login</button>
-    <h2 id="naam"></h2>
-    <p id="login-info"></p>
-  </div>
-  <div class="container-sm" id="keyword-container">
-    <h2>Selecteer een property</h2>
-    <input type="text" placeholder="Zoek property" class="form-control" id="searchproperty" data-np-intersection-state="visible">
-    <select class="form-select" id="all-sites">
-        <option selected>Selecteer het property</option>
-    </select>
-  </div>
-  <div class="container-sm" id="keyword-container">
-    <h2>Selecteer start- en einddatum</h2>
+    <h1>Google Search Console Extractor</h1>
+    <p>Met de Google Search Console Extractor haal je gemakkelijk data op met door middel van de Google Search Console API.</p>
     <div class="row">
+      <div class="col col-lg-6">
+        <div class="custom-dropdown" id="property-dropdown">
+          <form class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="searchproperty" data-np-intersection-state="visible">
+            <label for="searchproperty">Selecteer property</label>
+          </form>
+          <ul class="dropdown-options" id="all-sites">
+          </ul>
+        </div>
+      </div>
       <div class="col-sm" id="pad-col">
-        <label for="start-date">Wat is de startdatum?</label>
-        <input id="start-date" class="form-control" type="date" min="yyyy-mm-dd"/>  
+        <form class="form-floating">
+          <input id="start-date" class="form-control" type="date" min="yyyy-mm-dd"/>  
+          <label for="start-date">Selecteer startdatum</label>
+        </form>
       </div>
       <div class="col-sm">
-        <label for="end-date">Wat is de einddatum?</label>
-        <input id="end-date" class="form-control" type="date" max="yyyy-mm-dd"/>
+        <form class="form-floating">
+          <input id="end-date" class="form-control" type="date" max="yyyy-mm-dd"/>
+          <label for="end-date">Wat is de einddatum?</label>
+        </form>
       </div>
     </div>
-  </div>
+  </div>   
   <div class="container-sm" id="keyword-container">
     <h2>Stel de dimensies in</h2>
     <p>De dimensies zijn de kolommen die de tool ophaalt. Kies je enkel pagina's? Dan krijg je de performance per pagina. Kies je enkel zoekwoorden? Dan krijg je de performance per zoekwoord. Kies je pagina en zoekwoord? Dan zie je de performance per zoekwoord, gekoppeld aan de desbetreffende pagina. Dan heb je ook nog de mogelijkheid om de performance te splitsen tussen mobiel en desktop apparaat voor specifieke analyses.</p>
@@ -118,41 +162,45 @@
     </div>
   </div>
   <div class="container-sm" id="keyword-container">
-    <div class="row">
-      <div class="col col-sm-6">
-        <h2>Stel de type resultaten in</h2>
-        <select class="form-select" id="type-results">
-          <option value="web" selected>Web</option>
-          <option value="discover">Discover</option>
-          <option value="googleNews">News (tab)</option>
-          <option value="news">News (news.google.com)</option>
-          <option value="image">Afbeeldingen</option>
-          <option value="video">Video</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="container-sm" id="keyword-container">
     <h2>Stel een filter in (optioneel)</h2>
     <div class="callout"><div class="body-text"><b>Tip! </b>Met de <a href="/regex-builder/">RegEx builder</a> maak je gemakkelijk een reguliere expressie voor meerdere zoekwoorden of pagina's!</div></div>
     <div class="row">
       <div class="col-sm">
-        <select class="form-select" id="filter-type">
-          <option selected>Filter Type</option>
-          <option value="PAGE">Pagina</option>
-          <option value="QUERY">Zoekwoord</option>
-        </select>
+        <form class="form-floating">
+          <select class="form-select" id="type-results">
+            <option value="web" selected>Web</option>
+            <option value="discover">Discover</option>
+            <option value="googleNews">News (tab)</option>
+            <option value="news">News (news.google.com)</option>
+            <option value="image">Afbeeldingen</option>
+            <option value="video">Video</option>
+          </select>
+          <label for="type-results">Type resultaten</label>
+        </form>
       </div>
       <div class="col-sm">
-        <select class="form-select" id="filter-match">
-          <option selected>Filter Match</option>
-          <option value="CONTAINS">Bevat</option>
-          <option value="NOT_CONTAINS">Bevat niet</option>
-          <option value="EQUALS">Komt overeen met</option>
-          <option value="NOT_EQUALS">Komt niet overeen met</option>
-          <option value="INCLUDING_REGEX">Komt overeen met RegEx</option>
-          <option value="EXCLUDING_REGEX">Komt niet overeen met RegEx</option>
-        </select>
+        <form class="form-floating">
+          <select class="form-select" id="filter-type">
+            <option value>Open menu</option>
+            <option value="PAGE">Pagina</option>
+            <option value="QUERY">Zoekwoord</option>
+          </select>
+          <label for="filter-type">Filter Type</label>
+        </form>
+      </div>
+      <div class="col-sm">
+        <form class="form-floating">
+          <select class="form-select" id="filter-match">
+            <option value>Open menu</option>
+            <option value="CONTAINS">Bevat</option>
+            <option value="NOT_CONTAINS">Bevat niet</option>
+            <option value="EQUALS">Komt overeen met</option>
+            <option value="NOT_EQUALS">Komt niet overeen met</option>
+            <option value="INCLUDING_REGEX">Komt overeen met RegEx</option>
+            <option value="EXCLUDING_REGEX">Komt niet overeen met RegEx</option>
+          </select>
+          <label for="filter-match">Filter Match</label>
+        </form>
       </div>
     </div>
     <input type="text" class="form-control" id="filter" placeholder="Filter waarde: zoekwoord, pagina of RegEx">
@@ -160,13 +208,6 @@
   <div class="container-sm" id="keyword-container">
     <button type="button" class="btn btn-primary" onclick="getData()">Data ophalen</button>
     <div class="status"></div>
-  </div>
-  <div class="container-sm" id="keyword-container">
-    <h1>Google Search Console Extractor</h1>
-    <p>Met de Google Search Console Extractor haal je gemakkelijk data op met door middel van de Google Search Console API.</p>
-    <h2>Hoe werkt de tool?</h2>
-    <p>Vrij simpel. Je logt namelijk in met Google, selecteert een property, datum range &eacute;n eventuele filter en klikt vevolgens op 'Data ophalen' !</p>
-    <p>De tool gaat de data voor je ophalen en er wordt automatisch een Excel bestand gedownload met alle data, happy analyzing!</p>
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
