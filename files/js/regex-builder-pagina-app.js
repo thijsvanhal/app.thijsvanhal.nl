@@ -3,11 +3,11 @@
 // Functie GSC 
 function generateRegexGSC(values) {
     function extractBaseUrl(url) {
-      let index = url.indexOf('/', 8);
-      if (index === -1) {
-        index = url.length;
-      }
-      return url.substring(0, index);
+        let index = url.indexOf('/', 8);
+        if (index === -1) {
+            index = url.length;
+        }
+        return url.substring(0, index);
     }
     const domain = extractBaseUrl(values);
     const inputs = values.split('\n').map(input => {
@@ -37,21 +37,13 @@ function generateRegexGA(values) {
 // Functie Length GSC
 function getLengthGSC(regexgsc) {
     const string = regexgsc.toString()
-    if (document.documentElement.lang === 'nl') {
-        return new String(`${string.length} Tekens`);
-    } else if(document.documentElement.lang === 'en') {
-        return new String(`${string.length} Characters`);
-    }
+    return new String(`${string.length} Tekens`);
 }
 
 // Functie Length GA
 function getLengthGA(regexga) {
     const string = regexga.toString()
-    if (document.documentElement.lang === 'nl') {
-        return new String(`${string.length} Tekens`);
-    } else if(document.documentElement.lang === 'en') {
-        return new String(`${string.length} Characters`);
-    }
+    return new String(`${string.length} Tekens`);
 }
 
 // Functie Date
@@ -63,17 +55,10 @@ function getDate() {
     const previousEndDate = new Date(endDate.getTime() - timeDiff - (1000 * 60 * 60 * 24));
     const previousStartDateString = previousStartDate.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const previousEndDateString = previousEndDate.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    if (document.documentElement.lang === 'nl') {
-        const DateOutputFirst = new String(`De vorige startdatum is ${previousStartDateString}`);
-        const DateOutputSecond = new String(`De vorige einddatum is ${previousEndDateString}`);
-        const resultDate = document.getElementById('date-text');
-        resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
-    } else if(document.documentElement.lang === 'en') {
-        const DateOutputFirst = new String(`The previous start date is ${previousStartDateString}`);
-        const DateOutputSecond = new String(`The previous end date is ${previousEndDateString}`);
-        const resultDate = document.getElementById('date-text');
-        resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
-    }
+    const DateOutputFirst = new String(`De vorige startdatum is ${previousStartDateString}`);
+    const DateOutputSecond = new String(`De vorige einddatum is ${previousEndDateString}`);
+    const resultDate = document.getElementById('date-text');
+    resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'datum_gegenereerd'});
 }

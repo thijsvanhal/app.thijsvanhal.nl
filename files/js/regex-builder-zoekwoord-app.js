@@ -17,21 +17,13 @@ function generateRegexExact(values) {
 // Functie Length GSC
 function getLengthBevat(regexBevat) {
     const string = regexBevat.toString()
-    if (document.documentElement.lang === 'nl') {
-        return new String(`${string.length} Tekens`);
-    } else if(document.documentElement.lang === 'en') {
-        return new String(`${string.length} Characters`);
-    }
+    return new String(`${string.length} Tekens`);
 }
 
 // Functie Length GA
 function getLengthExact(regexExact) {
     const string = regexExact.toString()
-    if (document.documentElement.lang === 'nl') {
-        return new String(`${string.length} Tekens`);
-    } else if(document.documentElement.lang === 'en') {
-        return new String(`${string.length} Characters`);
-    }
+    return new String(`${string.length} Tekens`);
 }
 
 // Functie Date
@@ -43,17 +35,10 @@ function getDate() {
     const previousEndDate = new Date(endDate.getTime() - timeDiff - (1000 * 60 * 60 * 24));
     const previousStartDateString = previousStartDate.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const previousEndDateString = previousEndDate.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    if (document.documentElement.lang === 'nl') {
-        const DateOutputFirst = new String(`De vorige startdatum is ${previousStartDateString}`);
-        const DateOutputSecond = new String(`De vorige einddatum is ${previousEndDateString}`);
-        const resultDate = document.getElementById('date-text');
-        resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
-    } else if(document.documentElement.lang === 'en') {
-        const DateOutputFirst = new String(`The previous start date is ${previousStartDateString}`);
-        const DateOutputSecond = new String(`The previous end date is ${previousEndDateString}`);
-        const resultDate = document.getElementById('date-text');
-        resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
-    }
+    const DateOutputFirst = new String(`De vorige startdatum is ${previousStartDateString}`);
+    const DateOutputSecond = new String(`De vorige einddatum is ${previousEndDateString}`);
+    const resultDate = document.getElementById('date-text');
+    resultDate.innerHTML = `${DateOutputFirst}\n${DateOutputSecond}`;
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'datum_gegenereerd'});
 }

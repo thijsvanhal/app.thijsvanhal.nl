@@ -16,11 +16,7 @@ let api_methode;
 // Functie Length
 function getLength(mixedKeywords) {
     const string = mixedKeywords.toString();
-    if (document.documentElement.lang === 'nl') {
-        return new String(`${string.split('\n').length} Zoekwoorden`);
-    } else if(document.documentElement.lang === 'en') {
-        return new String(`${string.split('\n').length} Keywords`);
-    }
+    return new String(`${string.split('\n').length} Zoekwoorden`);
 }
 
 // Functie mixKeywords
@@ -167,13 +163,8 @@ resultTextarea.addEventListener('click', () => {
     if (resultTextarea.value !== '') {
         resultTextarea.select();
         document.execCommand("copy");
-        if (document.documentElement.lang === 'nl') {
-            showNotification('Resultaten gekopieerd naar clipboard!', 3000);
-            showAlert = true;
-        } else if(document.documentElement.lang === 'en') {
-            showNotification('Results copied to clipboard!', 3000);
-            showAlert = true;
-        }
+        showNotification('Resultaten gekopieerd naar clipboard!', 3000);
+        showAlert = true;
     }
 });
 
@@ -181,11 +172,7 @@ resultTextarea.addEventListener('focus', () => {
     if (resultTextarea.value !== '' && SeeNotification) {
         resultTextarea.select();
         document.execCommand("copy");
-        if (document.documentElement.lang === 'nl') {
-            showNotification('Resultaten gekopieerd naar clipboard!', 3000);
-        } else if(document.documentElement.lang === 'en') {
-            showNotification('Results copied to clipboard!', 3000);
-        }
+        showNotification('Resultaten gekopieerd naar clipboard!', 3000);
         SeeNotification = false;
     }
 });
@@ -674,7 +661,7 @@ async function mixLists(login_storage, login, password, api_login) {
                     api_methode = "search_volume";
                 }
                 apiMethodes.push(api_methode);
-                const post_url = `https://sandbox.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
+                const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
                 const requestPostOptions = {
                     method: 'POST',
                     headers: {
@@ -749,7 +736,7 @@ async function fetchData(taskId, login, password, getApiMethode) {
                 'Authorization': 'Basic ' + btoa(login + ':' + password)
             }
         };
-        const get_url = `https://sandbox.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
         const get_response = await fetch(get_url, requestGetOptions);
         const get_result = await get_response.json();
         console.log(get_result.tasks);
@@ -971,3 +958,38 @@ async function getData (login, password) {
     }
     generateExcel();
 }
+
+//Database
+const dbName = "historicDataKM";
+const dbVersion = 1;
+
+const openDBRequest = indexedDB.open(dbName, dbVersion);
+
+openDBRequest.onupgradeneeded = function (event) {
+    const db = event.target.result;
+    
+    if (!db.objectStoreNames.contains("historicData")) {
+        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
+    }
+};
+
+openDBRequest.onsuccess = function (event) {
+    const db = event.target.result;
+
+    document.getElementById("save-button").addEventListener("click", () => {
+        const transaction = db.transaction(["historicData"], "readwrite");
+        const store = transaction.objectStore("historicData");
+        const titel = mixedKeywordsArray[0].line;
+        const newData = { data: JSON.stringify(mixedKeywordsArray), titel: titel, timestamp: new Date().toLocaleString() };
+        
+        store.add(newData);
+        
+        transaction.oncomplete = () => {
+            showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
+        };
+    });
+};
+
+openDBRequest.onerror = function (event) {
+    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
+};
