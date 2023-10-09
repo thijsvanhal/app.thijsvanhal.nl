@@ -659,8 +659,8 @@ async function mixLists(login_storage, login, password, api_login) {
                 const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
                 const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
 
-                const selectedCountry = document.getElementById('location-option').value;
-                const selectedLanguage = document.getElementById('language-option').value;
+                const selectedCountry = document.getElementById('search-location').value;
+                const selectedLanguage = document.getElementById('search-language').value;
 
                 const post_array = [{
                     "location_name": selectedCountry,

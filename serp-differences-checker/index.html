@@ -154,6 +154,12 @@
     </div>
     <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
   </div>
+  <div class="container-sm">
+    <h2>Data opslaan en terugkijken</h2>
+    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
+    <button type="button" class="btn btn-primary" id="save-button" style="width: auto">Data opslaan</button>
+    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/serp-differences-checker/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
+  </div>
   <div class="container-sm" id="serps">
   </div>
   <div class="container-sm" id="keyword-container">
@@ -161,6 +167,5 @@
   </div>
   <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
   <script type="text/javascript" defer src="/files/js/serp-differences-app.js"></script>
-  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
   </body>
 </html>

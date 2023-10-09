@@ -82,6 +82,10 @@ window.onload = updateNavbar();
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
+    const divs = ['overzicht', 'samenvatting', 'screenshots'];
+    divs.forEach(id => {
+        document.getElementById(id).innerHTML = '';
+    });
     const container = document.getElementById('serps');
     container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>'
 
@@ -105,8 +109,8 @@ async function getData(login_storage, login, password, api_login) {
         window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
     } else {
         for (const keywordObj of keywords) {
-            const selectedCountry = document.getElementById('location-option').value;
-            const selectedLanguage = document.getElementById('language-option').value;
+            const selectedCountry = document.getElementById('search-location').value;
+            const selectedLanguage = document.getElementById('search-language').value;
 
             const post_array = [{
                 "location_name": selectedCountry,
@@ -380,6 +384,19 @@ async function getScreenshot(taskId, login, password) {
     return image
 }
 
+function showNotification(message, duration) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, duration);
+}
+
 //Database
 const dbName = "historicDataCDH";
 const dbVersion = 1;
@@ -409,91 +426,11 @@ openDBRequest.onsuccess = function (event) {
         store.add(newData);
         
         transaction.oncomplete = () => {
-            loadStoredData();
+            showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
         };
     });
 };
 
-// Function to load and display stored data automatically
-function loadStoredData() {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
-    const store = transaction.objectStore("historicData");
-
-    const getDataRequest = store.getAll();
-
-    getDataRequest.onsuccess = () => {
-        const historicData = getDataRequest.result;
-        const dataList = document.getElementById("data-list");
-
-        if (getDataRequest.readyState === "done" && historicData.length > 0) {
-            dataList.innerHTML = "";
-
-            historicData.reverse();
-            historicData.forEach(entry => {
-                const listItem = document.createElement("div");
-                listItem.innerHTML = `<button type="button" class="btn btn-primary view-button" style="width: auto" data-id="${entry.id}">Bekijk</button> 
-                                     <button type="button" class="btn btn-primary delete-button secondbutton" style="width: auto" data-id="${entry.id}">Verwijder</button>
-                                     <span>${entry.titel} (${entry.timestamp})</span>`;
-                dataList.appendChild(listItem);
-            });
-
-            const viewButtons = document.querySelectorAll(".view-button");
-            const deleteButtons = document.querySelectorAll(".delete-button");
-
-            viewButtons.forEach(button => {
-                button.addEventListener("click", (event) => {
-                    const id = Number(event.target.getAttribute("data-id"));
-                    viewData(id);
-                });
-            });
-
-            deleteButtons.forEach(button => {
-                button.addEventListener("click", (event) => {
-                    const id = Number(event.target.getAttribute("data-id"));
-                    deleteData(id);
-                });
-            });
-
-            console.log("Data loaded from IndexedDB.");
-        } else if (getDataRequest.readyState === "done" && historicData.length === 0) {
-            dataList.innerHTML = "<p>Op dit moment heb je nog geen data opgeslagen.</p>";
-        }
-    };
-}
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(loadStoredData, 1500);
-});
-
 openDBRequest.onerror = function (event) {
     window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
 };
-
-function viewData(id) {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
-    const store = transaction.objectStore("historicData");
-    
-    const getDataRequest = store.get(id);
-    
-    getDataRequest.onsuccess = function () {
-        const data = getDataRequest.result;
-        if (data) {
-            const viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
-            const viewDataContent = document.getElementById("view-data-content");
-            
-            viewDataContent.innerHTML = data.html;
-
-            viewModal.show();
-        }
-    };
-}
-
-function deleteData(id) {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readwrite");
-    const store = transaction.objectStore("historicData");
-    
-    const deleteRequest = store.delete(id);
-    
-    deleteRequest.onsuccess = function () {
-        loadStoredData();
-    };
-}

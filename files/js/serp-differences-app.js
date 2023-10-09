@@ -82,7 +82,7 @@ window.onload = updateNavbar();
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
     const container = document.getElementById('serps');
-    container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>'
+    container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>';
 
     const keyword1 = document.getElementById("zoekwoord-1").value;
     const keyword2 = document.getElementById("zoekwoord-2").value;
@@ -116,8 +116,8 @@ async function getData(login_storage, login, password, api_login) {
         }
     
         for (const keywordObj of keywords) {
-            const selectedCountry = document.getElementById('location-option').value;
-            const selectedLanguage = document.getElementById('language-option').value;
+            const selectedCountry = document.getElementById('search-location').value;
+            const selectedLanguage = document.getElementById('search-language').value;
 
             const post_array = [{
                 "location_name": selectedCountry,
@@ -460,3 +460,61 @@ function handleResultClick(event) {
         ResultSERP3.classList.remove('inactive');
     }
 }
+
+function showNotification(message, duration) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, duration);
+}
+
+//Database
+const dbName = "historicDataSDC";
+const dbVersion = 1;
+
+const openDBRequest = indexedDB.open(dbName, dbVersion);
+
+openDBRequest.onupgradeneeded = function (event) {
+    const db = event.target.result;
+    
+    if (!db.objectStoreNames.contains("historicData")) {
+        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
+    }
+};
+
+openDBRequest.onsuccess = function (event) {
+    const db = event.target.result;
+
+    document.getElementById("save-button").addEventListener("click", () => {
+        const dataHTML = document.getElementById("serps").innerHTML;
+        
+        const transaction = db.transaction(["historicData"], "readwrite");
+        const store = transaction.objectStore("historicData");
+        const titles = [];
+        for (let i = 1; i <= 3; i++) {
+            const element = document.getElementById(`zoekwoord-${i}`);
+            if (element.value != '') {
+                titles.push(element.value);
+            }
+        }
+        const titel = titles.join(' , ');
+        
+        const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
+        
+        store.add(newData);
+        
+        transaction.oncomplete = () => {
+            showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
+        };
+    });
+};
+
+openDBRequest.onerror = function (event) {
+    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
+};

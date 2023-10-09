@@ -148,20 +148,7 @@
     <h2>Data opslaan en terugkijken</h2>
     <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
     <button type="button" class="btn btn-primary" id="save-button" style="width: auto">Data opslaan</button>
-  </div>
-  <div class="container-sm" id="data-container">
-    <h3>Opgeslagen data</h3>
-    <div id="data-list"></div>
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content">
-              <div class="modal-body">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right"></button>
-                <div id="view-data-content"></div>
-              </div>
-          </div>
-      </div>
-    </div>
+    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/content-document-helper/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
   </div>
   <div id="data">
     <div class="container-sm" id="overzicht">
@@ -178,6 +165,5 @@
   </div>
   <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
   <script type="text/javascript" defer src="/files/js/content-document-helper.js"></script>
-  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
   </body>
 </html>
