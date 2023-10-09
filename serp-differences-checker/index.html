@@ -118,46 +118,58 @@
   <div class="container-sm" id="top-container">
     <h1>SERP Differences Checker</h1>
     <p>Met de SERP Differences Checker check je eenvoudig de overeenkomsten tussen de zoekresultaten van maximaal drie zoekwoorden.</p>
+  </div>
+  <div class="container-sm" id="blauwe-container">
     <div class="row">
-      <div class="col-sm">
-        <h3>Zoekwoord 1</h3>
-        <input type="text" placeholder="Zoekwoord 1" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+      <div class="col-md">
+        <form class="form-floating">
+          <input type="text" placeholder="Vul zoekwoord 1 in" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+          <label for="zoekwoord-1">Zoekwoord 1</label>
+        </form>
       </div>
-      <div class="col-sm">
-        <h3>Zoekwoord 2</h3>
-        <input type="text" placeholder="Zoekwoord 2" class="form-control" id="zoekwoord-2" data-np-intersection-state="visible">
+      <div class="col-md">
+        <form class="form-floating">
+          <input type="text" placeholder="Vul zoekwoord 2 in" class="form-control" id="zoekwoord-2" data-np-intersection-state="visible">
+          <label for="zoekwoord-2">Zoekwoord 2</label>
+        </form>
       </div>
-      <div class="col-sm">
-        <h3>Zoekwoord 3</h3>
-        <input type="text" placeholder="Zoekwoord 3" class="form-control" id="zoekwoord-3" data-np-intersection-state="visible">
+      <div class="col-md">
+        <form class="form-floating">
+          <input type="text" placeholder="Vul zoekwoord 3 in" class="form-control" id="zoekwoord-3" data-np-intersection-state="visible">
+          <label for="zoekwoord-3">Zoekwoord 3</label>
+        </form>
       </div>
     </div>
-  </div>
-  <div class="container-sm">
-    <div class="row">
+    <div class="row" style="display: flex; align-items: center; margin-top: 1rem;">
       <div class="col-sm">
-        <h3>Locatie</h3>
         <div class="custom-dropdown" id="location-dropdown">
-          <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+          <form class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+            <label for="search-location">Locatie</label>
+          </form>
           <ul class="dropdown-options" id="location-options">
           </ul>
         </div>
       </div>
       <div class="col-sm">
-        <h3>Taal</h3>
         <div class="custom-dropdown" id="language-dropdown">
-          <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+          <form class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+            <label for="search-language">Taal</label>
+          </form>
           <ul class="dropdown-options" id="language-options">
           </ul>
         </div>
       </div>
+      <div class="col col-sm-2">
+        <button type="button" class="btn btn-primary thirdbutton" style="height: 46px;" onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
   </div>
-  <div class="container-sm">
+  <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>
     <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
-    <button type="button" class="btn btn-primary" id="save-button" style="width: auto">Data opslaan</button>
+    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data opslaan</button>
     <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/serp-differences-checker/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
   </div>
   <div class="container-sm" id="serps">

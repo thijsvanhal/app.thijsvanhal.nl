@@ -583,6 +583,7 @@ error_sluiten_knop.onclick = function() {
 // Mixen van bulk lijsten
 async function mixLists(login_storage, login, password, api_login) {
     // verwijder huidige waardes
+    document.getElementById("save-button").style = "width: auto; display:none;";
     document.querySelector('.bulk-mixer-status').innerHTML = '';
     mixedKeywordsArray = [];
     taskIds = [];
@@ -720,6 +721,7 @@ async function mixLists(login_storage, login, password, api_login) {
             }
             statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor <b>${line_name}</b> opgehaald.</p></div>`);
         }
+        document.getElementById("save-button").style = "width: auto;";
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
         generateExcel();
     }
@@ -987,6 +989,7 @@ openDBRequest.onsuccess = function (event) {
         transaction.oncomplete = () => {
             showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
         };
+        document.getElementById("save-button").style = "width: auto; display:none;";
     });
 };
 

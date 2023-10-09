@@ -86,6 +86,7 @@ async function getData(login_storage, login, password, api_login) {
     divs.forEach(id => {
         document.getElementById(id).innerHTML = '';
     });
+    document.getElementById("save-button").style = "width: auto; display:none;";
     const container = document.getElementById('serps');
     container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>'
 
@@ -156,6 +157,7 @@ async function getData(login_storage, login, password, api_login) {
                 <img src="${mobileImage}" class="img-fluid" style="width: 30%"></img>
             `;
         })();
+        document.getElementById("save-button").style = "width: auto;";
     }
 }
 
@@ -428,6 +430,7 @@ openDBRequest.onsuccess = function (event) {
         transaction.oncomplete = () => {
             showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
         };
+        document.getElementById("save-button").style = "width: auto; display:none;";
     });
 };
 

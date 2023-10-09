@@ -117,37 +117,45 @@
   </div>
   <div class="container-sm" id="top-container">
     <h1>Content Document Helper</h1>
-    <p>De content document helper is de basis voor je content template! Vul je zoekwoord in en krijg waardevolle informatie terug.</p>
-    <h2>SERP instellingen</h2>
-    <p>Welk zoekwoord wil je optimaliseren, in welke locatie en in welke taal?</p>
-    <h3>Zoekwoord</h3>
-    <input type="text" placeholder="Zoekwoord" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+    <p>De content document helper is de basis voor je content template! Vul je zoekwoord, locatie en taal in en krijg waardevolle informatie terug.</p>
   </div>
-  <div class="container-sm">
-    <div class="row">
+  <div class="container-sm" id="blauwe-container">
+    <div class="row" style="display: flex; align-items: center;">
+      <div class="col col-lg-6">
+        <form class="form-floating">
+          <input type="text" placeholder="Vul het zoekwoord in" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+          <label for="zoekwoord-1">Zoekwoord</label>
+        </form>
+      </div>
       <div class="col-sm">
-        <h3>Locatie</h3>
         <div class="custom-dropdown" id="location-dropdown">
-          <input type="text" placeholder="Zoek locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+          <form class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+            <label for="search-location">Locatie</label>
+          </form>
           <ul class="dropdown-options" id="location-options">
           </ul>
         </div>
       </div>
       <div class="col-sm">
-        <h3>Taal</h3>
         <div class="custom-dropdown" id="language-dropdown">
-          <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+          <form class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+            <label for="search-language">Taal</label>
+          </form>
           <ul class="dropdown-options" id="language-options">
           </ul>
         </div>
       </div>
+      <div class="col-md-auto">
+        <button type="button" class="btn btn-primary thirdbutton" onclick="getData(login_storage, login, password, api_login)"><svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" fill="#fff"/></svg></button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="getData(login_storage, login, password, api_login)">Genereer data</button>
   </div>
-  <div class="container-sm">
+  <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>
     <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
-    <button type="button" class="btn btn-primary" id="save-button" style="width: auto">Data opslaan</button>
+    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data opslaan</button>
     <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/content-document-helper/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
   </div>
   <div id="data">

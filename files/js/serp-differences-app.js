@@ -81,6 +81,7 @@ window.onload = updateNavbar();
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
+    document.getElementById("save-button").style = "width: auto; display:none;";
     const container = document.getElementById('serps');
     container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>';
 
@@ -148,6 +149,7 @@ async function getData(login_storage, login, password, api_login) {
         } else {
             renderResults(keywords[0].keyword, keywords[1].keyword, null, keywordResults[0], keywordResults[1], null);
         }
+        document.getElementById("save-button").style = "width: auto;";
     }
 }
 
@@ -512,6 +514,7 @@ openDBRequest.onsuccess = function (event) {
         transaction.oncomplete = () => {
             showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
         };
+        document.getElementById("save-button").style = "width: auto; display:none;";
     });
 };
 
