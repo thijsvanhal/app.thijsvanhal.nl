@@ -2,16 +2,24 @@
 
 // Functie Bevat
 function generateRegexBevat(values) {
-    const inputs = values.split('\n');
-    const joined = inputs.join('|');
-    return new String(`\\b(${joined})\\b`);
+    if (values === '') {
+        return new String('');
+    } else {
+        const inputs = values.split('\n');
+        const joined = inputs.join('|');
+        return new String(`\\b(${joined})\\b`);
+    }
   }
 
 // Functie Exact
 function generateRegexExact(values) {
-    const inputs = values.split('\n');
-    const joined = inputs.join('|');
-    return new String(`^(${joined})$`);
+    if (values === '') {
+        return new String('');
+    } else {
+        const inputs = values.split('\n');
+        const joined = inputs.join('|');
+        return new String(`^(${joined})$`);
+    }
 }
 
 // Functie Length GSC
@@ -70,10 +78,22 @@ textField.addEventListener('input', () => {
 });
 
 // Zorg dat output geselecteerd wordt
+textField.addEventListener('click', () => {
+    textField.select();
+});
+
 resultTextareaBevat.addEventListener('click', () => {
     resultTextareaBevat.select();
+    document.execCommand("copy");
+    const successToast = document.getElementById("success-toast");
+    const bootstrapToast = new bootstrap.Toast(successToast);
+    bootstrapToast.show();
 });
 
 resultTextareaExact.addEventListener('click', () => {
     resultTextareaExact.select();
+    document.execCommand("copy");
+    const successToast = document.getElementById("success-toast");
+    const bootstrapToast = new bootstrap.Toast(successToast);
+    bootstrapToast.show();
 });

@@ -2,35 +2,43 @@
 
 // Functie GSC 
 function generateRegexGSC(values) {
-    function extractBaseUrl(url) {
-        let index = url.indexOf('/', 8);
-        if (index === -1) {
-            index = url.length;
+    if (values === '') {
+        return new String('');
+    } else {
+        function extractBaseUrl(url) {
+            let index = url.indexOf('/', 8);
+            if (index === -1) {
+                index = url.length;
+            }
+            return url.substring(0, index);
         }
-        return url.substring(0, index);
-    }
-    const domain = extractBaseUrl(values);
-    const inputs = values.split('\n').map(input => {
-        return input.replace(/^.*\/\/[^\/]+/, '');
-        });
-    const joined = inputs.join('|');
-    if (document.getElementById('bevat').checked == true) {
-        return new String(`^${domain}(${joined})`);
-    } else if(document.getElementById('exact').checked == true) {
-        return new String(`^${domain}(${joined})$`);
+        const domain = extractBaseUrl(values);
+        const inputs = values.split('\n').map(input => {
+            return input.replace(/^.*\/\/[^\/]+/, '');
+            });
+        const joined = inputs.join('|');
+        if (document.getElementById('bevat').checked == true) {
+            return new String(`^${domain}(${joined})`);
+        } else if(document.getElementById('exact').checked == true) {
+            return new String(`^${domain}(${joined})$`);
+        }
     }
   }
 
 // Functie GA
 function generateRegexGA(values) {
-    const inputs = values.split('\n').map(input => {
-        return input.replace(/^.*\/\/[^\/]+/, '');
-        });
-    const joined = inputs.join('|');
-    if (document.getElementById('bevat').checked == true) {
-        return new String(`^(${joined})`);
-    } else if(document.getElementById('exact').checked == true) {
-        return new String(`^(${joined})$`);
+    if (values === '') {
+        return new String('');
+    } else {
+        const inputs = values.split('\n').map(input => {
+            return input.replace(/^.*\/\/[^\/]+/, '');
+            });
+        const joined = inputs.join('|');
+        if (document.getElementById('bevat').checked == true) {
+            return new String(`^(${joined})`);
+        } else if(document.getElementById('exact').checked == true) {
+            return new String(`^(${joined})$`);
+        }
     }
 }
 
@@ -89,9 +97,10 @@ function generateRegEx() {
     resultLengthGA.textContent = lengthGA.toString();
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'regex_pagina'});
+    
 }
 
-textField.addEventListener('input', () => {
+textField.addEventListener('change', () => {
     generateRegEx();
 });
 
@@ -104,10 +113,22 @@ radioExact.addEventListener('click', () => {
 })
 
 // Zorg dat output geselecteerd wordt
+textField.addEventListener('click', () => {
+    textField.select();
+});
+
 resultTextareaGSC.addEventListener('click', () => {
     resultTextareaGSC.select();
+    document.execCommand("copy");
+    const successToast = document.getElementById("success-toast");
+    const bootstrapToast = new bootstrap.Toast(successToast);
+    bootstrapToast.show();
 });
 
 resultTextareaGA.addEventListener('click', () => {
     resultTextareaGA.select();
+    document.execCommand("copy");
+    const successToast = document.getElementById("success-toast");
+    const bootstrapToast = new bootstrap.Toast(successToast);
+    bootstrapToast.show();
 });

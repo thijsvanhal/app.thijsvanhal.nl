@@ -135,7 +135,7 @@ async function getData() {
   allData = [];
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
-  const siteUrl = encodeURIComponent(document.getElementById('all-sites').value);
+  const siteUrl = encodeURIComponent(document.getElementById('searchproperty').value);
 
   const maxRows = 25000;
   let startRow = 0;
