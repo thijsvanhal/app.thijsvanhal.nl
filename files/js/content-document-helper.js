@@ -358,10 +358,22 @@ async function getSummary(taskId, login, password) {
     const post_result = await post_response.json();
     console.log(post_result);
     const summary = post_result.tasks[0].result[0].items[0].summary;
-    container.innerHTML = `
-        <h2>SERP Samenvatting</h2>
-        <p>${summary}</p>
-    `;
+    const paragraphs = summary.split('\n');
+    const pElements = paragraphs.map((paragraphText) => {
+        const p = document.createElement('p');
+        p.textContent = paragraphText;
+        container.appendChild(p);
+        return p;
+    });
+    const summaryContainer = document.createElement('div');
+    const summaryh2 = document.createElement('h2');
+    summaryh2.textContent = 'SERP Samenvatting';
+    pElements.forEach((p) => {
+        summaryContainer.appendChild(p);
+    });
+    container.innerHTML = '';
+    container.appendChild(summaryh2);
+    container.appendChild(summaryContainer);
 }
 
 async function getScreenshot(taskId, login, password) {

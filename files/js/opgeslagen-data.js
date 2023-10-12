@@ -36,9 +36,11 @@ function loadStoredData() {
             historicData.reverse();
             historicData.forEach(entry => {
                 const listItem = document.createElement("div");
-                listItem.innerHTML = `<span>${entry.titel} (${entry.timestamp})</span><br>
+                listItem.innerHTML = `<h3>${entry.titel}</h3>
+                                    <p>Gemaakt op: ${entry.timestamp}</p>
                                     <button type="button" class="btn btn-primary view-button" style="width: auto" data-id="${entry.id}">Bekijk</button> 
                                     <button type="button" class="btn btn-primary delete-button secondbutton" style="width: auto" data-id="${entry.id}">Verwijder</button>
+                                    <hr>
                                      `;
                 dataList.appendChild(listItem);
             });
