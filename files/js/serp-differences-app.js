@@ -79,6 +79,20 @@ logoutButton.onclick = function() {
 
 window.onload = updateNavbar();
 
+let checkbox = document.getElementById("standaard-data-switch");
+checkbox.addEventListener("click", function() {
+    if (checkbox.checked) {
+        localStorage.setItem("checkbox-SDC", "checked");
+    } else {
+        localStorage.removeItem("checkbox-SDC");
+    }
+});
+
+let checkbox_checked = localStorage.getItem("checkbox-SDC");
+if (checkbox_checked === "checked") {
+    checkbox.checked = true;
+}
+
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
     document.getElementById("save-button").style = "width: auto; display:none;";
@@ -149,7 +163,11 @@ async function getData(login_storage, login, password, api_login) {
         } else {
             renderResults(keywords[0].keyword, keywords[1].keyword, null, keywordResults[0], keywordResults[1], null);
         }
-        document.getElementById("save-button").style = "width: auto;";
+        if (checkbox.checked) {
+            saveData();
+        } else {
+            document.getElementById("save-button").style = "width: auto;";
+        }
     }
 }
 
@@ -221,15 +239,15 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             </div>
             <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
             <div class="row">
-                <div class="col-sm" style="overflow-x: auto">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
                     ${renderPositionResults(results1, commonResults1)}
                 </div>
-                <div class="col-sm" style="overflow-x: auto">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
                     <h2>SERP 2: ${keyword2}</h2>
                     ${renderPositionResults(results2, commonResults2)}
                 </div>
-                <div class="col-sm" style="overflow-x: auto">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
                     <h2>SERP 3: ${keyword3}</h2>
                     ${renderPositionResults(results3, commonResults3)}
                 </div>
@@ -245,11 +263,11 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             </ul>
             <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
             <div class="row">
-                <div class="col-sm" style="overflow-x: auto">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
                     <h2>SERP 1: ${keyword1}</h2>
                     ${renderPositionResults(results1, commonResults1)}
                 </div>
-                <div class="col-sm" style="overflow-x: auto">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
                     <h2>SERP 2: ${keyword2}</h2>
                     ${renderPositionResults(results2, commonResults1)}
                 </div>
@@ -283,7 +301,7 @@ function renderPositionResults(results, commonResults) {
 
         return `
             <div class="result result-${index + 1}">
-                <h3>Positie ${index + 1}</h3>
+                <p><strong>Positie ${index + 1}</strong></p>
                 <ul class="list-group ${highlightClass}" data-url="${item.url}">
                     <li class="list-group-item">
                         <strong>${item.title}</strong>
@@ -466,6 +484,7 @@ function handleResultClick(event) {
 //Database
 const dbName = "historicDataSDC";
 const dbVersion = 1;
+let db;
 
 const openDBRequest = indexedDB.open(dbName, dbVersion);
 
@@ -478,35 +497,38 @@ openDBRequest.onupgradeneeded = function (event) {
 };
 
 openDBRequest.onsuccess = function (event) {
-    const db = event.target.result;
-
-    document.getElementById("save-button").addEventListener("click", () => {
-        const dataHTML = document.getElementById("serps").innerHTML;
-        
-        const transaction = db.transaction(["historicData"], "readwrite");
-        const store = transaction.objectStore("historicData");
-        const titles = [];
-        for (let i = 1; i <= 3; i++) {
-            const element = document.getElementById(`zoekwoord-${i}`);
-            if (element.value != '') {
-                titles.push(element.value);
-            }
-        }
-        const titel = titles.join(' , ');
-        
-        const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
-        
-        store.add(newData);
-        
-        transaction.oncomplete = () => {
-            const successToast = document.getElementById("success-toast");
-            const bootstrapToast = new bootstrap.Toast(successToast);
-            bootstrapToast.show();
-        };
-        document.getElementById("save-button").style = "width: auto; display:none;";
-    });
+    db = event.target.result;
 };
 
 openDBRequest.onerror = function (event) {
     window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
 };
+
+async function saveData() {
+    const dataHTML = document.getElementById("serps").innerHTML;
+    
+    const transaction = db.transaction(["historicData"], "readwrite");
+    const store = transaction.objectStore("historicData");
+    const titles = [];
+    for (let i = 1; i <= 3; i++) {
+        const element = document.getElementById(`zoekwoord-${i}`);
+        if (element.value != '') {
+            titles.push(element.value);
+        }
+    }
+    const titel = titles.join(' , ');
+    
+    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
+    
+    store.add(newData);
+    
+    transaction.oncomplete = () => {
+        const successToast = document.getElementById("success-toast");
+        const bootstrapToast = new bootstrap.Toast(successToast);
+        bootstrapToast.show();
+    };
+    document.getElementById("save-button").style = "width: auto; display:none;";
+};
+
+document.getElementById("save-button").addEventListener("click", saveData);
+

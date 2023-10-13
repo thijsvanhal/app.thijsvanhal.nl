@@ -119,21 +119,25 @@
       </div>
     </nav>
     <div class="container-sm" id="top-container">
-      <p>
+      <div class="form-floating">
+        <textarea class="input-area form-control" placeholder="Voeg hier je zoekwoorden toe" id="input-area" rows="6"></textarea>
         <label for="input-area">Voeg hier je zoekwoorden toe</label>
-        <textarea class="input-area" id="input-area" rows="6"></textarea>
-      </p>
+      </div>
     </div>
-    <div class="container-sm">
+    <div class="container-sm" id="keyword-container">
       <div class="row">
         <div class="col-sm" id="resultaat">
-          <label for="result-bevat">Google Search Console RegEx Bevat</label>
-          <textarea class="textarea-results" id="result-bevat"></textarea>
+          <div class="form-floating">
+            <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Bevat" id="result-bevat"></textarea>
+            <label for="result-bevat">Google Search Console RegEx Bevat</label>
+          </div>
           <div class="tekens" id="tekens-bevat"></div>
         </div>
         <div class="col-sm" id="resultaat">
-          <label for="result-exact">Google Search Console RegEx Exact</label>
-          <textarea class="textarea-results" id="result-exact"></textarea>
+          <div class="form-floating">
+            <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Exact" id="result-exact"></textarea>
+            <label for="result-exact">Google Search Console RegEx Exact</label>
+          </div>
           <div class="tekens" id="tekens-exact"></div>
         </div>
       </div>
@@ -145,12 +149,16 @@
     <div class="container-sm">
       <div class="row">
         <div class="col-sm">
-          <label for="startDate">Wat is de startdatum?</label>
-          <input id="startDate" class="form-control" type="date" />  
+          <form class="form-floating">
+            <input id="startDate" class="form-control" type="date"/>  
+            <label for="startDate">Wat is de startdatum?</label>
+          </form>
         </div>
         <div class="col-sm">
-          <label for="endDate">Wat is de einddatum?</label>
-          <input id="endDate" class="form-control" type="date"/>
+          <form class="form-floating">
+            <input id="endDate" class="form-control" type="date"/>
+            <label for="endDate">Wat is de einddatum?</label>
+          </form>
         </div>
       </div>
     </div>

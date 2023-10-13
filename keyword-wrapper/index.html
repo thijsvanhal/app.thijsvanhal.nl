@@ -112,16 +112,20 @@
     <div class="container-sm" id="top-container">
       <div class="row">
         <div class="col-sm" id="pad-col">
-          <label for="lijst-1">Input</label>
-          <textarea class="keywords-input" id="keywords-input-area" tabindex="1"></textarea>
+          <div class="form-floating">
+            <textarea class="keywords-input form-control" placeholder="Input" id="keywords-input-area" tabindex="1"></textarea>
+            <label for="keywords-input-area">Input</label>
+          </div>
         </div>
         <div class="col-sm" id="pad-col">
-          <label for="lijst-2">Output</label>
-          <textarea class="keywords-output" id="keywords-output-area" tabindex="2"></textarea>
+          <div class="form-floating">
+            <textarea class="keywords-output form-control" placeholder="Output" id="keywords-output-area" tabindex="2"></textarea>
+            <label for="keywords-output-area">Output</label>
+          </div>
         </div>
       </div>
     </div>
-    <div class="container-sm" id="row">
+    <div class="container-sm" id="row" style="margin-top: 0.5rem;">
       <div class="col-sm">
         <div class="form-check form-switch" id="exact-match">
           <input class="form-check-input" type="checkbox" id="exact-match-input">

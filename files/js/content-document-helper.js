@@ -79,6 +79,20 @@ logoutButton.onclick = function() {
 
 window.onload = updateNavbar();
 
+let checkbox = document.getElementById("standaard-data-switch");
+checkbox.addEventListener("click", function() {
+    if (checkbox.checked) {
+        localStorage.setItem("checkbox-CDH", "checked");
+    } else {
+        localStorage.removeItem("checkbox-CDH");
+    }
+});
+
+let checkbox_checked = localStorage.getItem("checkbox-CDH");
+if (checkbox_checked === "checked") {
+    checkbox.checked = true;
+}
+
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
     const divs = ['overzicht', 'samenvatting', 'screenshots'];
@@ -141,7 +155,7 @@ async function getData(login_storage, login, password, api_login) {
         
         renderResults(keywords[0].keyword, keywordResults[0], keywordResults[1]);
 
-        getSummary(taskIds[0], login, password);
+        await getSummary(taskIds[0], login, password);
         
         const container = document.getElementById('screenshots');
         (async () => {
@@ -156,7 +170,11 @@ async function getData(login_storage, login, password, api_login) {
                 <img src="${mobileImage}" class="img-fluid" style="width: 30%"></img>
             `;
         })();
-        document.getElementById("save-button").style = "width: auto;";
+        if (checkbox.checked) {
+            saveData();
+        } else {
+            document.getElementById("save-button").style = "width: auto;";
+        }
     }
 }
 
@@ -191,11 +209,11 @@ async function renderResults(keyword, results1, results2) {
     container.innerHTML = `
         <h2>SERP Resultaten</h2>
         <div class="row">
-            <div class="col-sm" style="overflow-x: auto">
+            <div class="col-sm" id="col-serp" style="overflow-x: auto">
                 <h2>SERP Desktop</h2>
                 ${renderPositionResults(results1)}
             </div>
-            <div class="col-sm" style="overflow-x: auto">
+            <div class="col-sm" id="col-serp" style="overflow-x: auto">
                 <h2>SERP Mobiel</h2>
                 ${renderPositionResults(results2)}
             </div>
@@ -217,7 +235,7 @@ function renderPositionResults(results) {
     return top10Items.map((item, index) => {
         return `
             <div class="result-content result-${index + 1}">
-                <h3>Positie ${index + 1}</h3>
+                <p><strong>Positie ${index + 1}</strong></p>
                 <ul class="list-group" data-url="${item.url}">
                     <li class="list-group-item">
                         <strong>${item.title}</strong>
@@ -338,7 +356,7 @@ async function getSummary(taskId, login, password) {
 
     const post_array = [{
         "task_id": taskId,
-        "prompt": "Geef een uitgebreide samenvatting van de SERP. Geef daarnaast antwoord op de volgende vragen: Voor welk segment is deze SERP? Wat is de behoefte van de gebruiker? Wat doen de resultaten aan expertise op hun pagina? Welke vragen worden er beantwoord in de SERP? Beschrijf van de top 5 resultaat voor elk resultaat wat deze pagina uniek maakt.",
+        "prompt": "Geef een uitgebreide samenvatting van de SERP. Geef daarnaast antwoord op de volgende vragen: Voor welk segment is deze SERP? Wat is de behoefte van de gebruiker? Welke vragen worden er beantwoord in de SERP? Wat moet er gedaan worden om in deze SERP goed te ranken? Beschrijf daarnaast van de top 5 resultaten voor elk resultaat wat deze pagina uniek maakt.",
         "include_links": true,
         "fetch_content": true,
         "suport_extra": true
@@ -400,40 +418,43 @@ async function getScreenshot(taskId, login, password) {
 //Database
 const dbName = "historicDataCDH";
 const dbVersion = 1;
+let db;
 
 const openDBRequest = indexedDB.open(dbName, dbVersion);
 
 openDBRequest.onupgradeneeded = function (event) {
     const db = event.target.result;
-    
+
     if (!db.objectStoreNames.contains("historicData")) {
         db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
     }
 };
 
 openDBRequest.onsuccess = function (event) {
-    const db = event.target.result;
-
-    document.getElementById("save-button").addEventListener("click", () => {
-        const dataHTML = document.getElementById("data").innerHTML;
-        
-        const transaction = db.transaction(["historicData"], "readwrite");
-        const store = transaction.objectStore("historicData");
-        const titel = document.getElementById("zoekwoord").innerText;
-        
-        const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
-        
-        store.add(newData);
-        
-        transaction.oncomplete = () => {
-            const successToast = document.getElementById("success-toast");
-            const bootstrapToast = new bootstrap.Toast(successToast);
-            bootstrapToast.show();
-        };
-        document.getElementById("save-button").style = "width: auto; display:none;";
-    });
+    db = event.target.result;
 };
 
 openDBRequest.onerror = function (event) {
     window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
 };
+
+async function saveData() {
+    const dataHTML = document.getElementById("data").innerHTML;
+
+    const transaction = db.transaction(["historicData"], "readwrite");
+    const store = transaction.objectStore("historicData");
+    const titel = document.getElementById("zoekwoord").innerText;
+
+    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
+
+    store.add(newData);
+
+    transaction.oncomplete = () => {
+        const successToast = document.getElementById("success-toast");
+        const bootstrapToast = new bootstrap.Toast(successToast);
+        bootstrapToast.show();
+    };
+    document.getElementById("save-button").style = "width: auto; display:none;";
+}
+
+document.getElementById("save-button").addEventListener("click", saveData);

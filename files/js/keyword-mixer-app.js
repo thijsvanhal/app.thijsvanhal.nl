@@ -219,7 +219,7 @@ if (listsStorage) {
     updateAccordion();
 }
 
-function addList() {
+async function addList() {
     const list_name = document.getElementById("list-name");
     const list_values = document.getElementById("list-values");
     const listName = list_name.value;
@@ -227,7 +227,15 @@ function addList() {
 
     const listExists = lists.some((list) => list.name === listName);
     if (listExists) {
-        window.alert(`Rijtje ${listName} bestaat al, pas de naam aan :)`);
+        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Rijtje <b>${listName}</b> bestaat al, pas de naam aan :)</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
         return;
     }
 
@@ -239,7 +247,7 @@ function addList() {
     list_values.value = "";
 }
 
-function bulkaddList() {
+async function bulkaddList() {
     const textarea = document.getElementById('bulk-list-values');
     const rawRows = textarea.value.split('\n');
     const filteredRows = rawRows.filter(row => row.trim() !== "");
@@ -261,8 +269,16 @@ function bulkaddList() {
         const listExists = lists.some(list => list.name === listName);
 
         if (listExists) {
-            window.alert(`Rijtje ${listName} bestaat al, pas de naam aan :)`);
-            continue;
+            const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+            error_modal.show();
+            document.getElementById("error-message").innerHTML = `<p class="body-text">Rijtje <b>${listName}</b> bestaat al, pas de naam aan :)</p>`;
+            const modalClosedPromise = new Promise((resolve) => {
+                error_modal._element.addEventListener("hidden.bs.modal", function () {
+                    resolve();
+                }, { once: true });
+            });
+            await modalClosedPromise;
+            return;
         }
 
         lists.push(list);
@@ -526,6 +542,20 @@ logoutButton.onclick = function() {
 
 window.onload = updateNavbar();
 
+let checkbox = document.getElementById("standaard-data-switch");
+checkbox.addEventListener("click", function() {
+    if (checkbox.checked) {
+        localStorage.setItem("checkbox-KM", "checked");
+    } else {
+        localStorage.removeItem("checkbox-KM");
+    }
+});
+
+let checkbox_checked = localStorage.getItem("checkbox-KM");
+if (checkbox_checked === "checked") {
+    checkbox.checked = true;
+}
+
 function calculateCost(lines) {
     let totalCost = 0;
 
@@ -582,6 +612,7 @@ error_sluiten_knop.onclick = function() {
 
 // Mixen van bulk lijsten
 async function mixLists(login_storage, login, password, api_login) {
+    console.log(login_storage, login, password, api_login);
     // verwijder huidige waardes
     document.getElementById("save-button").style = "width: auto; display:none;";
     document.querySelector('.bulk-mixer-status').innerHTML = '';
@@ -596,7 +627,15 @@ async function mixLists(login_storage, login, password, api_login) {
     await calculateCost(lines);
 
     if (!api_login && login_storage === "") {
-        window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
+        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je bent niet ingelogd!<br><br> Log in en probeer het opnieuw!</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
     } else {
         for (const line of lines) {
             const checkvalues = line.split(",");
@@ -606,7 +645,15 @@ async function mixLists(login_storage, login, password, api_login) {
             });
             
             if (!checkExist) {
-                window.alert(`De naam ${checknonEmptyValues.join(" + ")} komt niet overeen met de naam van het rijtje. Pas deze aan en probeer opnieuw!`);
+                const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+                error_modal.show();
+                document.getElementById("error-message").innerHTML = `<p class="body-text">De naam <b>${checknonEmptyValues.join(" + ")}</b> komt niet overeen met de naam van het rijtje.<br> Pas deze aan en probeer opnieuw!</p>`;
+                const modalClosedPromise = new Promise((resolve) => {
+                    error_modal._element.addEventListener("hidden.bs.modal", function () {
+                        resolve();
+                    }, { once: true });
+                });
+                await modalClosedPromise;
                 return;
             }
         }
@@ -721,7 +768,11 @@ async function mixLists(login_storage, login, password, api_login) {
             }
             statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor <b>${line_name}</b> opgehaald.</p></div>`);
         }
-        document.getElementById("save-button").style = "width: auto;";
+        if (checkbox.checked) {
+            saveData();
+        } else {
+            document.getElementById("save-button").style = "width: auto;";
+        }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
         generateExcel();
     }
@@ -964,6 +1015,7 @@ async function getData (login, password) {
 //Database
 const dbName = "historicDataKM";
 const dbVersion = 1;
+let db;
 
 const openDBRequest = indexedDB.open(dbName, dbVersion);
 
@@ -976,23 +1028,27 @@ openDBRequest.onupgradeneeded = function (event) {
 };
 
 openDBRequest.onsuccess = function (event) {
-    const db = event.target.result;
-
-    document.getElementById("save-button").addEventListener("click", () => {
-        const transaction = db.transaction(["historicData"], "readwrite");
-        const store = transaction.objectStore("historicData");
-        const titel = mixedKeywordsArray[0].line;
-        const newData = { data: JSON.stringify(mixedKeywordsArray), titel: titel, timestamp: new Date().toLocaleString() };
-        
-        store.add(newData);
-        
-        transaction.oncomplete = () => {
-            showNotification('De data is opgeslagen, je kunt deze nu bekijken!', 5000);
-        };
-        document.getElementById("save-button").style = "width: auto; display:none;";
-    });
+    db = event.target.result;
 };
 
 openDBRequest.onerror = function (event) {
     window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
 };
+
+async function saveData() {
+    const transaction = db.transaction(["historicData"], "readwrite");
+    const store = transaction.objectStore("historicData");
+    const titel = mixedKeywordsArray[0].line;
+    const newData = { data: JSON.stringify(mixedKeywordsArray), titel: titel, timestamp: new Date().toLocaleString() };
+    
+    store.add(newData);
+    
+    transaction.oncomplete = () => {
+        const successToast = document.getElementById("success-toast");
+        const bootstrapToast = new bootstrap.Toast(successToast);
+        bootstrapToast.show();
+    };
+    document.getElementById("save-button").style = "width: auto; display:none;";
+};
+
+document.getElementById("save-button").addEventListener("click", saveData);
