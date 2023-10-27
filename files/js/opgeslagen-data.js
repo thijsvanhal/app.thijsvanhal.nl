@@ -28,7 +28,7 @@ function loadStoredData() {
 
     getDataRequest.onsuccess = () => {
         const historicData = getDataRequest.result;
-        const dataList = document.getElementById("data-list");
+        const dataList = document.getElementById("data-container");
 
         if (getDataRequest.readyState === "done" && historicData.length > 0) {
             dataList.innerHTML = "";

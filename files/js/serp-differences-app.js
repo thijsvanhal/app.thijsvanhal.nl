@@ -93,15 +93,33 @@ if (checkbox_checked === "checked") {
     checkbox.checked = true;
 }
 
+const keyword2input = document.getElementById("zoekwoord-2");
+keyword2input.addEventListener("input", function() {
+    if (keyword2input.value != '') {
+        document.getElementById("zoekwoord-3").removeAttribute("disabled");
+    } else {
+        document.getElementById("zoekwoord-3").setAttribute("disabled", "disabled");
+    }
+});
+
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
-    document.getElementById("save-button").style = "width: auto; display:none;";
-    const container = document.getElementById('serps');
-    container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>';
-
     const keyword1 = document.getElementById("zoekwoord-1").value;
     const keyword2 = document.getElementById("zoekwoord-2").value;
     const keyword3 = document.getElementById("zoekwoord-3").value;
+    
+    if (keyword1 === '' || keyword2 === '') {
+        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je moet minimaal 2 zoekwoorden invullen om de tool te gebruiken!</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
+        return
+    }
 
     mixedKeywordsArray = [];
     taskIds = [];
@@ -123,12 +141,10 @@ async function getData(login_storage, login, password, api_login) {
 
     if (!api_login && login_storage === "") {
         window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
-    } else {
-        const confirmed = confirm("Weet je zeker dat je een API call gaat maken? Dit kost geld!");
-  
-        if (!confirmed) {
-        return;
-        }
+    } else {       
+        document.getElementById("save-button").style = "width: auto; display:none;";
+        const container = document.getElementById('serps');
+        container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>';
     
         for (const keywordObj of keywords) {
             const selectedCountry = document.getElementById('search-location').value;

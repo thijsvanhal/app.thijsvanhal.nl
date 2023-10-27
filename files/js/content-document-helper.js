@@ -99,11 +99,20 @@ async function getData(login_storage, login, password, api_login) {
     divs.forEach(id => {
         document.getElementById(id).innerHTML = '';
     });
-    document.getElementById("save-button").style = "width: auto; display:none;";
-    const container = document.getElementById('serps');
-    container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>'
-
+    
     const keyword = document.getElementById("zoekwoord-1").value;
+    if (keyword === '') {
+        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je moet een zoekwoord invullen om de tool te gebruiken!</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
+        return
+    }   
 
     mixedKeywordsArray = [];
     taskIds = [];
@@ -122,6 +131,9 @@ async function getData(login_storage, login, password, api_login) {
     if (!api_login && login_storage === "") {
         window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
     } else {
+        document.getElementById("save-button").style = "width: auto; display:none;";
+        const container_serps = document.getElementById('serps');
+        container_serps.innerHTML = '<p>De tool gaat bezig met het verzamelen van data...</p>';
         for (const keywordObj of keywords) {
             const selectedCountry = document.getElementById('search-location').value;
             const selectedLanguage = document.getElementById('search-language').value;

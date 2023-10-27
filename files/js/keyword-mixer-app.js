@@ -612,7 +612,6 @@ error_sluiten_knop.onclick = function() {
 
 // Mixen van bulk lijsten
 async function mixLists(login_storage, login, password, api_login) {
-    console.log(login_storage, login, password, api_login);
     // verwijder huidige waardes
     document.getElementById("save-button").style = "width: auto; display:none;";
     document.querySelector('.bulk-mixer-status').innerHTML = '';

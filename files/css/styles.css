@@ -423,3 +423,12 @@ a {
 .list-group {
     margin-bottom: 2rem;
 }
+.modal-dialog {
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%) !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
