@@ -165,7 +165,7 @@ async function getData() {
     if (apparaatCheckbox.checked) {
       dimensions.push("DEVICE");
     }
-    if (filter_type_value !== 'Filter Type') {
+    if (filter_type_value !== '') {
       var requestBody = {
         startDate: startDate,
         endDate: endDate,

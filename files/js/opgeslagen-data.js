@@ -1,6 +1,8 @@
 //Database
 const currentUrl = window.location.href;
 let dbName = '';
+let data = [];
+
 if (currentUrl.includes('serp-differences-checker')) {
     dbName = "historicDataSDC";
 } 
@@ -70,6 +72,7 @@ function loadStoredData() {
 }
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(loadStoredData, 1500);
+    setTimeout(populateData, 2500);
 });
 
 openDBRequest.onerror = function (event) {
@@ -104,4 +107,61 @@ function deleteData(id) {
     deleteRequest.onsuccess = function () {
         loadStoredData();
     };
+}
+
+function populateData() {
+    const dataContainer = document.getElementById('data-container');
+    const items = dataContainer.querySelectorAll('div');
+
+    items.forEach(item => {
+        const name = item.querySelector('h3').textContent;
+        const date = item.querySelector('p').textContent.replace('Gemaakt op: ', '');
+        const id = item.querySelector('.view-button').getAttribute('data-id');
+        
+        data.push({
+            name: name,
+            date: date,
+            id: id
+        });
+    });
+    searchInput.removeAttribute("disabled");
+}
+
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', applyFilters);
+
+function applyFilters() {
+    const searchValue = searchInput.value.toLowerCase();
+
+    const filteredData = data.filter(item => {
+        const name_filtered = item.name.replace('Overzicht: ', '');
+        if ((name_filtered.toLowerCase().includes(searchValue))) {
+            return true;
+        }
+        return false;
+    });
+
+    displayData(filteredData);
+}
+
+function displayData(data) {
+    const dataContainer = document.getElementById('data-container');
+    dataContainer.innerHTML = '';
+    
+    if (data.length === 0 && searchInput.value != '') {
+        dataContainer.innerHTML = '<p>Helaas! Met die zoekopdracht kunnen we helaas niks vinden in de opgeslagen data.</p>';
+    } else {
+        data.forEach(item => {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h3>${item.name}</h3>
+                <p>Gemaakt op: ${item.date}</p>
+                <button type="button" class="btn btn-primary view-button" style="width: auto" data-id="${item.id}">Bekijk</button> 
+                <button type="button" class="btn btn-primary delete-button secondbutton" style="width: auto" data-id="${item.id}">Verwijder</button>
+                <hr>
+            `;
+    
+            dataContainer.appendChild(div);
+        });
+    }
 }
