@@ -262,42 +262,24 @@ function renderPositionResults(results) {
 }
 
 // Language & location
-async function fetchLocationLanguageData(login, password) {
-    const locationRequestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(login + ':' + password)
-      }
-    };
-  
-    const locationUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/locations';
-    const locationResponse = await fetch(locationUrl, locationRequestOptions);
+async function fetchLocationLanguageData() {
+
+    const locationResponse = await fetch ('/files/locations.json');
     const locationData = await locationResponse.json();
-    const locationEntries = locationData.tasks[0].result;
   
     const desiredCountries = ['Netherlands', 'Belgium'];
-    const filteredLocationEntries = locationEntries.filter(location => {
-      return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
+    const filteredLocationEntries = locationData.filter(location => {
+        return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
     createCustomDropdown(locationDropdown, 'location-options', 'search-location', locationOptions);
   
-    const languageRequestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(login + ':' + password)
-      }
-    };
-  
-    const languageUrl = 'https://api.dataforseo.com/v3/keywords_data/google_ads/languages';
-    const languageResponse = await fetch(languageUrl, languageRequestOptions);
+    const languageResponse = await fetch("/files/languages.json");
     const languageData = await languageResponse.json();
-    const languageOptions = languageData.tasks[0].result.map(language => language.language_name);
-  
+    const languageOptions = languageData.map(language => language.language_name);
+
     const languageDropdown = document.getElementById('language-dropdown');
     createCustomDropdown(languageDropdown, 'language-options', 'search-language', languageOptions);
   
