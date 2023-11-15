@@ -29,9 +29,8 @@ function mixKeywords(...lists) {
 
 // Functie voor verwijderen van dubbele zoekwoorden
 function removeDuplicates(mixedKeywords) {
-    let keywords = mixedKeywords.toLowerCase().split("\n");
     let uniqueKeywords = new Map();
-    for (let keyword of keywords) {
+    for (let keyword of mixedKeywords) {
         uniqueKeywords.set(keyword, keyword);
     }
     return Array.from(uniqueKeywords.values()).join("\n");
@@ -136,13 +135,32 @@ function updateMixer () {
             ].join("\n");
         }
     }
-    let noDuplicates = removeDuplicates(mixedKeywords);
+    let KeywordsArray = mixedKeywords.toLowerCase().split('\n');
+    let noDuplicates = removeDuplicates(KeywordsArray.filter(isValidKeywordPhrase));
     var length = getLength(noDuplicates);
     resultTextarea.value = noDuplicates.toString();
     resultLength.textContent = length.toString();
     window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
 };
+
+function isValidKeywordPhrase(phrase) {
+    const words = phrase.split(/\s+/);
+    if (words.length > 10) {
+        return false;
+    }
+    for (const word of words) {
+        if (word.length > 80) {
+            return false;
+        }
+        const disallowedSymbols = /[^\w\s'-]/;
+        if (disallowedSymbols.test(word)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 // Functie notificatie
 function showNotification(message, duration) {
