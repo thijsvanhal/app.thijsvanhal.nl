@@ -252,12 +252,43 @@
     </div>
     <button type="button" class="btn btn-primary secondbutton" onclick="removeLists()" style="width: auto;">Verwijder alle rijtjes</button>   
   </div>
+  <div class="container-sm">
+    <form id="tableForm">
+      <table class="table table-bordered" id="dataTable">
+          <thead>
+          <tr>
+              <th>Naam Rijtje 1</th>
+              <th>Naam Rijtje 2</th>
+              <th>Naam Rijtje 3</th>
+              <th>Suggesties (1) of Zoekvolumes (0)</th>
+              <th>Verwissel lijsten?</th>
+              <th>Lijst 2 optioneel?</th>
+              <th>Lijst 3 optioneel?</th>
+              <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+              <td><input type="text" class="form-control" name="name1input" required></td>
+              <td><input type="text" class="form-control" name="name2input"></td>
+              <td><input type="text" class="form-control" name="name3input"></td>
+              <td><input type="number" class="form-control" name="suggestionsinput" required></td>
+              <td><input type="checkbox" class="form-check-input" name="swapListsinput" required></td>
+              <td><input type="checkbox" class="form-check-input" name="optionalList2input"></td>
+              <td><input type="checkbox" class="form-check-input" name="optionalList3input"></td>
+              <td><button type="button" class="btn btn-danger" onclick="addRow()">Voeg toe</button></td>
+          </tr>
+          </tbody>
+      </table>
+      <button type="button" class="btn btn-primary" onclick="buildTable()">Rijen bouwen</button>
+    </form>
+  </div>
   <div class="container-sm" id="blauwe-container">
     <div>
       <h2>Bulk zoekvolumes ophalen</h2>
       <h3>API Methode</h3>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="zoekvolumes" checked>
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="zoekvolumes">
         <label class="form-check-label" for="zoekvolumes">
           Zoekvolumes
         </label>

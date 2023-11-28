@@ -481,6 +481,74 @@ function updateAccordion() {
     accordionLists.appendChild(rowContainer);
 }
 
+function addRow() {
+    const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow(table.rows.length);
+    newRow.id = 'waarde';
+    const columns = ['name1', 'name2', 'name3', 'suggestions', 'swapLists', 'optionalList2', 'optionalList3'];
+
+    for (const col of columns) {
+        const cell = newRow.insertCell();
+        const input = document.createElement('input');
+        if (col.includes('List')) {
+            input.type = 'checkbox';
+            input.className = 'form-check-input';
+        } else {
+            input.type = 'text';
+            input.className = 'form-control';
+        }
+        input.name = col;
+        cell.appendChild(input);
+    }
+
+    const actionCell = newRow.insertCell();
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'btn btn-danger';
+    deleteButton.textContent = 'Verwijder';
+    deleteButton.onclick = function () {
+        deleteRow(this);
+    };
+    actionCell.appendChild(deleteButton);
+}
+
+function deleteRow(button) {
+    const row = button.closest('tr');
+    row.parentNode.removeChild(row);
+}
+
+const columnOrder = ['suggestions', 'swapLists', 'name1', 'name2', 'optionalList2', 'name3', 'optionalList3'];
+
+function buildTable() {
+    const tableRows = document.querySelectorAll('table#dataTable tbody tr#waarde');
+    let result = '';
+
+    for (const row of tableRows) {
+        const columns = row.querySelectorAll('input');
+        result += columnOrder.map((col, index) => {
+            const input = Array.from(columns).find(input => input.name === col);
+            
+            if (col === 'optionalList2' && columns[index - 3].value.trim() === '') {
+                return null;
+            } else if (col === 'optionalList3' && columns[index - 4].value.trim() === '') {
+                return null;
+            } else if (input.type === 'checkbox') {
+                return input.checked ? 1 : 0;
+            } else {
+                const value = input.value.trim();
+                if (value === '') {
+                    return null;
+                }
+                return value;
+            }
+        }).filter(value => value !== null).join(',') + '\n';
+    }
+
+    document.getElementById('afhankelijk').checked = true;    
+    document.getElementById('bulk-input').innerText = result;
+}
+
+
 // Functie voor ophalen van waardes van de lijst op basis van de lijst naam
 function getListValues(listName) {
     for (let i = 0; i < lists.length; i++) {
