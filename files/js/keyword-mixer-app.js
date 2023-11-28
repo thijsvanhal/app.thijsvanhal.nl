@@ -570,34 +570,32 @@ if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
+    fetchLocationLanguageData(login, password);
 } else {
     login = email_login;
     password = api_login;
 }
 
-const modal = document.getElementById("loginModal");
+const modal = new bootstrap.Modal(document.getElementById("loginModal"));
 const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
-const logoutButton = document.getElementById("logoutButton");
+const deleteButton = document.getElementById("deleteButton");
 const welcomeText = document.getElementById("welcomeText");
 const rememberme = document.getElementById("rememberMe");
 const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
-function updateNavbar() {
-  if (login) {
-    loginLink.style.display = "none";
-    welcomeText.textContent = "Welkom, " + login;
-    logoutButtonContainer.style.display = "block";
-    fetchLocationLanguageData(login, password);
-  } else {
-    loginLink.style.display = "block";
-    welcomeText.textContent = '';
-    logoutButtonContainer.style.display = "none";
-  }
-}
-
-loginLink.onclick = function() {
-  modal.style.display = "block";
+loginLink.onclick = function () {
+    modal.show();
+    if (login) {
+        document.getElementById("inputEmail").value = login;
+        document.getElementById("inputAPI").value = password;
+        if (login_storage) {
+            rememberme.checked = true;
+        }
+        deleteButton.style.display = 'block';
+    } else {
+        deleteButton.style.display = 'none';
+    }
 };
 
 loginButton.onclick = function() {
@@ -615,18 +613,18 @@ loginButton.onclick = function() {
         login = document.getElementById("inputEmail").value;
         password = document.getElementById("inputAPI").value;
     }
-    updateNavbar();
     fetchLocationLanguageData(login, password);
 };
 
-logoutButton.onclick = function() {
-  localStorage.removeItem('userData');
-  login = '';
-  password = '';
-  updateNavbar();
+deleteButton.onclick = function() {
+    localStorage.removeItem('userData');
+    login = '';
+    password = '';
+    rememberme.checked = false;
+    document.getElementById("inputEmail").value = '';
+    document.getElementById("inputAPI").value = '';
+    modal.hide();
 };
-
-window.onload = updateNavbar();
 
 let checkbox = document.getElementById("standaard-data-switch");
 checkbox.addEventListener("click", function() {
@@ -711,16 +709,19 @@ async function mixLists(login_storage, login, password, api_login) {
     const lines = inputTextarea.value.split("\n");
     await calculateCost(lines);
 
+    console.log(api_login, login_storage);
     if (!api_login && login_storage === "") {
         const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
         error_modal.show();
-        document.getElementById("error-message").innerHTML = `<p class="body-text">Je bent niet ingelogd!<br><br> Log in en probeer het opnieuw!</p>`;
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt geen DataForSEO API waarden ingesteld.<br><br> Voeg deze eerst toe!</p>`;
         const modalClosedPromise = new Promise((resolve) => {
             error_modal._element.addEventListener("hidden.bs.modal", function () {
                 resolve();
             }, { once: true });
+            
         });
         await modalClosedPromise;
+        modal.show();
     } else {
         for (const line of lines) {
             const checkvalues = line.split(",");

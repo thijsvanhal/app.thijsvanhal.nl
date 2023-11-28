@@ -36,6 +36,7 @@
       font-display: swap;
     }
   </style>
+  <script type="module" src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -68,6 +69,11 @@
     </script>
   </head>
   <body>
+  <div id="loading-screen">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -110,13 +116,17 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
-          <li class="nav-item" id="welcomeText">
-          </li>
-          <li class="nav-item" style="display: none;" id="logoutButtonContainer">
-            <button class="btn btn-primary secondbutton" id="logoutButton">Log uit</button>
-          </li>
-          <li class="nav-item">
-            <button class="btn btn-primary secondbutton" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</button>
+          <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item">
+                <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
+              </li>
+              <li class="nav-item">
+                <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -126,7 +136,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Inloggen bij DataForSEO</h5>
+          <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
         <div class="modal-body">
@@ -139,9 +149,10 @@
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Onthouden</label>
+              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server gestuurd)</label>
             </div>
-            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
+            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
+            <button type="button" class="btn btn-primary secondbutton" id="deleteButton" style="display: none;">Verwijder Data</button>
           </form>
         </div>
       </div>
@@ -252,7 +263,7 @@
     </div>
     <button type="button" class="btn btn-primary secondbutton" onclick="removeLists()" style="width: auto;">Verwijder alle rijtjes</button>   
   </div>
-  <div class="container-sm">
+  <div class="container-sm" style="display: none;">
     <form id="tableForm">
       <table class="table table-bordered" id="dataTable">
           <thead>
@@ -373,7 +384,9 @@
           <h5 class="modal-title">Error!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
-        <div class="modal-body" id="error-message">
+        <div class="modal-body">
+          <p id="error-message"></p>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Begrepen</button>
         </div>
       </div>
     </div>
