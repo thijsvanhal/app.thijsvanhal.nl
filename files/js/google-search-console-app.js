@@ -8,7 +8,7 @@ let aantal_properties
 let allData = [];
 let dimensions = [];
 
-const loginLink = document.getElementById("loginLink");
+const loginLink = document.getElementById("loginLinkAPI");
 const welcomeText = document.getElementById("welcomeText");
 
 loginLink.onclick = function() {
@@ -16,7 +16,7 @@ loginLink.onclick = function() {
 };
 
 // Datum selecties
-var today = new Date();
+let today = new Date();
 var beginDate = new Date(today.getFullYear(), today.getMonth() - 16, today.getDate());
 var beginDateString = beginDate.toISOString().split("T")[0];
 document.getElementById("start-date").setAttribute("min", beginDateString);
@@ -279,8 +279,93 @@ function downloadExcelFile() {
 
 function updateInformation(data) {
   loginLink.style.display = "none";
-  welcomeText.textContent = "Welkom, " + data.name;
+  document.getElementById("searchproperty").removeAttribute("disabled");
+  welcomeText.textContent = "Selecteer een property, " + data.name;
 }
 
-const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+document.addEventListener('DOMContentLoaded', function() {
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+});
+
+// Datum selecties
+const startDateInput = document.getElementById('start-date');
+const endDateInput = document.getElementById('end-date');
+const selecteerPeriode = document.getElementById('selecteer-periode');
+
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() - 1);
+
+selecteerPeriode.addEventListener('change', function () {
+  // Get the selected value from the select element
+  const selectedValue = selecteerPeriode.value;
+
+  // Calculate the start date based on the selected value
+  const startDate = new Date(currentDate); // Clone the current date
+
+  switch (selectedValue) {
+    case '7':
+      startDate.setDate(currentDate.getDate() - 7);
+      break;
+    case '28':
+      startDate.setDate(currentDate.getDate() - 28);
+      break;
+    case 'd-maand':
+      if ((today.getDate() === 1 || today.getDate() === 2)) {
+        alert("Google Search Console heeft vertraging, je kan enkel de data van 2 dagen ervoor bekijken. Het is daarom niet mogelijk om van deze maand de data op te halen, probeer het vanaf de 3e van de maand.");
+        return;
+      };
+      startDate.setDate(1);
+      console.log(startDate);
+      console.log(today);
+      break;
+    case 'a-maand':
+      startDate.setMonth(today.getMonth() - 1, 1); // First day of the last month
+      break;
+    case '3-maand':
+      startDate.setMonth(currentDate.getMonth() - 3); // First day of the month 3 months ago
+      break;
+    case '6-maand':
+      startDate.setMonth(currentDate.getMonth() - 6); // First day of the month 6 months ago
+      break;
+    case '12-maand':
+      startDate.setFullYear(currentDate.getFullYear() - 1);
+      break;
+    case '16-maand':
+      startDate.setFullYear(currentDate.getFullYear() - 1, currentDate.getMonth() - 4);
+      break;
+    case 'jaar':
+      startDate.setMonth(0, 1);
+      break;
+    default:
+      break;
+  }
+
+  startDateInput.value = formatDate(startDate);
+
+  const endDate = new Date();
+  endDate.setDate(today.getDate() - 2);
+
+  endDateInput.value = formatDate(endDate);
+});
+
+// Function to format a date as "yyyy-mm-dd"
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+// Disabled
+
+const filterType = document.getElementById("filter-type");
+filterType.addEventListener("change", function() {
+    if (filterType.value != '') {
+        document.getElementById("filter-match").removeAttribute("disabled");
+        document.getElementById("filter").removeAttribute("disabled");
+    } else {
+        document.getElementById("filter-match").setAttribute("disabled", "disabled");
+        document.getElementById("filter").setAttribute("disabled", "disabled");
+    }
+});

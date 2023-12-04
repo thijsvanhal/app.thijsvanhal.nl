@@ -245,7 +245,7 @@ async function addList() {
 
     const listExists = lists.some((list) => list.name === listName);
     if (listExists) {
-        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+        
         error_modal.show();
         document.getElementById("error-message").innerHTML = `<p class="body-text">Rijtje <b>${listName}</b> bestaat al, pas de naam aan :)</p>`;
         const modalClosedPromise = new Promise((resolve) => {
@@ -570,13 +570,21 @@ if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
-    fetchLocationLanguageData(login, password);
+    fetchLanguageData();
+    fetchLocationData("Netherlands")
 } else {
     login = email_login;
     password = api_login;
 }
 
-const modal = new bootstrap.Modal(document.getElementById("loginModal"));
+let modal;
+let error_modal;
+document.addEventListener('DOMContentLoaded', function() {
+    modal = new bootstrap.Modal(document.getElementById("loginModal"));
+    error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+});
 const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const deleteButton = document.getElementById("deleteButton");
@@ -613,7 +621,6 @@ loginButton.onclick = function() {
         login = document.getElementById("inputEmail").value;
         password = document.getElementById("inputAPI").value;
     }
-    fetchLocationLanguageData(login, password);
 };
 
 deleteButton.onclick = function() {
@@ -678,7 +685,10 @@ function calculateCost(lines) {
         };
 
         const cancelButton = document.getElementById("cancel");
-        cancelButton.addEventListener("click", hideConfirmation);
+        cancelButton.addEventListener("click", async () => {
+            hideConfirmation();
+            location.reload();
+        });
 
         const confirm = document.getElementById("confirm");
         confirm.removeEventListener("click", hideConfirmation);
@@ -705,13 +715,15 @@ async function mixLists(login_storage, login, password, api_login) {
     apiMethodes = [];
 
     const inputTextarea = document.getElementById("bulk-input");
+
+
+
     const statusElement = document.querySelector('.bulk-mixer-status');
     const lines = inputTextarea.value.split("\n");
     await calculateCost(lines);
 
     console.log(api_login, login_storage);
     if (!api_login && login_storage === "") {
-        const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
         error_modal.show();
         document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt geen DataForSEO API waarden ingesteld.<br><br> Voeg deze eerst toe!</p>`;
         const modalClosedPromise = new Promise((resolve) => {
@@ -722,6 +734,7 @@ async function mixLists(login_storage, login, password, api_login) {
         });
         await modalClosedPromise;
         modal.show();
+        return;
     } else {
         for (const line of lines) {
             const checkvalues = line.split(",");
@@ -731,7 +744,6 @@ async function mixLists(login_storage, login, password, api_login) {
             });
             
             if (!checkExist) {
-                const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
                 error_modal.show();
                 document.getElementById("error-message").innerHTML = `<p class="body-text">De naam <b>${checknonEmptyValues.join(" + ")}</b> komt niet overeen met de naam van het rijtje.<br> Pas deze aan en probeer opnieuw!</p>`;
                 const modalClosedPromise = new Promise((resolve) => {
@@ -813,7 +825,6 @@ async function mixLists(login_storage, login, password, api_login) {
                     lineNames.push(nonEmptyValues.join(" + "));
                     taskIds.push(post_result.tasks[0].id);
                 } else {
-                    const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
                     error_modal.show();
                     document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b> <br><br> De tool gaat verder maar je zult rijtje <b>${nonEmptyValues.join(" + ")}</b> moeten controleren en later opnieuw moeten ophalen!</p>`;
                     const modalClosedPromise = new Promise((resolve) => {
@@ -957,12 +968,18 @@ async function generateExcel() {
 }
 
 // Language & location
-async function fetchLocationLanguageData() {
+let typingTimer;
+const Interval = 1000;
+document.getElementById("search-location").addEventListener("input", function() {
+    clearTimeout(typingTimer);
+    const searchInput = document.getElementById("search-location").value;
+    typingTimer = setTimeout(fetchLocationData(searchInput), Interval);
+});
 
+async function fetchLocationData(input) {
     const locationResponse = await fetch ('/files/locations.json');
     const locationData = await locationResponse.json();
-  
-    const desiredCountries = ['Netherlands', 'Belgium'];
+    const desiredCountries = [input];
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
@@ -970,19 +987,15 @@ async function fetchLocationLanguageData() {
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
     createCustomDropdown(locationDropdown, 'location-options', 'search-location', locationOptions);
-  
+}
+
+async function fetchLanguageData() {
     const languageResponse = await fetch("/files/languages.json");
     const languageData = await languageResponse.json();
     const languageOptions = languageData.map(language => language.language_name);
 
     const languageDropdown = document.getElementById('language-dropdown');
     createCustomDropdown(languageDropdown, 'language-options', 'search-language', languageOptions);
-  
-    const defaultLocation = 'Netherlands';
-    const defaultLanguage = 'Dutch';
-  
-    document.querySelector('#location-dropdown input').value = defaultLocation;
-    document.querySelector('#language-dropdown input').value = defaultLanguage;
 }
 
 document.addEventListener('click', (event) => {
@@ -1039,6 +1052,69 @@ function filterOptions(optionsId, filter) {
     });
 }
 
+// Disabled
+const disabled = document.getElementById("bulk-input");
+const disabled1 = document.getElementById("zoekvolumes");
+const disabled2 = document.getElementById("suggesties");
+const disabled3 = document.getElementById("afhankelijk");
+const radioButtons = document.querySelectorAll('input[name="flexRadioDefault"]');
+const afhankelijkRadio = document.getElementById("afhankelijk");
+
+disabled.addEventListener("input", function() {
+    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        checkErrors();
+    } else {
+        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+    }
+});
+
+disabled1.addEventListener("change", function() {
+    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        checkErrors();
+    } else {
+        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+    }
+});
+
+disabled2.addEventListener("change", function() {
+    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        checkErrors();
+    } else {
+        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+    }
+});
+
+disabled3.addEventListener("change", function() {
+    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        checkErrors();
+    } else {
+        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+    }
+});
+
+function checkErrors() {
+    const lines = disabled.value.trim().split('\n');
+    const firstLine = lines[0];
+
+    if ((firstLine.startsWith('0') || firstLine.startsWith('1')) && !afhankelijkRadio.checked) {
+        afhankelijkRadio.checked = true;
+        radioButtons.forEach(radio => {
+            if (radio !== afhankelijkRadio) {
+                radio.checked = false;
+            }
+        });
+    } else if (!(firstLine.startsWith('0') || firstLine.startsWith('1')) && afhankelijkRadio.checked) {
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt niet de juiste API methode geselecteerd. Je kunt enkel 'verschilt per regel' selecteren als je ook rijtjes gaat mixen. Selecteer voor nu 'Zoekvolumes' of 'Suggesties'</p>`;
+        afhankelijkRadio.checked = false;
+        radioButtons.forEach(radio => radio.checked = false);
+    }
+}
+
 // Data ophalen op basis van taskId's in html form.
 async function getData (login, password) {
     mixedKeywordsArray = [];
@@ -1080,7 +1156,7 @@ async function getData (login, password) {
     generateExcel();
 }
 
-//Database
+//database
 const dbName = "historicDataKM";
 const dbVersion = 1;
 let db;

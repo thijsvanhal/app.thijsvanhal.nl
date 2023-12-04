@@ -19,9 +19,10 @@ const userElement = document.getElementById('user-info');
 function updateUserInfo(user) {
     if (user) {
         const { displayName, photoURL } = user;
+        const {image, breedte} = (photoURL !== null) ? { image: photoURL, breedte: "30" } : { image: "/files/images/person.svg", breedte: "20" };
 
         const userHTML = `
-        <img src="${photoURL}" alt="User Photo" width="30" height="30">
+        <img src="${image}" alt="User Photo" width=${breedte} height=${breedte}>
         <span>${displayName}</span>
         `;
         userElement.innerHTML = userHTML;

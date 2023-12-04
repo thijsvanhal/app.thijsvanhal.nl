@@ -33,6 +33,7 @@
       font-display: swap;
     }
   </style>
+  <script type="module" async src="/files/js/auth.js"></script>
   <script async src="https://accounts.google.com/gsi/client"></script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -66,11 +67,16 @@
     </script>
   </head>
   <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <nav class="navbar navbar-expand-md fixed-top">
+    <div id="loading-screen">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
@@ -108,10 +114,14 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
-          <li class="nav-item" id="welcomeText">
-          </li>
-          <li class="nav-item">
-            <button class="btn btn-primary secondbutton" id="loginLink">Log in</button>
+          <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item">
+                <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -119,13 +129,15 @@
   </nav>
   <div class="container-sm" id="top-container">
     <h1>Google Search Console Extractor</h1>
-    <p>Met de Google Search Console Extractor haal je gemakkelijk data op met door middel van de Google Search Console API.</p>
+    <button class="btn btn-primary" id="loginLinkAPI">Selecteer Google account</button>
+  </div>
+  <div class="container-sm" id="blauwe-container">
     <div class="row">
-      <div class="col col-lg-6">
+      <div class="col col-lg-5">
         <div class="custom-dropdown" id="property-dropdown">
           <form class="form-floating">
-            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="searchproperty" data-np-intersection-state="visible">
-            <label for="searchproperty">Selecteer property</label>
+            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="searchproperty" data-np-intersection-state="visible" disabled>
+            <label id="welcomeText" for="searchproperty">Selecteer property</label>
           </form>
           <ul class="dropdown-options" id="all-sites">
           </ul>
@@ -143,11 +155,30 @@
           <label for="end-date">Wat is de einddatum?</label>
         </form>
       </div>
+      <div class="col-sm">
+        <form class="form-floating">
+          <select class="form-select" id="selecteer-periode" style="margin: 0px;">
+            <option value>Selecteer periode</option>
+            <option value="7">Afgelopen 7 dagen</option>
+            <option value="28">Afgelopen 28 dagen</option>
+            <option value="d-maand">Deze maand</option>
+            <option value="a-maand">Afgelopen maand</option>
+            <option value="3-maand">Afgelopen 3 maanden</option>
+            <option value="6-maand">Afgelopen 6 maanden</option>
+            <option value="12-maand">Afgelopen 12 maanden</option>
+            <option value="16-maand">Afgelopen 16 maanden</option>
+            <option value="jaar">Dit jaar</option>
+          </select>
+          <label for="selecteer-periode">Standaard periode</label>
+        </form>
+      </div>
     </div>
   </div>   
   <div class="container-sm" id="keyword-container">
-    <h2>Stel de dimensies in</h2>
-    <p>De dimensies zijn de kolommen die de tool ophaalt. Kies je enkel pagina's? Dan krijg je de performance per pagina. Kies je enkel zoekwoorden? Dan krijg je de performance per zoekwoord. Kies je pagina en zoekwoord? Dan zie je de performance per zoekwoord, gekoppeld aan de desbetreffende pagina. Dan heb je ook nog de mogelijkheid om de performance te splitsen tussen mobiel en desktop apparaat voor specifieke analyses.</p>
+    <h2 class="hulp-element">Stel de dimensies in</h2>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Dimensies instellen" data-bs-content="De dimensies zijn de kolommen die de tool ophaalt.<br><br> Kies je enkel pagina's? Dan krijg je de performance per pagina.<br><br> Kies je enkel zoekwoorden? Dan krijg je de performance per zoekwoord.<br><br> Kies je pagina en zoekwoord? Dan zie je de performance per zoekwoord, gekoppeld aan de desbetreffende pagina.<br><br> Dan heb je ook nog de mogelijkheid om de performance te splitsen tussen mobiel en desktop apparaat voor specifieke analyses, dat doe je door apparaat aan te vinken.">
+      ?
+    </div>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" id="dimensie-pagina" checked>
       <label class="form-check-label" for="dimensie-pagina">Pagina</label>
@@ -181,7 +212,7 @@
       <div class="col-sm">
         <form class="form-floating">
           <select class="form-select" id="filter-type">
-            <option value>Open menu</option>
+            <option value></option>
             <option value="PAGE">Pagina</option>
             <option value="QUERY">Zoekwoord</option>
           </select>
@@ -190,8 +221,8 @@
       </div>
       <div class="col-sm">
         <form class="form-floating">
-          <select class="form-select" id="filter-match">
-            <option value>Open menu</option>
+          <select class="form-select" id="filter-match" disabled>
+            <option value></option>
             <option value="CONTAINS">Bevat</option>
             <option value="NOT_CONTAINS">Bevat niet</option>
             <option value="EQUALS">Komt overeen met</option>
@@ -204,7 +235,7 @@
       </div>
     </div>
     <form class="form-floating">
-      <input type="text" class="form-control" id="filter" placeholder="Filter waarde: zoekwoord, pagina of RegEx">
+      <input type="text" class="form-control" id="filter" placeholder="Filter waarde: zoekwoord, pagina of RegEx" disabled>
       <label for="filter">Filter waarde: zoekwoord, pagina of RegEx</label>
     </form>
     

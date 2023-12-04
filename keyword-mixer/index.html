@@ -36,7 +36,7 @@
       font-display: swap;
     }
   </style>
-  <script type="module" src="/files/js/auth.js"></script>
+  <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -123,6 +123,7 @@
               <li class="nav-item">
                 <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
               </li>
+              <hr>
               <li class="nav-item">
                 <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
               </li>
@@ -159,6 +160,10 @@
     </div>
   </div>
   <div class="container-sm" id="top-container">
+    <h1 class="hulp-element">Zoekwoorden Mixen</h1>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Zoekwoorden Mixen" data-bs-content="Met de zoekwoorden mixer mix je eenvoudig 3 lijsten met zoekwoorden tot alle mogelijke combinaties.<br><br>Het makkelijkst en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe zoekwoorden kunt plakken.<br><br>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke <b>automatisch</b> worden gekopieerd om bijvoorbeeld in Google Ads te kunnen plakken!">
+      ?
+    </div>
     <div class="row">
       <div class="col-sm" id="pad-col">
         <div class="form-floating">
@@ -200,26 +205,9 @@
     <div class="woorden" id="woorden-totaal" style="margin-top: 0.5rem;"></div>
   </div>
   <div class="container-sm">
-    <div class="body-text">
-      <h1>Zoekwoorden Mixen</h1>
-      <p>Met de zoekwoorden mixer mix je eenvoudig 3 lijsten met zoekwoorden tot alle mogelijke combinaties.</p>
-      <p>Het makkelijkst en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe zoekwoorden kunt plakken.</p>
-      <p>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke <b>automatisch</b> worden gekopieerd om bijvoorbeeld in Google Ads te kunnen plakken!</p>
-    </div>
-  </div>
-  <div class="container-sm" id="keyword-container">
-    <div class="body-text">
-      <h1>Bulk Zoekwoorden Mixen</h1>
-      <p>Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden.</p>
-      <p>Hoe werkt de bulk keyword mixer precies?</p>
-      <p><b>Stap 1:</b> Log in met een DataForSEO account, dit kan rechtsboven</p>
-      <p><b>Stap 2:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere kolommen te plakken en in bulk rijtjes toevoegen.</p> 
-      <p><b>Stap 3:</b> Geef in het input veld 'bulk zoekvolumes ophalen' aan welke rijtjes je wil laten mixen.</p>
-      <p>Wil je enkel de zoekvolumes ophalen van opgegeven rijtjes? Vul de namen van de rijtjes onder elkaar in.</p>
-      <p>Wil je zoekwoorden mixen én de zoekvolumes ophalen van opgegeven rijtjes? Vul per regel in welke rijtjes de tool voor je moet mixen in onderstaand format:</p>
-      <p>1,1,naam rijtje,naam rijtje,1,naam rijtje,1</p>
-      <p>Met het eerste cijfer bepaal je of de zoekvolumes of suggesties opgehaald moeten worden, 1 = SUGGESTIES en 0 = ZOEKVOLUME. Met het tweede cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je de naam op van het rijtje dat als rijtje 1 moet functioneren, welke als rijtje 2 en welke als rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.</p>
-      <p><b>Stap 4:</b> Klik op 'Zoekvolumes ophalen' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.</p>
+    <h1 class="hulp-element">Bulk Zoekwoorden Mixen</h1>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Bulk Zoekwoorden Mixen" data-bs-content="Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden.<br><br>Hoe werkt de bulk keyword mixer precies?<br><br><b>Stap 1:</b> Log in met een DataForSEO account, dit kan rechtsboven<br><br><b>Stap 2:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere kolommen te plakken en in bulk rijtjes toevoegen.<br><br><b>Stap 3:</b> Geef in het input veld 'bulk zoekvolumes ophalen' aan welke rijtjes je wil laten mixen.<br><br>Wil je enkel de zoekvolumes ophalen van opgegeven rijtjes? Vul de namen van de rijtjes onder elkaar in.<br><br>Wil je zoekwoorden mixen én de zoekvolumes ophalen van opgegeven rijtjes? Vul per regel in welke rijtjes de tool voor je moet mixen in onderstaand format:<br><br>1,1,naam rijtje,naam rijtje,1,naam rijtje,1<br><br>Met het eerste cijfer bepaal je of de zoekvolumes of suggesties opgehaald moeten worden, 1 = SUGGESTIES en 0 = ZOEKVOLUME. Met het tweede cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je de naam op van het rijtje dat als rijtje 1 moet functioneren, welke als rijtje 2 en welke als rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.<br><br><b>Stap 4:</b> Klik op 'Zoekvolumes ophalen' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.<br><br>">
+      ?
     </div>
   </div>
   <div class="container-sm" id="blauwe-container">
@@ -320,7 +308,7 @@
         <div class="col-sm">
           <div class="custom-dropdown" id="location-dropdown">
             <form class="form-floating">
-              <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+              <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible" value="Netherlands">
               <label for="search-location">Locatie</label>
             </form>
             <ul class="dropdown-options" id="location-options">
@@ -330,7 +318,7 @@
         <div class="col-sm">
           <div class="custom-dropdown" id="language-dropdown">
             <form class="form-floating">
-              <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+              <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible" value="Dutch">
               <label for="search-language">Taal</label>
             </form>
             <ul class="dropdown-options" id="language-options"></ul>
@@ -346,7 +334,7 @@
       </div>
     </div>
     
-    <button type="button" class="btn btn-primary thirdbutton" onclick="mixLists(login_storage, login, password, api_login)">Zoekvolumes ophalen</button>
+    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen" onclick="mixLists(login_storage, login, password, api_login)" disabled>Zoekvolumes ophalen</button>
   </div>
   <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>

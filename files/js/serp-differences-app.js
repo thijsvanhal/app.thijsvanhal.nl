@@ -529,5 +529,3 @@ async function saveData() {
 };
 
 document.getElementById("save-button").addEventListener("click", saveData);
-
-{}
