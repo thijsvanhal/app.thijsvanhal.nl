@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="nl">
-  <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoekwoorden mixen voor zoekwoorden onderzoek - Keyword Mixer</title>
   <meta name="robots" content="index, follow">
   <meta name="description" content="Zoekwoorden mixen voor je zoekwoorden onderzoek of voor Google Ads? Gebruik de zoekwoorden mixer en genereer alle mogelijke combinaties!">
-  <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/keyword-mixer/">
-  <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/keyword-mixer/">
-  <link rel="alternate" hreflang="x-default" href="https://app.thijsvanhal.nl/keyword-mixer/">
   <link rel="stylesheet" href="/files/css/bootstrap.min.css" type="text/css">
   <link rel="stylesheet" href="/files/css/styles.css" type="text/css">
   <link rel="apple-touch-icon" sizes="180x180" href="/files/images/favicon/apple-touch-icon.png">
@@ -22,15 +19,16 @@
     @font-face {
       font-family: 'madaregular';
       src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
-         url('/files/font/mada-regular-webfont.woff') format('woff');
+        url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
+
     @font-face {
       font-family: 'madabold';
       src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
-         url('/files/font/mada-bold-webfont.woff') format('woff');
+        url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
@@ -38,11 +36,14 @@
   </style>
   <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NRD96HB');</script>
   <!-- End Google Tag Manager -->
   <script type="application/ld+json">
     {
@@ -56,7 +57,7 @@
       }
     }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -67,21 +68,22 @@
       "sameAs": "https://twitter.com/thijsvanhal"
     }
     </script>
-  </head>
-  <body>
+</head>
+<body>
   <div id="loading-screen">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+        aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navContent">
@@ -91,9 +93,12 @@
               Google Search Console
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a>
+              </li>
               <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
-              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+              <li><a class="dropdown-item"
+                  href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google
+                  Search Console Date Selector</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -117,15 +122,17 @@
         </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
           <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              id="user-info">
             </a>
             <ul class="dropdown-menu">
               <li class="nav-item">
-                <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
+              <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal"
+                  href="#">API Instellingen</span></a>
               </li>
               <hr>
               <li class="nav-item">
-                <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
               </li>
             </ul>
           </li>
@@ -150,10 +157,12 @@
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server gestuurd)</label>
+              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server
+                gestuurd)</label>
             </div>
             <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
-            <button type="button" class="btn btn-primary secondbutton" id="deleteButton" style="display: none;">Verwijder Data</button>
+            <button type="button" class="btn btn-primary secondbutton" id="deleteButton"
+              style="display: none;">Verwijder Data</button>
           </form>
         </div>
       </div>
@@ -161,7 +170,8 @@
   </div>
   <div class="container-sm" id="top-container">
     <h1 class="hulp-element">Zoekwoorden Mixen</h1>
-    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Zoekwoorden Mixen" data-bs-content="Met de zoekwoorden mixer mix je eenvoudig 3 lijsten met zoekwoorden tot alle mogelijke combinaties.<br><br>Het makkelijkst en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe zoekwoorden kunt plakken.<br><br>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke <b>automatisch</b> worden gekopieerd om bijvoorbeeld in Google Ads te kunnen plakken!">
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Zoekwoorden Mixen"
+      data-bs-content="Met de zoekwoorden mixer mix je eenvoudig 3 lijsten met zoekwoorden tot alle mogelijke combinaties.<br><br>Het makkelijkst en meest efficiënte om snel zoekwoorden te genereren is door <b>TAB</b> te gebruiken. De tool selecteert automatisch alle waardes in een lijst zodat je makkelijk elke keer nieuwe zoekwoorden kunt plakken.<br><br>Door met <b>TAB</b> te navigeren kom je, nadat je de lijsten geplakt hebt, automatisch bij het resulaat welke <b>automatisch</b> worden gekopieerd om bijvoorbeeld in Google Ads te kunnen plakken!">
       ?
     </div>
     <div class="row">
@@ -199,14 +209,17 @@
   </div>
   <div class="container-sm" id="keyword-container">
     <div class="form-floating">
-      <textarea class="textarea-results form-control" placeholder="Gegenereerde resultaten" id="result-mixer" tabindex="4"></textarea>
+      <textarea class="textarea-results form-control" placeholder="Gegenereerde resultaten" id="result-mixer"
+        tabindex="4"></textarea>
       <label for="result-mixer">Gegenereerde resultaten</label>
     </div>
     <div class="woorden" id="woorden-totaal" style="margin-top: 0.5rem;"></div>
   </div>
   <div class="container-sm">
     <h1 class="hulp-element">Bulk Zoekwoorden Mixen</h1>
-    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Bulk Zoekwoorden Mixen" data-bs-content="Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden.<br><br>Hoe werkt de bulk keyword mixer precies?<br><br><b>Stap 1:</b> Log in met een DataForSEO account, dit kan rechtsboven<br><br><b>Stap 2:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere kolommen te plakken en in bulk rijtjes toevoegen.<br><br><b>Stap 3:</b> Geef in het input veld 'bulk zoekvolumes ophalen' aan welke rijtjes je wil laten mixen.<br><br>Wil je enkel de zoekvolumes ophalen van opgegeven rijtjes? Vul de namen van de rijtjes onder elkaar in.<br><br>Wil je zoekwoorden mixen én de zoekvolumes ophalen van opgegeven rijtjes? Vul per regel in welke rijtjes de tool voor je moet mixen in onderstaand format:<br><br>1,1,naam rijtje,naam rijtje,1,naam rijtje,1<br><br>Met het eerste cijfer bepaal je of de zoekvolumes of suggesties opgehaald moeten worden, 1 = SUGGESTIES en 0 = ZOEKVOLUME. Met het tweede cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je de naam op van het rijtje dat als rijtje 1 moet functioneren, welke als rijtje 2 en welke als rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.<br><br><b>Stap 4:</b> Klik op 'Zoekvolumes ophalen' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.<br><br>">
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true"
+      title="Bulk Zoekwoorden Mixen"
+      data-bs-content="Met de bulk zoekwoorden mixer mix je eenvoudig meerdere lijsten met zoekwoorden.<br><br>Hoe werkt de bulk keyword mixer precies?<br><br><b>Stap 1:</b> Log in met een DataForSEO account, dit kan rechtsboven<br><br><b>Stap 2:</b> Voeg rijtjes toe. Dit kan door handmatig een rijtje een naam te geven of vanuit Excel meerdere kolommen te plakken en in bulk rijtjes toevoegen.<br><br><b>Stap 3:</b> Geef in het input veld 'bulk zoekvolumes ophalen' aan welke rijtjes je wil laten mixen.<br><br>Wil je enkel de zoekvolumes ophalen van opgegeven rijtjes? Vul de namen van de rijtjes onder elkaar in.<br><br>Wil je zoekwoorden mixen én de zoekvolumes ophalen van opgegeven rijtjes? Vul per regel in welke rijtjes de tool voor je moet mixen in onderstaand format:<br><br>1,1,naam rijtje,naam rijtje,1,naam rijtje,1<br><br>Met het eerste cijfer bepaal je of de zoekvolumes of suggesties opgehaald moeten worden, 1 = SUGGESTIES en 0 = ZOEKVOLUME. Met het tweede cijfer bepaal je of de rijtjes verwisselt moeten worden, 1 = JA en 0 = NEE. Vervolgens geef je de naam op van het rijtje dat als rijtje 1 moet functioneren, welke als rijtje 2 en welke als rijtje 3. Achter rijtje 2 en 3 moet je aangeven of het rijtje optioneel is. 1 = JA en 0 = NEE.<br><br><b>Stap 4:</b> Klik op 'Zoekvolumes ophalen' en laat de tool zijn werk doen. De zoekvolumes worden via een API opgehaald en wanneer een rijtje klaar is wordt er een status bericht toegevoegd onder het input veld. Zo kun je zien hoeveel rijtjes van het totaal klaar zijn.<br><br>">
       ?
     </div>
   </div>
@@ -240,7 +253,8 @@
             <textarea class="form-control" placeholder="Plaats bulk rijtjes hier" id="bulk-list-values"></textarea>
             <label for="bulk-list-values">Bulk rijtjes toevoegen</label>
           </div>
-          <button type="button" class="btn btn-primary thirdbutton" onclick="bulkaddList()">Voeg bulk rijtjes toe</button>
+          <button type="button" class="btn btn-primary thirdbutton" onclick="bulkaddList()">Voeg bulk rijtjes
+            toe</button>
         </div>
       </div>
     </div>
@@ -249,35 +263,36 @@
     <h2>Gegenereerde rijtjes</h2>
     <div class="lijsten" id="alle-lijsten">
     </div>
-    <button type="button" class="btn btn-primary secondbutton" onclick="removeLists()" style="width: auto;">Verwijder alle rijtjes</button>   
+    <button type="button" class="btn btn-primary secondbutton" onclick="removeLists()" style="width: auto;">Verwijder
+      alle rijtjes</button>
   </div>
   <div class="container-sm" style="display: none;">
     <form id="tableForm">
       <table class="table table-bordered" id="dataTable">
-          <thead>
+        <thead>
           <tr>
-              <th>Naam Rijtje 1</th>
-              <th>Naam Rijtje 2</th>
-              <th>Naam Rijtje 3</th>
-              <th>Suggesties (1) of Zoekvolumes (0)</th>
-              <th>Verwissel lijsten?</th>
-              <th>Lijst 2 optioneel?</th>
-              <th>Lijst 3 optioneel?</th>
-              <th></th>
+            <th>Naam Rijtje 1</th>
+            <th>Naam Rijtje 2</th>
+            <th>Naam Rijtje 3</th>
+            <th>Suggesties (1) of Zoekvolumes (0)</th>
+            <th>Verwissel lijsten?</th>
+            <th>Lijst 2 optioneel?</th>
+            <th>Lijst 3 optioneel?</th>
+            <th></th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           <tr>
-              <td><input type="text" class="form-control" name="name1input" required></td>
-              <td><input type="text" class="form-control" name="name2input"></td>
-              <td><input type="text" class="form-control" name="name3input"></td>
-              <td><input type="number" class="form-control" name="suggestionsinput" required></td>
-              <td><input type="checkbox" class="form-check-input" name="swapListsinput" required></td>
-              <td><input type="checkbox" class="form-check-input" name="optionalList2input"></td>
-              <td><input type="checkbox" class="form-check-input" name="optionalList3input"></td>
-              <td><button type="button" class="btn btn-danger" onclick="addRow()">Voeg toe</button></td>
+            <td><input type="text" class="form-control" name="name1input" required></td>
+            <td><input type="text" class="form-control" name="name2input"></td>
+            <td><input type="text" class="form-control" name="name3input"></td>
+            <td><input type="number" class="form-control" name="suggestionsinput" required></td>
+            <td><input type="checkbox" class="form-check-input" name="swapListsinput" required></td>
+            <td><input type="checkbox" class="form-check-input" name="optionalList2input"></td>
+            <td><input type="checkbox" class="form-check-input" name="optionalList3input"></td>
+            <td><button type="button" class="btn btn-danger" onclick="addRow()">Voeg toe</button></td>
           </tr>
-          </tbody>
+        </tbody>
       </table>
       <button type="button" class="btn btn-primary" onclick="buildTable()">Rijen bouwen</button>
     </form>
@@ -308,7 +323,8 @@
         <div class="col-sm">
           <div class="custom-dropdown" id="location-dropdown">
             <form class="form-floating">
-              <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible" value="Netherlands">
+              <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location"
+                data-np-intersection-state="visible" value="Netherlands">
               <label for="search-location">Locatie</label>
             </form>
             <ul class="dropdown-options" id="location-options">
@@ -318,7 +334,8 @@
         <div class="col-sm">
           <div class="custom-dropdown" id="language-dropdown">
             <form class="form-floating">
-              <input type="text" placeholder="Zoek taal" class="form-control" id="search-language" data-np-intersection-state="visible" value="Dutch">
+              <input type="text" placeholder="Zoek taal" class="form-control" id="search-language"
+                data-np-intersection-state="visible" value="Dutch">
               <label for="search-language">Taal</label>
             </form>
             <ul class="dropdown-options" id="language-options"></ul>
@@ -333,18 +350,22 @@
         <label for="bulk-input">Lijst met rijtjes</label>
       </div>
     </div>
-    
-    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen" onclick="mixLists(login_storage, login, password, api_login)" disabled>Zoekvolumes ophalen</button>
+    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen"
+      onclick="mixLists(login_storage, login, password, api_login)" disabled>Zoekvolumes ophalen</button>
   </div>
   <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>
-    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
+    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij
+      je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="standaard-data-switch">
       <label class="form-check-label" for="standaard-data-switch">Standaard data in database opslaan</label>
     </div>
-    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data opslaan</button>
-    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/keyword-mixer/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
+    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data
+      opslaan</button>
+    <button type="button" class="btn btn-primary secondbutton"
+      onclick="window.location.href='/keyword-mixer/opgeslagen-data/';" style="width: auto">Opgeslagen data
+      bekijken</button>
   </div>
   <div class="container-sm">
     <div class="bulk-mixer-status"></div>
@@ -356,11 +377,13 @@
     <button type="button" class="btn btn-primary" onclick="getData(login, password)">Data ophalen</button>
   </div>
   <div class="container-sm" id="keyword-container">
-    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden?
+      Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <div id="popup" class="popup">
     <div class="popup-content">
-      <p class="body-text"><b>Let op!</b> Dit gaat in totaal <b><span id="cost"></span></b> kosten. Weet je zeker dat je dit geld gaat uitgeven?</p>
+      <p class="body-text"><b>Let op!</b> Dit gaat in totaal <b><span id="cost"></span></b> kosten. Weet je zeker dat je
+        dit geld gaat uitgeven?</p>
       <button type="button" class="btn btn-primary" id="confirm">Ja</button>
       <button type="button" class="btn btn-primary secondbutton" id="cancel">Nee</button>
     </div>
@@ -392,8 +415,9 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" defer src="/files/js/keyword-mixer-app.js"></script>
-  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
-  </body>
+  <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/files/js/keyword-mixer-app.js"></script>
+  <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+</body>
+
 </html>

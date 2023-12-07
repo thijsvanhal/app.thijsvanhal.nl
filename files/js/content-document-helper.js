@@ -21,34 +21,41 @@ if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
+    fetchLanguageData();
+    fetchLocationData();
 } else {
     login = email_login;
     password = api_login;
+    fetchLanguageData();
+    fetchLocationData();
 }
 
-const modal = document.getElementById("loginModal");
+let modal;
+let error_modal;
+document.addEventListener('DOMContentLoaded', function() {
+    modal = new bootstrap.Modal(document.getElementById("loginModal"));
+    error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+});
 const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
-const logoutButton = document.getElementById("logoutButton");
-const welcomeText = document.getElementById("welcomeText");
+const deleteButton = document.getElementById("deleteButton");
 const rememberme = document.getElementById("rememberMe");
 const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
-function updateNavbar() {
-  if (login) {
-    loginLink.style.display = "none";
-    welcomeText.textContent = "Welkom, " + login;
-    logoutButtonContainer.style.display = "block";
-    fetchLocationLanguageData(login, password);
-  } else {
-    loginLink.style.display = "block";
-    welcomeText.textContent = '';
-    logoutButtonContainer.style.display = "none";
-  }
-}
-
-loginLink.onclick = function() {
-  modal.style.display = "block";
+loginLink.onclick = function () {
+    modal.show();
+    if (login) {
+        document.getElementById("inputEmail").value = login;
+        document.getElementById("inputAPI").value = password;
+        if (login_storage) {
+            rememberme.checked = true;
+        }
+        deleteButton.style.display = 'block';
+    } else {
+        deleteButton.style.display = 'none';
+    }
 };
 
 loginButton.onclick = function() {
@@ -66,18 +73,17 @@ loginButton.onclick = function() {
         login = document.getElementById("inputEmail").value;
         password = document.getElementById("inputAPI").value;
     }
-    updateNavbar();
-    fetchLocationLanguageData(login, password);
 };
 
-logoutButton.onclick = function() {
-  localStorage.removeItem('userData');
-  login = '';
-  password = '';
-  updateNavbar();
+deleteButton.onclick = function() {
+    localStorage.removeItem('userData');
+    login = '';
+    password = '';
+    rememberme.checked = false;
+    document.getElementById("inputEmail").value = '';
+    document.getElementById("inputAPI").value = '';
+    modal.hide();
 };
-
-window.onload = updateNavbar();
 
 let checkbox = document.getElementById("standaard-data-switch");
 checkbox.addEventListener("click", function() {
@@ -92,6 +98,15 @@ let checkbox_checked = localStorage.getItem("checkbox-CDH");
 if (checkbox_checked === "checked") {
     checkbox.checked = true;
 }
+
+// Enter
+const keywordinput = document.getElementById("zoekwoord-1");
+keywordinput.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        getData(login_storage, login, password, api_login);
+    }
+});
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
@@ -129,7 +144,17 @@ async function getData(login_storage, login, password, api_login) {
     ];
 
     if (!api_login && login_storage === "") {
-        window.alert('Je bent niet ingelogd! Log in en probeer het opnieuw!');
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt geen DataForSEO API waarden ingesteld.<br><br> Voeg deze eerst toe!</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+            
+        });
+        await modalClosedPromise;
+        modal.show();
+        return;
     } else {
         document.getElementById("save-button").style = "width: auto; display:none;";
         const container_serps = document.getElementById('serps');
@@ -262,32 +287,37 @@ function renderPositionResults(results) {
 }
 
 // Language & location
-async function fetchLocationLanguageData() {
+let typingTimer;
+const Interval = 500;
+document.getElementById("search-location").addEventListener("input", function() {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(function() {
+        fetchLocationData();
+    }, Interval);
+});
 
+async function fetchLocationData() {
+    const searchInput = document.getElementById("search-location").value;
     const locationResponse = await fetch ('/files/locations.json');
     const locationData = await locationResponse.json();
-  
-    const desiredCountries = ['Netherlands', 'Belgium'];
+    const desiredCountries = [searchInput];
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
+    console.log(filteredLocationEntries);
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
     createCustomDropdown(locationDropdown, 'location-options', 'search-location', locationOptions);
-  
+}
+
+async function fetchLanguageData() {
     const languageResponse = await fetch("/files/languages.json");
     const languageData = await languageResponse.json();
     const languageOptions = languageData.map(language => language.language_name);
 
     const languageDropdown = document.getElementById('language-dropdown');
     createCustomDropdown(languageDropdown, 'language-options', 'search-language', languageOptions);
-  
-    const defaultLocation = 'Netherlands';
-    const defaultLanguage = 'Dutch';
-  
-    document.querySelector('#location-dropdown input').value = defaultLocation;
-    document.querySelector('#language-dropdown input').value = defaultLanguage;
 }
 
 document.addEventListener('click', (event) => {

@@ -36,6 +36,7 @@
       font-display: swap;
     }
   </style>
+  <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -68,6 +69,11 @@
     </script>
   </head>
   <body>
+    <div id="loading-screen">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -115,9 +121,50 @@
               </ul>
             </li>
           </ul>
+          <ul class="navbar-nav ms-auto" id="second-menu">
+            <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
+              </a>
+              <ul class="dropdown-menu">
+                <li class="nav-item">
+                  <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
+                </li>
+                <hr>
+                <li class="nav-item">
+                  <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+              </div>
+              <div class="mb-3">
+                <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server gestuurd)</label>
+              </div>
+              <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
+              <button type="button" class="btn btn-primary secondbutton" id="deleteButton" style="display: none;">Verwijder Data</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-sm" id="top-container">
       <div class="form-floating">
         <textarea class="input-area form-control" placeholder="Voeg hier je zoekwoorden toe" id="input-area" rows="6"></textarea>
@@ -203,8 +250,8 @@
         </div>
       </div>
     </div>
-    <!-- JS Files -->
     <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/files/js/regex-builder-zoekwoord-app.js"></script>      
+    <script type="text/javascript" src="/files/js/regex-builder-zoekwoord-app.js"></script>
+    <script type="text/javascript" defer src="/files/js/auth-api.js"></script>
   </body>
 </html>

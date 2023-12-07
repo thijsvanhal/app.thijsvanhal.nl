@@ -137,7 +137,7 @@ h3 {
 .thirdbutton {
     font-family: madabold;
     color: #fff !important;
-    border-color: #fff;
+    border-color: #fff !important;
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 1rem;

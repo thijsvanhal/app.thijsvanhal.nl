@@ -24,29 +24,17 @@ let password;
 const RegistreerButtonMail = document.getElementById("registreer-email");
 if (RegistreerButtonMail) {
   RegistreerButtonMail.addEventListener("click", function() {
-    email = document.getElementById("e-mail").value;
-    password = document.getElementById("password").value;
-    const naam = document.getElementById("naam").value;
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
+    Registreer();
+  });
+}
 
-          updateProfile(auth.currentUser, {
-            displayName: naam
-          }).then(() => {
-            document.querySelector(".registreren").innerHTML = `
-            <h1>Welkom ${user.displayName}!</h1>
-            <p>Je wordt over enkele seconden doorgestuurd....</p>
-            `;
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 4000);
-          });
-        })
-        .catch((error) => {
-          const errorMessage = error.message.replace(/Firebase: (.+?) \(.+\)/, '$1');
-          window.alert(errorMessage);
-        });
+const RegistreerPassword = document.getElementById("registreer-password");
+if (RegistreerPassword) {
+  RegistreerPassword.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        Registreer();
+    }
   });
 }
 
@@ -54,22 +42,17 @@ if (RegistreerButtonMail) {
 const LoginButtonMail = document.getElementById("login-email");
 if (LoginButtonMail) {
   LoginButtonMail.addEventListener("click", function() {
-    email = document.getElementById("e-mail").value;
-    password = document.getElementById("password").value;
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        if (document.referrer.includes('app.thijsvanhal.nl')) {
-            window.location.href = document.referrer;
-        } else {
-            window.location.href = "/";
-        }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        window.alert(errorMessage);
-      });
+    Login();
+  });
+}
+
+const LoginPassword = document.getElementById("password");
+if (LoginPassword) {
+  LoginPassword.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        Login();
+    }
   });
 }
 
@@ -95,4 +78,49 @@ if (LoginButtonGoogle) {
             window.alert(errorMessage);
         });
   });
+}
+
+async function Login() {
+  email = document.getElementById("e-mail").value;
+  password = document.getElementById("password").value;
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      if (document.referrer.includes('app.thijsvanhal.nl')) {
+          window.location.href = document.referrer;
+      } else {
+          window.location.href = "/";
+      }
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      window.alert(errorMessage);
+    });
+}
+
+async function Registreer() {
+  email = document.getElementById("e-mail").value;
+  password = document.getElementById("registreer-password").value;
+  const naam = document.getElementById("naam").value;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        updateProfile(auth.currentUser, {
+          displayName: naam
+        }).then(() => {
+          document.querySelector(".registreren").innerHTML = `
+          <h1>Welkom ${user.displayName}!</h1>
+          <p>Je wordt over enkele seconden doorgestuurd....</p>
+          `;
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 4000);
+        });
+      })
+      .catch((error) => {
+        const errorMessage = error.message.replace(/Firebase: (.+?) \(.+\)/, '$1');
+        window.alert(errorMessage);
+      });
 }

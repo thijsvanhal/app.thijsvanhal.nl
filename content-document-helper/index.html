@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
-  <head>
+
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Content Document Helper</title>
@@ -19,26 +20,31 @@
     @font-face {
       font-family: 'madaregular';
       src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
-         url('/files/font/mada-regular-webfont.woff') format('woff');
+        url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
+
     @font-face {
       font-family: 'madabold';
       src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
-         url('/files/font/mada-bold-webfont.woff') format('woff');
+        url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
   </style>
+  <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NRD96HB');</script>
   <!-- End Google Tag Manager -->
   <script type="application/ld+json">
     {
@@ -52,7 +58,7 @@
       }
     }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -63,16 +69,22 @@
       "sameAs": "https://twitter.com/thijsvanhal"
     }
     </script>
-  </head>
-  <body>
+</head>
+<body>
+  <div id="loading-screen">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+        aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navContent">
@@ -82,9 +94,12 @@
               Google Search Console
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a>
+              </li>
               <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
-              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+              <li><a class="dropdown-item"
+                  href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google
+                  Search Console Date Selector</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -107,13 +122,20 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
-          <li class="nav-item" id="welcomeText">
-          </li>
-          <li class="nav-item" style="display: none;" id="logoutButtonContainer">
-            <button class="btn btn-primary secondbutton" id="logoutButton">Log uit</button>
-          </li>
-          <li class="nav-item">
-            <button class="btn btn-primary secondbutton" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</button>
+          <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              id="user-info">
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item">
+              <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal"
+                  href="#">API Instellingen</span></a>
+              </li>
+              <hr>
+              <li class="nav-item">
+              <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -123,7 +145,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Inloggen bij DataForSEO</h5>
+          <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
         <div class="modal-body">
@@ -136,60 +158,76 @@
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Onthouden</label>
+              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server
+                gestuurd)</label>
             </div>
-            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Log in</button>
+            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
+            <button type="button" class="btn btn-primary secondbutton" id="deleteButton"
+              style="display: none;">Verwijder Data</button>
           </form>
         </div>
       </div>
     </div>
   </div>
   <div class="container-sm" id="top-container">
-    <h1>Content Document Helper</h1>
-    <p>De content document helper is de basis voor je content template! Vul je zoekwoord, locatie en taal in en krijg waardevolle informatie terug.</p>
+    <h1 class="hulp-element">Content Document Helper</h1>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Content Document Helper" data-bs-content="De content document helper is de basis voor je content template! Vul je zoekwoord, locatie en taal in en krijg waardevolle informatie terug.">
+      ?
+    </div>
   </div>
   <div class="container-sm" id="blauwe-container">
     <div class="row" style="display: flex; align-items: center;">
       <div class="col col-lg-6">
-        <form class="form-floating">
-          <input type="text" placeholder="Vul het zoekwoord in" class="form-control" id="zoekwoord-1" data-np-intersection-state="visible">
+        <div class="form-floating">
+          <input type="text" placeholder="Vul het zoekwoord in" class="form-control" id="zoekwoord-1"
+            data-np-intersection-state="visible">
           <label for="zoekwoord-1">Zoekwoord</label>
-        </form>
+        </div>
       </div>
       <div class="col-sm">
         <div class="custom-dropdown" id="location-dropdown">
-          <form class="form-floating">
-            <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible">
+          <div class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste locatie" class="form-control" id="search-location" data-np-intersection-state="visible" value="Netherlands">
             <label for="search-location">Locatie</label>
-          </form>
+          </div>
           <ul class="dropdown-options" id="location-options">
           </ul>
         </div>
       </div>
       <div class="col-sm">
         <div class="custom-dropdown" id="language-dropdown">
-          <form class="form-floating">
-            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="search-language" data-np-intersection-state="visible">
+          <div class="form-floating">
+            <input type="text" placeholder="Zoek je gewenste taal" class="form-control" id="search-language" data-np-intersection-state="visible" value="Dutch">
             <label for="search-language">Taal</label>
-          </form>
+          </div>
           <ul class="dropdown-options" id="language-options">
           </ul>
         </div>
       </div>
       <div class="col-md-auto">
-        <button type="button" class="btn btn-primary thirdbutton" onclick="getData(login_storage, login, password, api_login)"><svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" fill="#fff"/></svg></button>
+        <button type="button" class="btn btn-primary thirdbutton"
+          onclick="getData(login_storage, login, password, api_login)"><svg xmlns="http://www.w3.org/2000/svg"
+            height="2em" viewBox="0 0 448 512">
+            <path
+              d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
+              fill="#fff" />
+          </svg></button>
       </div>
     </div>
   </div>
   <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>
-    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
+    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij
+      je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="standaard-data-switch">
       <label class="form-check-label" for="standaard-data-switch">Standaard data in database opslaan</label>
     </div>
-    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data opslaan</button>
-    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/content-document-helper/opgeslagen-data/';" style="width: auto">Opgeslagen data bekijken</button>
+    <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data
+      opslaan</button>
+    <button type="button" class="btn btn-primary secondbutton"
+      onclick="window.location.href='/content-document-helper/opgeslagen-data/';" style="width: auto">Opgeslagen data
+      bekijken</button>
   </div>
   <div id="data">
     <div class="container-sm" id="overzicht">
@@ -215,7 +253,8 @@
     </div>
   </div>
   <div class="container-sm" id="keyword-container">
-    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden?
+      Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
   <div class="modal" id="error-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -224,12 +263,15 @@
           <h5 class="modal-title">Error!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
-        <div class="modal-body" id="error-message">
+        <div class="modal-body">
+          <p id="error-message"></p>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Begrepen</button>
         </div>
       </div>
     </div>
   </div>
-  <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" defer src="/files/js/content-document-helper.js"></script>
-  </body>
+  <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/files/js/content-document-helper.js"></script>
+</body>
+
 </html>

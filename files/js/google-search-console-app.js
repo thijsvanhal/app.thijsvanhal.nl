@@ -8,10 +8,10 @@ let aantal_properties
 let allData = [];
 let dimensions = [];
 
-const loginLink = document.getElementById("loginLinkAPI");
+const loginLinkGoogle = document.getElementById("loginLinkAPI");
 const welcomeText = document.getElementById("welcomeText");
 
-loginLink.onclick = function() {
+loginLinkGoogle.onclick = function() {
   initClient();
 };
 
@@ -278,7 +278,7 @@ function downloadExcelFile() {
 }
 
 function updateInformation(data) {
-  loginLink.style.display = "none";
+  loginLinkGoogle.style.display = "none";
   document.getElementById("searchproperty").removeAttribute("disabled");
   welcomeText.textContent = "Selecteer een property, " + data.name;
 }
@@ -358,7 +358,6 @@ function formatDate(date) {
 }
 
 // Disabled
-
 const filterType = document.getElementById("filter-type");
 filterType.addEventListener("change", function() {
     if (filterType.value != '') {

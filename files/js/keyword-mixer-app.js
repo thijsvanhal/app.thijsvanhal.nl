@@ -571,10 +571,12 @@ if (login_storage) {
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
     fetchLanguageData();
-    fetchLocationData("Netherlands")
+    fetchLocationData();
 } else {
     login = email_login;
     password = api_login;
+    fetchLanguageData();
+    fetchLocationData();
 }
 
 let modal;
@@ -588,7 +590,6 @@ document.addEventListener('DOMContentLoaded', function() {
 const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const deleteButton = document.getElementById("deleteButton");
-const welcomeText = document.getElementById("welcomeText");
 const rememberme = document.getElementById("rememberMe");
 const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
@@ -722,7 +723,6 @@ async function mixLists(login_storage, login, password, api_login) {
     const lines = inputTextarea.value.split("\n");
     await calculateCost(lines);
 
-    console.log(api_login, login_storage);
     if (!api_login && login_storage === "") {
         error_modal.show();
         document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt geen DataForSEO API waarden ingesteld.<br><br> Voeg deze eerst toe!</p>`;
@@ -969,20 +969,23 @@ async function generateExcel() {
 
 // Language & location
 let typingTimer;
-const Interval = 1000;
+const Interval = 500;
 document.getElementById("search-location").addEventListener("input", function() {
     clearTimeout(typingTimer);
-    const searchInput = document.getElementById("search-location").value;
-    typingTimer = setTimeout(fetchLocationData(searchInput), Interval);
+    typingTimer = setTimeout(function() {
+        fetchLocationData();
+    }, Interval);
 });
 
-async function fetchLocationData(input) {
+async function fetchLocationData() {
+    const searchInput = document.getElementById("search-location").value;
     const locationResponse = await fetch ('/files/locations.json');
     const locationData = await locationResponse.json();
-    const desiredCountries = [input];
+    const desiredCountries = [searchInput];
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
+    console.log(filteredLocationEntries);
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
