@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-  <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registreren</title>
@@ -19,27 +19,30 @@
     @font-face {
       font-family: 'madaregular';
       src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
-         url('/files/font/mada-regular-webfont.woff') format('woff');
+        url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
 
     }
+
     @font-face {
       font-family: 'madabold';
       src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
-         url('/files/font/mada-bold-webfont.woff') format('woff');
+        url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
 
     }
   </style>
-  <script type="module" src="/files/js/auth-login-register.js"></script>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NRD96HB');</script>
   <!-- End Google Tag Manager -->
   <script type="application/ld+json">
     {
@@ -53,7 +56,7 @@
       }
     }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -64,31 +67,36 @@
       "sameAs": "https://twitter.com/thijsvanhal"
     }
     </script>
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div class="container-sm registreren" id="witte-container" style="width: 30%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <h1>Welkom!</h1>
-      <p>Wat super tof dat je één van mijn tools wil gebruiken voor jouw werkzaamheden.</p>
-      <p>Registreer je hieronder en maak gratis gebruik van een van mijn tools.</p>
-      <h3>Registreren</h3>
-      <div class="form-floating" id="form-login">
-        <input type="text" placeholder="Vul e-mail in" class="form-control" id="naam" data-np-intersection-state="visible">
-        <label for="naam">Naam</label>
-      </div>
-      <div class="form-floating" id="form-login">
-        <input type="email" placeholder="Vul e-mail in" class="form-control" id="e-mail" data-np-intersection-state="visible">
-        <label for="e-mail">E-mailadres</label>
-      </div>
-      <div class="form-floating" id="form-login">
-        <input type="password" placeholder="Vul wachtwoord in" class="form-control" id="registreer-password" data-np-intersection-state="visible">
-        <label for="password">Wachtwoord</label>
-      </div>
-      <button type="button" class="btn btn-primary" id="registreer-email">Registreren</button>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="container-sm registreren" id="witte-container"
+    style="width: 30%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <h1>Welkom!</h1>
+    <p>Wat super tof dat je één van mijn tools wil gebruiken voor jouw werkzaamheden.</p>
+    <p>Registreer je hieronder en maak gratis gebruik van een van mijn tools.</p>
+    <h3>Registreren</h3>
+    <div class="form-floating" id="form-login">
+      <input type="text" placeholder="Vul e-mail in" class="form-control" id="naam"
+        data-np-intersection-state="visible">
+      <label for="naam">Naam</label>
     </div>
-    <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-  </body>
+    <div class="form-floating" id="form-login">
+      <input type="email" placeholder="Vul e-mail in" class="form-control" id="e-mail"
+        data-np-intersection-state="visible">
+      <label for="e-mail">E-mailadres</label>
+    </div>
+    <div class="form-floating" id="form-login">
+      <input type="password" placeholder="Vul wachtwoord in" class="form-control" id="registreer-password"
+        data-np-intersection-state="visible">
+      <label for="password">Wachtwoord</label>
+    </div>
+    <button type="button" class="btn btn-primary" id="registreer-email">Registreren</button>
+  </div>
+  <script type="module" src="/files/js/auth-login-register.js"></script>
+  <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
+</body>
 </html>

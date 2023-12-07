@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="nl">
-  <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoekwoord RegEx Builder voor GSC | RegEx Builder</title>
   <meta name="robots" content="index, follow">
-  <meta name="description" content="Specifieke zoekwoorden filteren met RegEx in Google Search Console? Met de RegEx builder bouw je gemakkelijk een reguliere expressie met meerdere zoekwoorden.">
+  <meta name="description"
+    content="Specifieke zoekwoorden filteren met RegEx in Google Search Console? Met de RegEx builder bouw je gemakkelijk een reguliere expressie met meerdere zoekwoorden.">
   <link rel="alternate" hreflang="nl" href="https://app.thijsvanhal.nl/regex-builder/zoekwoorden/">
   <link rel="alternate" hreflang="en" href="https://app.thijsvanhal.nl/en/regex-builder/keywords/">
   <link rel="alternate" hreflang="x-default" href="https://regex.thijsvanhal.nl/regex-builder/zoekwoorden/">
@@ -22,27 +23,30 @@
     @font-face {
       font-family: 'madaregular';
       src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
-         url('/files/font/mada-regular-webfont.woff') format('woff');
+        url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
+
     @font-face {
       font-family: 'madabold';
       src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
-         url('/files/font/mada-bold-webfont.woff') format('woff');
+        url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
   </style>
-  <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NRD96HB');</script>
   <!-- End Google Tag Manager -->
   <script type="application/ld+json">
     {
@@ -56,7 +60,7 @@
       }
     }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -67,191 +71,223 @@
       "sameAs": "https://twitter.com/thijsvanhal"
     }
     </script>
-  </head>
-  <body>
-    <div id="loading-screen">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+</head>
+<body>
+  <div id="loading-screen">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <nav class="navbar navbar-expand-md fixed-top">
+    <div class="container-sm" id="c-navbar">
+      <a class="navbar-brand" href="/">Apps</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+        aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse" id="navContent">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/regex-builder/">RegEx Pagina&apos;s</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/regex-builder/zoekwoorden/">RegEx Zoekwoorden</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Google Search Console
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a>
+              </li>
+              <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
+              <li><a class="dropdown-item"
+                  href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google
+                  Search Console Date Selector</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Zoekwoorden
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/keyword-mixer/">Keyword Mixer</a></li>
+              <li><a class="dropdown-item" href="/keyword-wrapper/">Keyword Wrapper</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Content
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/content-document-helper/">Content Document Helper</a></li>
+              <li><a class="dropdown-item" href="/serp-differences-checker/">SERP Differences Checker</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto" id="second-menu">
+          <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              id="user-info">
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item">
+              <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal"
+                  href="#">API Instellingen</span></a>
+              </li>
+              <hr>
+              <li class="nav-item">
+              <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <nav class="navbar navbar-expand-md fixed-top">
-      <div class="container-sm" id="c-navbar">
-        <a class="navbar-brand" href="/">Apps</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse" id="navContent">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/regex-builder/">RegEx Pagina&apos;s</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/regex-builder/zoekwoorden/">RegEx Zoekwoorden</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Google Search Console
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
-                <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
-                <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Zoekwoorden
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/keyword-mixer/">Keyword Mixer</a></li>
-                <li><a class="dropdown-item" href="/keyword-wrapper/">Keyword Wrapper</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Content
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/content-document-helper/">Content Document Helper</a></li>
-                <li><a class="dropdown-item" href="/serp-differences-checker/">SERP Differences Checker</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="navbar-nav ms-auto" id="second-menu">
-            <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
-              </a>
-              <ul class="dropdown-menu">
-                <li class="nav-item">
-                  <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
-                </li>
-                <hr>
-                <li class="nav-item">
-                  <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+  </nav>
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
-      </div>
-    </nav>
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-              </div>
-              <div class="mb-3">
-                <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
-              </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMe">
-                <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server gestuurd)</label>
-              </div>
-              <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
-              <button type="button" class="btn btn-primary secondbutton" id="deleteButton" style="display: none;">Verwijder Data</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-sm" id="top-container">
-      <div class="form-floating">
-        <textarea class="input-area form-control" placeholder="Voeg hier je zoekwoorden toe" id="input-area" rows="6"></textarea>
-        <label for="input-area">Voeg hier je zoekwoorden toe</label>
-      </div>
-    </div>
-    <div class="container-sm" id="keyword-container">
-      <div class="row">
-        <div class="col-sm" id="resultaat">
-          <div class="form-floating">
-            <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Bevat" id="result-bevat"></textarea>
-            <label for="result-bevat">Google Search Console RegEx Bevat</label>
-          </div>
-          <div class="tekens" id="tekens-bevat"></div>
-        </div>
-        <div class="col-sm" id="resultaat">
-          <div class="form-floating">
-            <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Exact" id="result-exact"></textarea>
-            <label for="result-exact">Google Search Console RegEx Exact</label>
-          </div>
-          <div class="tekens" id="tekens-exact"></div>
-        </div>
-      </div>
-    </div>
-    <div class="container-sm">
-      <h2>Genereer vergelijkingsperiode</h2>
-      <p>Wanneer heb je de optimalisatie gedaan? Genereer hieronder gemakkelijk je vergelijkingsperiode. Helaas kun je in Google Search Console (nog) niet gemakkelijk vergelijken op de vorige periode. De data voor de vergelijkingsperiode wordt gegenereerd op het moment dat de einddatum gewijzigd wordt.</p>
-    </div>
-    <div class="container-sm">
-      <div class="row">
-        <div class="col-sm">
-          <form class="form-floating">
-            <input id="startDate" class="form-control" type="date"/>  
-            <label for="startDate">Wat is de startdatum?</label>
-          </form>
-        </div>
-        <div class="col-sm">
-          <form class="form-floating">
-            <input id="endDate" class="form-control" type="date"/>
-            <label for="endDate">Wat is de einddatum?</label>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="mb-3">
+              <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server
+                gestuurd)</label>
+            </div>
+            <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
+            <button type="button" class="btn btn-primary secondbutton" id="deleteButton"
+              style="display: none;">Verwijder Data</button>
           </form>
         </div>
       </div>
     </div>
-    <div class="container-sm">
-      <div class="previousdate" id="date-text"></div>
+  </div>
+  <div class="container-sm" id="top-container">
+    <div class="form-floating">
+      <textarea class="input-area form-control" placeholder="Voeg hier je zoekwoorden toe" id="input-area"
+        rows="6"></textarea>
+      <label for="input-area">Voeg hier je zoekwoorden toe</label>
     </div>
-    <div class="container-sm">
-      <div class="body-text">
-        <h1>Zoekwoord RegEx maken voor Google Search Console</h1>
-        <p>Heb je SEO optimalisaties gedaan voor een specifieke set aan zoekwoorden en wil je vervolgens de resultaten zien van die specifieke zoekwoorden in Google Search Console? Dan bouw je deze RegEx makkelijk op met deze tool.</p>
-        <h2>Hoe gebruik je deze zoekwoorden RegEx builder?</h2>
-        <p>Plak een set aan zoekwoorden in het tekstvak en kies vervolgens of de filter deze zoekwoorden moet bevatten of exact die zoekwoorden moeten zijn.<br><br><b>Bijvoorbeeld:</b> Je hebt voor elke plaatsnaam in Nederland een pagina (https://www.voorbeeld.nl/amsterdam & https://www.voorbeeld.nl/utrecht) en eronder een subpagina met /contact (https://www.voorbeeld.nl/amsterdam/contact & https://www.voorbeeld.nl/utrecht/contact ) . Je hebt geoptimaliseerd voor de zoekwoorden &apos;amsterdam&apos;, &apos;amsterdam contact&apos;, &apos;utrecht&apos; en &apos;utrecht contact&apos;.<br><br>Kies je voor exact? Dan zie je enkel de resultaten van de zoekwoorden &apos;amsterdam&apos; en &apos;utrecht&apos;. Kies je voor bevat? Dan zie je alles zoekwoorden in Google Search Console waar &apos;amsterdam&apos; en &apos;utrecht&apos; in zit, dus ook &apos;amsterdam contact&apos; en &apos;utrecht contact&apos;.</p>
-        <h3>Voorbeeld RegEx bevat voor Google Search Console</h3>
-        <pre><code>\b(amsterdam|utrecht)\b</code></pre>
-        <h3>Voorbeeld RegEx exact voor Google Search Console</h3>
-        <pre><code>^(amsterdam|utrecht)$</code></pre>
-        <h2>Hoe gebruik je de RegEx in Google Search Console?</h2>
-        <p><b>Stap 1:</b> Ga naar Google Search Console en klik in Prestaties als nieuwe filter voor &apos;Zoekopdracht&apos;.</p>
-        <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-1.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 1" width="1675" height="363">
-        <p><b>Stap 2:</b> Klik vervolgens op &apos;Aangepast (regex)&apos;</p>
-        <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-2.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 2" width="491" height="295">
-        <p><b>Stap 3:</b> De standaard optie is hier &apos;Komt overeen met regex&apos; , laat dit ongewijzigd.</p>
-        <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-3.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 3" width="496" height="352">
-        <p><b>Stap 4:</b> Plak de RegEx in het vak en klik op &apos;Toepassen&apos;.</p>
-        <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-4.jpg" class="img-fluid" alt="Zoekwoorden RegEx builder GSC stap 4" width="491" height="355">
-        <h2>RegEx voor vragen</h2>
-        <p>Met onderstaande RegEx vind je gemakkelijk alle vragen in jouw Google Search Console Property. Door alle zoekwoorden met &apos;wie&apos;, &apos;wat&apos; etc. te zoeken vind je gemakkelijk input voor content of je FAQ!</p>
-        <pre><code>\b(zijn|kan|hoe|wat|wanneer|waar|welke|wie|waarom|wil)\b</code></pre>
-        <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+  </div>
+  <div class="container-sm" id="keyword-container">
+    <div class="row">
+      <div class="col-sm" id="resultaat">
+        <div class="form-floating">
+          <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Bevat"
+            id="result-bevat"></textarea>
+          <label for="result-bevat">Google Search Console RegEx Bevat</label>
+        </div>
+        <div class="tekens" id="tekens-bevat"></div>
+      </div>
+      <div class="col-sm" id="resultaat">
+        <div class="form-floating">
+          <textarea class="textarea-results form-control" placeholder="Google Search Console RegEx Exact"
+            id="result-exact"></textarea>
+          <label for="result-exact">Google Search Console RegEx Exact</label>
+        </div>
+        <div class="tekens" id="tekens-exact"></div>
       </div>
     </div>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div class="toast" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <img src="/files/images/favicon/favicon-32x32.png" class="rounded me-2">
-          <strong class="me-auto">app.thijsvanhal.nl</strong>
-          <small>nu</small>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          <p style="margin-bottom: 0px;">De RegEx is gekopieerd, je kunt deze nu gebruiken door te plakken!</p>
-        </div>
+  </div>
+  <div class="container-sm">
+    <h2>Genereer vergelijkingsperiode</h2>
+    <p>Wanneer heb je de optimalisatie gedaan? Genereer hieronder gemakkelijk je vergelijkingsperiode. Helaas kun je in
+      Google Search Console (nog) niet gemakkelijk vergelijken op de vorige periode. De data voor de
+      vergelijkingsperiode wordt gegenereerd op het moment dat de einddatum gewijzigd wordt.</p>
+  </div>
+  <div class="container-sm">
+    <div class="row">
+      <div class="col-sm">
+        <form class="form-floating">
+          <input id="startDate" class="form-control" type="date" />
+          <label for="startDate">Wat is de startdatum?</label>
+        </form>
+      </div>
+      <div class="col-sm">
+        <form class="form-floating">
+          <input id="endDate" class="form-control" type="date" />
+          <label for="endDate">Wat is de einddatum?</label>
+        </form>
       </div>
     </div>
-    <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/files/js/regex-builder-zoekwoord-app.js"></script>
-    <script type="text/javascript" defer src="/files/js/auth-api.js"></script>
-  </body>
+  </div>
+  <div class="container-sm">
+    <div class="previousdate" id="date-text"></div>
+  </div>
+  <div class="container-sm">
+    <div class="body-text">
+      <h1>Zoekwoord RegEx maken voor Google Search Console</h1>
+      <p>Heb je SEO optimalisaties gedaan voor een specifieke set aan zoekwoorden en wil je vervolgens de resultaten
+        zien van die specifieke zoekwoorden in Google Search Console? Dan bouw je deze RegEx makkelijk op met deze tool.
+      </p>
+      <h2>Hoe gebruik je deze zoekwoorden RegEx builder?</h2>
+      <p>Plak een set aan zoekwoorden in het tekstvak en kies vervolgens of de filter deze zoekwoorden moet bevatten of
+        exact die zoekwoorden moeten zijn.<br><br><b>Bijvoorbeeld:</b> Je hebt voor elke plaatsnaam in Nederland een
+        pagina (https://www.voorbeeld.nl/amsterdam & https://www.voorbeeld.nl/utrecht) en eronder een subpagina met
+        /contact (https://www.voorbeeld.nl/amsterdam/contact & https://www.voorbeeld.nl/utrecht/contact ) . Je hebt
+        geoptimaliseerd voor de zoekwoorden &apos;amsterdam&apos;, &apos;amsterdam contact&apos;, &apos;utrecht&apos; en
+        &apos;utrecht contact&apos;.<br><br>Kies je voor exact? Dan zie je enkel de resultaten van de zoekwoorden
+        &apos;amsterdam&apos; en &apos;utrecht&apos;. Kies je voor bevat? Dan zie je alles zoekwoorden in Google Search
+        Console waar &apos;amsterdam&apos; en &apos;utrecht&apos; in zit, dus ook &apos;amsterdam contact&apos; en
+        &apos;utrecht contact&apos;.</p>
+      <h3>Voorbeeld RegEx bevat voor Google Search Console</h3>
+      <pre><code>\b(amsterdam|utrecht)\b</code></pre>
+      <h3>Voorbeeld RegEx exact voor Google Search Console</h3>
+      <pre><code>^(amsterdam|utrecht)$</code></pre>
+      <h2>Hoe gebruik je de RegEx in Google Search Console?</h2>
+      <p><b>Stap 1:</b> Ga naar Google Search Console en klik in Prestaties als nieuwe filter voor
+        &apos;Zoekopdracht&apos;.</p>
+      <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-1.jpg" class="img-fluid"
+        alt="Zoekwoorden RegEx builder GSC stap 1" width="1675" height="363">
+      <p><b>Stap 2:</b> Klik vervolgens op &apos;Aangepast (regex)&apos;</p>
+      <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-2.jpg" class="img-fluid"
+        alt="Zoekwoorden RegEx builder GSC stap 2" width="491" height="295">
+      <p><b>Stap 3:</b> De standaard optie is hier &apos;Komt overeen met regex&apos; , laat dit ongewijzigd.</p>
+      <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-3.jpg" class="img-fluid"
+        alt="Zoekwoorden RegEx builder GSC stap 3" width="496" height="352">
+      <p><b>Stap 4:</b> Plak de RegEx in het vak en klik op &apos;Toepassen&apos;.</p>
+      <img src="/files/images/regex-builder/zoekwoord-regex-builder-gsc-4.jpg" class="img-fluid"
+        alt="Zoekwoorden RegEx builder GSC stap 4" width="491" height="355">
+      <h2>RegEx voor vragen</h2>
+      <p>Met onderstaande RegEx vind je gemakkelijk alle vragen in jouw Google Search Console Property. Door alle
+        zoekwoorden met &apos;wie&apos;, &apos;wat&apos; etc. te zoeken vind je gemakkelijk input voor content of je
+        FAQ!</p>
+      <pre><code>\b(zijn|kan|hoe|wat|wanneer|waar|welke|wie|waarom|wil)\b</code></pre>
+      <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden?
+        Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+    </div>
+  </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast" id="success-toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="/files/images/favicon/favicon-32x32.png" class="rounded me-2">
+        <strong class="me-auto">app.thijsvanhal.nl</strong>
+        <small>nu</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <p style="margin-bottom: 0px;">De RegEx is gekopieerd, je kunt deze nu gebruiken door te plakken!</p>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/files/js/auth.js"></script>
+  <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/files/js/regex-builder-zoekwoord-app.js"></script>
+  <script type="text/javascript" src="/files/js/auth-api.js"></script>
+</body>
 </html>

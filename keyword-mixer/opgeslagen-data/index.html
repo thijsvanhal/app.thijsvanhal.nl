@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
-  <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keyword Mixer - Opgeslagen data</title>
@@ -19,27 +19,30 @@
     @font-face {
       font-family: 'madaregular';
       src: url('/files/font/mada-regular-webfont.woff2') format('woff2'),
-         url('/files/font/mada-regular-webfont.woff') format('woff');
+        url('/files/font/mada-regular-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
+
     @font-face {
       font-family: 'madabold';
       src: url('/files/font/mada-bold-webfont.woff2') format('woff2'),
-         url('/files/font/mada-bold-webfont.woff') format('woff');
+        url('/files/font/mada-bold-webfont.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
     }
   </style>
-  <script type="module" async src="/files/js/auth.js"></script>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NRD96HB');</script>
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NRD96HB');</script>
   <!-- End Google Tag Manager -->
   <script type="application/ld+json">
     {
@@ -53,7 +56,7 @@
       }
     }
     </script>
-    <script type="application/ld+json">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -64,21 +67,22 @@
       "sameAs": "https://twitter.com/thijsvanhal"
     }
     </script>
-  </head>
-  <body>
-    <div id="loading-screen">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+</head>
+<body>
+  <div id="loading-screen">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
+  </div>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRD96HB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <nav class="navbar navbar-expand-md fixed-top">
     <div class="container-sm" id="c-navbar">
       <a class="navbar-brand" href="/">Apps</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+        aria-controls="navContent" aria-expanded="false" aria-label="Hamburger Menu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navContent">
@@ -88,9 +92,12 @@
               Google Search Console
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a></li>
+              <li><a class="dropdown-item" href="/google-search-console-extractor/">Google Search Console Extractor</a>
+              </li>
               <li><a class="dropdown-item" href="/regex-builder/">RegEx Builder</a></li>
-              <li><a class="dropdown-item" href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google Search Console Date Selector</a></li>
+              <li><a class="dropdown-item"
+                  href="https://chrome.google.com/webstore/detail/google-search-console-dat/fkpkhpigkldfnnimijaaldpafcibaepk">Google
+                  Search Console Date Selector</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -114,15 +121,17 @@
         </ul>
         <ul class="navbar-nav ms-auto" id="second-menu">
           <li class="nav-item dropdown" style="display: flex; align-items: center; padding-right: 1rem;">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="user-info">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              id="user-info">
             </a>
             <ul class="dropdown-menu">
               <li class="nav-item">
-                <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">API Instellingen</span></a>
+              <li><a class="dropdown-item" id="loginLink" data-bs-toggle="modal" data-bs-target="#loginModal"
+                  href="#">API Instellingen</span></a>
               </li>
               <hr>
               <li class="nav-item">
-                <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
+              <li><a class="dropdown-item" id="logout-btn" href="#">Uitloggen</span></a>
               </li>
             </ul>
           </li>
@@ -147,10 +156,12 @@
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server gestuurd)</label>
+              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server
+                gestuurd)</label>
             </div>
             <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
-            <button type="button" class="btn btn-primary secondbutton" id="deleteButton" style="display: none;">Verwijder Data</button>
+            <button type="button" class="btn btn-primary secondbutton" id="deleteButton"
+              style="display: none;">Verwijder Data</button>
           </form>
         </div>
       </div>
@@ -158,32 +169,37 @@
   </div>
   <div class="container-sm" id="top-container">
     <h1>Keyword Mixer - Opgeslagen data</h1>
-    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/keyword-mixer/';" style="width: auto">Terug naar tool</button>
+    <button type="button" class="btn btn-primary secondbutton" onclick="window.location.href='/keyword-mixer/';"
+      style="width: auto">Terug naar tool</button>
   </div>
   <div class="container-sm" id="data-container">
     <h2>Opgeslagen data</h2>
     <div id="data-list">
       <p class="placeholder-glow"><span class="placeholder col-4"></span></p>
-      <button type="button" class="btn btn-primary view-button placeholder col-6" style="width: auto">Bekijk</button> 
-      <button type="button" class="btn btn-primary delete-button secondbutton placeholder col-6" style="width: auto">Verwijder</button>
+      <button type="button" class="btn btn-primary view-button placeholder col-6" style="width: auto">Bekijk</button>
+      <button type="button" class="btn btn-primary delete-button secondbutton placeholder col-6"
+        style="width: auto">Verwijder</button>
     </div>
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content">
-              <div class="modal-body">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right"></button>
-                <div id="view-data-content"></div>
-              </div>
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              style="float: right"></button>
+            <div id="view-data-content"></div>
           </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="container-sm" id="keyword-container">
-    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+    <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden?
+      Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
   </div>
-  <script type="text/javascript" async src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" defer src="/files/js/opgeslagen-data-kw-mixer.js"></script>
-  <script lang="javascript" defer src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
-  <script type="text/javascript" defer src="/files/js/auth-api.js"></script>
-  </body>
+  <script type="module" src="/files/js/auth.js"></script>
+  <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/files/js/opgeslagen-data-kw-mixer.js"></script>
+  <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+  <script type="text/javascript" src="/files/js/auth-api.js"></script>
+</body>
 </html>
