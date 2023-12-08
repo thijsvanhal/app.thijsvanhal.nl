@@ -1082,7 +1082,7 @@ disabled1.addEventListener("change", function() {
 });
 
 disabled2.addEventListener("change", function() {
-    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+    if (disabled.value != '' && disabled2.checked == true || disabled1.checked == true || disabled3.checked == true) {
         document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
         checkErrors();
     } else {
@@ -1091,7 +1091,7 @@ disabled2.addEventListener("change", function() {
 });
 
 disabled3.addEventListener("change", function() {
-    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
+    if (disabled.value != '' && disabled3.checked == true || disabled1.checked == true || disabled3.checked == true) {
         document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
         checkErrors();
     } else {
@@ -1115,6 +1115,7 @@ function checkErrors() {
         document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt niet de juiste API methode geselecteerd. Je kunt enkel 'verschilt per regel' selecteren als je ook rijtjes gaat mixen. Selecteer voor nu 'Zoekvolumes' of 'Suggesties'</p>`;
         afhankelijkRadio.checked = false;
         radioButtons.forEach(radio => radio.checked = false);
+        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
     }
 }
 
