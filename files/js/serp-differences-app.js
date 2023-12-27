@@ -321,6 +321,7 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
             </div>
         `;
     }
+    container.setAttribute('id', 'witte-container');
     const commonResultElements = container.querySelectorAll('.common-result');
     commonResultElements.forEach(result => {
         result.addEventListener('click', handleResultClick);
@@ -331,7 +332,7 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
         commonResultElements.forEach(result => {
             result.classList.remove('inactive');
         });
-    });   
+    });
 }
 
 function renderPositionResults(results, commonResults) {

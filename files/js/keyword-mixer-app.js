@@ -705,6 +705,20 @@ error_sluiten_knop.onclick = function() {
     document.getElementById("error-modal").style.display = "none";
 };
 
+// Filter
+let filter_zoekvolume = document.getElementById("filter-zoekvolume");
+let filter_zoekvolume_waarde = document.getElementById("filter-zoekvolume-waarde");
+let filter_zoekvolume_label = document.getElementById("filter-zoekvolume-label");
+filter_zoekvolume.addEventListener("click", function() {
+    if (filter_zoekvolume.checked) {
+        filter_zoekvolume_waarde.style = "display: inline-flex;height: 40px !important;width: 60px;margin-top: -8px;margin-left: 10px;";
+        console.log(filter_zoekvolume_label);
+        filter_zoekvolume_label.innerText = "Test";
+    } else {
+        filter_zoekvolume_waarde.style = "display: none;";
+    }
+});
+
 // Mixen van bulk lijsten
 async function mixLists(login_storage, login, password, api_login) {
     // verwijder huidige waardes
@@ -871,7 +885,18 @@ async function mixLists(login_storage, login, password, api_login) {
             document.getElementById("save-button").style = "width: auto;";
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
-        generateExcel();
+        try {
+            generateExcel();
+        } catch (error) {
+            error_modal.show();
+            document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <br><br> ${error}</p>`;
+            const modalClosedPromise = new Promise((resolve) => {
+                error_modal._element.addEventListener("hidden.bs.modal", function () {
+                    resolve();
+                }, { once: true });
+            });
+            await modalClosedPromise;
+        }
     }
 }
 

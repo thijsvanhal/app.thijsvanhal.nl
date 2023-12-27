@@ -349,6 +349,13 @@
         <label for="bulk-input">Lijst met rijtjes</label>
       </div>
     </div>
+    <div class="form-check" style="display: flex;margin-top: 1rem;margin-bottom: 1rem;">
+      <input class="form-check-input" type="checkbox" value="" id="filter-zoekvolume" style="display: inline-flex;">
+      <label class="form-check-label" id="filter-zoekvolume-label" for="filter-zoekvolume" style="display: inline-flex;margin-left: 10px;">
+        Filter output op basis van zoekvolume?
+      </label>
+      <textarea class="form-control" id="filter-zoekvolume-waarde" style="display: none;"></textarea>
+    </div>
     <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen"
       onclick="mixLists(login_storage, login, password, api_login)" disabled>Zoekvolumes ophalen</button>
   </div>
