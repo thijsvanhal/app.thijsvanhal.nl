@@ -17,6 +17,8 @@ function removeDuplicates() {
     keywordsOutput.value = keywordsOutputValue;
 }
 
+let SeeNotification = true;
+
 function Wrapper () {
     keywordsOutput.value = "";
     var exactMatchCheck = document.getElementById("exact-match-input").checked;
@@ -24,6 +26,9 @@ function Wrapper () {
     var broadMatchCheck = document.getElementById("broad-match-input").checked;
     var keywordsInputValue = document.getElementById('keywords-input-area').value;
     var keywords = keywordsInputValue.split("\n");
+    if (keywordsInputValue == '') {
+        return;
+    }
     if (exactMatchCheck) {
         var formattedKeywordsExact = keywords.map(keyword => `[${keyword}]`);
         if (keywordsOutput.value === "") {
@@ -64,3 +69,43 @@ broadMatch.addEventListener('click', () => {
 keywordsInput.addEventListener('input', (event) => {
     Wrapper();
 });
+keywordsInput.addEventListener('click', (event) => {
+    if (keywordsInput.value !== '') {
+        keywordsInput.select();
+    }
+});
+keywordsInput.addEventListener('focus', (event) => {
+    if (keywordsInput.value !== '') {
+        keywordsInput.select();
+    }
+});
+keywordsOutput.addEventListener('click', (event) => {
+    if (keywordsOutput.value !== '') {
+        keywordsOutput.select();
+        document.execCommand("copy");
+        showNotification('Resultaten gekopieerd naar clipboard!', 3000);
+        SeeNotification = true;
+    }
+});
+keywordsOutput.addEventListener('focus', (event) => {
+    if (keywordsOutput.value !== '' && SeeNotification) {
+        keywordsOutput.select();
+        document.execCommand("copy");
+        showNotification('Resultaten gekopieerd naar clipboard!', 3000);
+        SeeNotification = false;
+    }
+});
+
+// Functie notificatie
+function showNotification(message, duration) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, duration);
+}

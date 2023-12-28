@@ -222,18 +222,18 @@
         </div>
       </div>
       <div class="col col-sm-2">
-        <button type="button" class="btn btn-primary thirdbutton" style="height: 46px;"
-          onclick="getData(login_storage, login, password, api_login)">Vergelijk</button>
+        <button type="button" id="start-button" class="btn btn-primary thirdbutton" style="height: 46px;">Vergelijk</button>
       </div>
     </div>
   </div>
   <div class="container-sm" id="witte-container">
-    <h2>Data opslaan en terugkijken</h2>
-    <p>Sla de gegenereerde data op om het later terug te bekijken! De data wordt opgeslagen en blijft beschikbaar tenzij
-      je de data van de website verwijderd of zelf een resultaat verwijderd.</p>
+    <h2 class="hulp-element">Opgeslagen data</h2>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Opgeslagen data" data-bs-content="Sla gegenereerde data handmatig op nadat data verzameld is door op de knop te klikken. Standaard je data in de database? Vink dan <b>'Altijd data in database opslaan'</b> aan.">
+      ?
+    </div>
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="standaard-data-switch">
-      <label class="form-check-label" for="standaard-data-switch">Standaard data in database opslaan</label>
+      <label class="form-check-label" for="standaard-data-switch">Altijd data in database opslaan</label>
     </div>
     <button type="button" class="btn btn-primary" id="save-button" style="width: auto; display:none">Data
       opslaan</button>
@@ -276,6 +276,6 @@
   </div>
   <script type="module" src="/files/js/auth.js"></script>
   <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/files/js/serp-differences-app.js"></script>
+  <script type="module" src="/files/js/serp-differences-app.js"></script>
 </body>
 </html>

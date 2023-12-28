@@ -1,3 +1,32 @@
+// Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import {getFirestore, collection, addDoc, updateDoc, doc} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCaTODMga4jcKR1Xwo1H7XVhSzyfBwCfRc",
+    authDomain: "app-thijsvanhal-nl.firebaseapp.com",
+    projectId: "app-thijsvanhal-nl",
+    storageBucket: "app-thijsvanhal-nl.appspot.com",
+    messagingSenderId: "437337351675",
+    appId: "1:437337351675:web:0c273400b65e1f6a7ad75e",
+    measurementId: "G-L57H7E26H3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let user;
+
+onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+        user = currentUser;
+    } else {
+        user = null;
+    }
+});
+
 // JavaScript Code
 
 let mixedKeywordsArray = [];
@@ -106,6 +135,11 @@ keywordinput.addEventListener("keyup", function(event) {
         event.preventDefault();
         getData(login_storage, login, password, api_login);
     }
+});
+
+const button = document.getElementById("start-button");
+button.addEventListener("click", function() {
+    getData(login_storage, login, password, api_login)
 });
 
 // Ophalen van data
@@ -304,7 +338,6 @@ async function fetchLocationData() {
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
-    console.log(filteredLocationEntries);
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
@@ -440,45 +473,26 @@ async function getScreenshot(taskId, login, password) {
 }
 
 //Database
-const dbName = "historicDataCDH";
-const dbVersion = 1;
-let db;
-
-const openDBRequest = indexedDB.open(dbName, dbVersion);
-
-openDBRequest.onupgradeneeded = function (event) {
-    const db = event.target.result;
-
-    if (!db.objectStoreNames.contains("historicData")) {
-        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
-    }
-};
-
-openDBRequest.onsuccess = function (event) {
-    db = event.target.result;
-};
-
-openDBRequest.onerror = function (event) {
-    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
-};
-
 async function saveData() {
     const dataHTML = document.getElementById("data").innerHTML;
-
-    const transaction = db.transaction(["historicData"], "readwrite");
-    const store = transaction.objectStore("historicData");
     const titel = document.getElementById("zoekwoord").innerText;
 
-    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
+    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString(), userId: user.uid };
 
-    store.add(newData);
+    try {
+        const docRef = await addDoc(collection(db, "historicDataCDH"), newData);
 
-    transaction.oncomplete = () => {
+        await updateDoc(doc(db, "historicDataCDH", docRef.id), {
+            id: docRef.id
+        });
+        
         const successToast = document.getElementById("success-toast");
         const bootstrapToast = new bootstrap.Toast(successToast);
         bootstrapToast.show();
-    };
-    document.getElementById("save-button").style = "width: auto; display:none;";
+        document.getElementById("save-button").style = "width: auto; display:none;";
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
 }
 
 document.getElementById("save-button").addEventListener("click", saveData);

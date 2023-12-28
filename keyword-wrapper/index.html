@@ -169,6 +169,11 @@
     </div>
   </div>
   <div class="container-sm" id="top-container">
+    <h1 class="hulp-element">Zoekwoorden Wrappen</h1>
+    <div class="hulp" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" title="Zoekwoorden Wrappen"
+      data-bs-content="Met de zoekwoorden wrapper wrap je eenvoudig je lijst met zoekwoorden naar exact, phrase of broad match zoekwoorden. Plak je zoekwoorden en vink aan welk zoekwoordtype je moet hebben en de tool genereert de zoekwoorden voor je.">
+      ?
+    </div>
     <div class="row">
       <div class="col-sm" id="pad-col">
         <div class="form-floating">
@@ -203,16 +208,22 @@
     </div>
   </div>
   <div class="container-sm">
-    <div class="body-text">
-      <h1>Zoekwoorden Wrappen</h1>
-      <p>Met de zoekwoorden wrapper wrap je eenvoudig je lijst met zoekwoorden naar exact, phrase of broad match
-        zoekwoorden. Plak je zoekwoorden en vink aan welk zoekwoordtype je moet hebben en de tool genereert de
-        zoekwoorden voor je.</p>
-    </div>
-  </div>
-  <div class="container-sm">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden?
       Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+  </div>
+  <div class="modal" id="error-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Error!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+        </div>
+        <div class="modal-body">
+          <p id="error-message"></p>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Begrepen</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="/files/js/auth.js"></script>
   <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>

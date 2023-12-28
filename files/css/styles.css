@@ -8,6 +8,10 @@
         margin-right: 5px;
     }
 
+    .col {
+        flex: none;
+    }
+
     #pad-col {
         margin-bottom: 20px;
     }
@@ -173,7 +177,7 @@ textarea {
 .card {
     font-family: madaregular;
     height: 100%;
-    border: 2px solid #cdcdcd;
+    border: 2px solid #02343f;
     border-radius: 15px;
     resize: none;
     outline: 0;
@@ -236,6 +240,7 @@ input[type=radio] {
 }
 
 .img-fluid {
+    border-radius: 1rem;
     margin-bottom: 30px;
 }
 
@@ -321,6 +326,11 @@ a {
     margin-bottom: 1rem;
 }
 
+.accordion-item {
+    border: 0px;
+    border-radius: 1rem !important;
+}
+
 .accordion-button:not(.collapsed) {
     color: #02343f;
     background-color: #02343f26;
@@ -358,6 +368,7 @@ a {
 }
 
 .form-select {
+    border: 2px solid #02343f;
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 1rem;

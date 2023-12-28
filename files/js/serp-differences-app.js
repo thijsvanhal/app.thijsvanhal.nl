@@ -1,3 +1,32 @@
+// Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import {getFirestore, collection, addDoc, updateDoc, doc} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCaTODMga4jcKR1Xwo1H7XVhSzyfBwCfRc",
+    authDomain: "app-thijsvanhal-nl.firebaseapp.com",
+    projectId: "app-thijsvanhal-nl",
+    storageBucket: "app-thijsvanhal-nl.appspot.com",
+    messagingSenderId: "437337351675",
+    appId: "1:437337351675:web:0c273400b65e1f6a7ad75e",
+    measurementId: "G-L57H7E26H3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let user;
+
+onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+        user = currentUser;
+    } else {
+        user = null;
+    }
+});
+
 // JavaScript Code
 
 let mixedKeywordsArray = [];
@@ -122,6 +151,11 @@ keyword3input.addEventListener("keyup", function(event) {
         event.preventDefault();
         getData(login_storage, login, password, api_login);
     }
+});
+
+const button = document.getElementById("start-button");
+button.addEventListener("click", function() {
+    getData(login_storage, login, password, api_login)
 });
 
 // Ophalen van data
@@ -253,70 +287,74 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
         const { similarityPercentage: similarityPercentage2, commonResults: commonResults2 } = calculateSimilarity(results1, results3);
         const { similarityPercentage: similarityPercentage3, commonResults: commonResults3 } = calculateSimilarity(results2, results3);
         container.innerHTML = `
-            <h2>SERP Resultaten</h2>
-            <p>De 3 SERP's komen voor <strong>${similarityPercentage.toFixed(2)}%</strong> met elkaar overeen.</p>
-            <ul>
-                <li>SERP ${keyword1} en ${keyword2} komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</li>
-                <li>SERP ${keyword1} en ${keyword3} komen voor <strong>${similarityPercentage2.toFixed(2)}%</strong> met elkaar overeen.</li>
-                <li>SERP ${keyword2} en ${keyword3} komen voor <strong>${similarityPercentage3.toFixed(2)}%</strong> met elkaar overeen.</li>
-            </ul>
-            <h3>Overeenkomende URLs:</h3>
-            <ul>
-                ${commonResults.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-            </ul>
-            <div class="row">
-                <div class="col-sm" style="overflow-x: auto">
-                    <h3>SERP ${keyword1} en ${keyword2}</h3>
-                    <ul>
-                        ${commonResults1.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                    </ul>
+            <div id="serps">
+                <h2>SERP Resultaten</h2>
+                <p>De 3 SERP's komen voor <strong>${similarityPercentage.toFixed(2)}%</strong> met elkaar overeen.</p>
+                <ul>
+                    <li>SERP ${keyword1} en ${keyword2} komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</li>
+                    <li>SERP ${keyword1} en ${keyword3} komen voor <strong>${similarityPercentage2.toFixed(2)}%</strong> met elkaar overeen.</li>
+                    <li>SERP ${keyword2} en ${keyword3} komen voor <strong>${similarityPercentage3.toFixed(2)}%</strong> met elkaar overeen.</li>
+                </ul>
+                <h3>Overeenkomende URLs:</h3>
+                <ul>
+                    ${commonResults.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                </ul>
+                <div class="row">
+                    <div class="col-sm" style="overflow-x: auto">
+                        <h3>SERP ${keyword1} en ${keyword2}</h3>
+                        <ul>
+                            ${commonResults1.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-sm" style="overflow-x: auto">
+                        <h3>SERP ${keyword1} en ${keyword3}</h3>
+                        <ul>
+                            ${commonResults2.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="col-sm" style="overflow-x: auto">
+                        <h3>SERP ${keyword2} en ${keyword3}</h3>
+                        <ul>
+                            ${commonResults3.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-sm" style="overflow-x: auto">
-                    <h3>SERP ${keyword1} en ${keyword3}</h3>
-                    <ul>
-                        ${commonResults2.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                    </ul>
-                </div>
-                <div class="col-sm" style="overflow-x: auto">
-                    <h3>SERP ${keyword2} en ${keyword3}</h3>
-                    <ul>
-                        ${commonResults3.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                    </ul>
-                </div>
-            </div>
-            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
-            <div class="row">
-                <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                    <h2>SERP 1: ${keyword1}</h2>
-                    ${renderPositionResults(results1, commonResults1)}
-                </div>
-                <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                    <h2>SERP 2: ${keyword2}</h2>
-                    ${renderPositionResults(results2, commonResults2)}
-                </div>
-                <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                    <h2>SERP 3: ${keyword3}</h2>
-                    ${renderPositionResults(results3, commonResults3)}
+                <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
+                <div class="row">
+                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                        <h2>SERP 1: ${keyword1}</h2>
+                        ${renderPositionResults(results1, commonResults1)}
+                    </div>
+                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                        <h2>SERP 2: ${keyword2}</h2>
+                        ${renderPositionResults(results2, commonResults2)}
+                    </div>
+                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                        <h2>SERP 3: ${keyword3}</h2>
+                        ${renderPositionResults(results3, commonResults3)}
+                    </div>
                 </div>
             </div>
         `;
     } else {
         container.innerHTML = `
-            <h2>SERP Resultaten</h2>
-            <p>De SERP's komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</p>
-            <h3>Overeenkomende URLs:</h3>
-            <ul>
-                ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
-            </ul>
-            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
-            <div class="row">
-                <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                    <h2>SERP 1: ${keyword1}</h2>
-                    ${renderPositionResults(results1, commonResults1)}
-                </div>
-                <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                    <h2>SERP 2: ${keyword2}</h2>
-                    ${renderPositionResults(results2, commonResults1)}
+            <div id="serps">
+                <h2>SERP Resultaten</h2>
+                <p>De SERP's komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</p>
+                <h3>Overeenkomende URLs:</h3>
+                <ul>
+                    ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+                </ul>
+                <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
+                <div class="row">
+                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                        <h2>SERP 1: ${keyword1}</h2>
+                        ${renderPositionResults(results1, commonResults1)}
+                    </div>
+                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                        <h2>SERP 2: ${keyword2}</h2>
+                        ${renderPositionResults(results2, commonResults1)}
+                    </div>
                 </div>
             </div>
         `;
@@ -517,33 +555,9 @@ function handleResultClick(event) {
 }
 
 //Database
-const dbName = "historicDataSDC";
-const dbVersion = 1;
-let db;
-
-const openDBRequest = indexedDB.open(dbName, dbVersion);
-
-openDBRequest.onupgradeneeded = function (event) {
-    const db = event.target.result;
-    
-    if (!db.objectStoreNames.contains("historicData")) {
-        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
-    }
-};
-
-openDBRequest.onsuccess = function (event) {
-    db = event.target.result;
-};
-
-openDBRequest.onerror = function (event) {
-    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
-};
-
 async function saveData() {
     const dataHTML = document.getElementById("serps").innerHTML;
-    
-    const transaction = db.transaction(["historicData"], "readwrite");
-    const store = transaction.objectStore("historicData");
+
     const titles = [];
     for (let i = 1; i <= 3; i++) {
         const element = document.getElementById(`zoekwoord-${i}`);
@@ -552,17 +566,23 @@ async function saveData() {
         }
     }
     const titel = titles.join(' , ');
-    
-    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString() };
-    
-    store.add(newData);
-    
-    transaction.oncomplete = () => {
+
+    const newData = { html: dataHTML, titel: titel, timestamp: new Date().toLocaleString(), userId: user.uid };
+
+    try {
+        const docRef = await addDoc(collection(db, "historicDataSDC"), newData);
+
+        await updateDoc(doc(db, "historicDataSDC", docRef.id), {
+            id: docRef.id
+        });
+        
         const successToast = document.getElementById("success-toast");
         const bootstrapToast = new bootstrap.Toast(successToast);
         bootstrapToast.show();
-    };
-    document.getElementById("save-button").style = "width: auto; display:none;";
-};
+        document.getElementById("save-button").style = "width: auto; display:none;";
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
 
 document.getElementById("save-button").addEventListener("click", saveData);

@@ -182,7 +182,7 @@ resultTextarea.addEventListener('click', () => {
         resultTextarea.select();
         document.execCommand("copy");
         showNotification('Resultaten gekopieerd naar clipboard!', 3000);
-        showAlert = true;
+        SeeNotification = true;
     }
 });
 
@@ -712,9 +712,9 @@ let filter_zoekvolume_label = document.getElementById("filter-zoekvolume-label")
 filter_zoekvolume.addEventListener("click", function() {
     if (filter_zoekvolume.checked) {
         filter_zoekvolume_waarde.style = "display: inline-flex;height: 40px !important;width: 60px;margin-top: -8px;margin-left: 10px;";
-        console.log(filter_zoekvolume_label);
-        filter_zoekvolume_label.innerText = "Test";
+        filter_zoekvolume_label.innerText = "Vul een waarde in. Alles boven deze waarde wordt meegenomen in het Excel document.";
     } else {
+        filter_zoekvolume_label.innerText = "Filter output op basis van zoekvolume?";
         filter_zoekvolume_waarde.style = "display: none;";
     }
 });
@@ -869,10 +869,21 @@ async function mixLists(login_storage, login, password, api_login) {
                         k === keyword
                     );
                     if (matchingKeywordIndex !== -1) {
-                        existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
+                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                            console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
+                            existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
+                            existingObject.searchVolume.splice(matchingKeywordIndex, 1);
+                        } else {
+                            existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
+                        }
                     } else {
-                        existingObject.mixedKeywords.push(keyword);
-                        existingObject.searchVolume.push(NewSearchVolume);
+                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                            console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
+                            continue;
+                        } else {
+                            existingObject.mixedKeywords.push(keyword);
+                            existingObject.searchVolume.push(NewSearchVolume);
+                        }
                     }
                 }
                 
@@ -1010,7 +1021,6 @@ async function fetchLocationData() {
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
-    console.log(filteredLocationEntries);
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');

@@ -302,13 +302,16 @@ selecteerPeriode.addEventListener('change', function () {
 
   // Calculate the start date based on the selected value
   const startDate = new Date(currentDate); // Clone the current date
+  const endDate = new Date();
 
   switch (selectedValue) {
     case '7':
       startDate.setDate(currentDate.getDate() - 7);
+      endDate.setDate(today.getDate() - 2);
       break;
     case '28':
       startDate.setDate(currentDate.getDate() - 28);
+      endDate.setDate(today.getDate() - 2);
       break;
     case 'd-maand':
       if ((today.getDate() === 1 || today.getDate() === 2)) {
@@ -316,36 +319,37 @@ selecteerPeriode.addEventListener('change', function () {
         return;
       };
       startDate.setDate(1);
-      console.log(startDate);
-      console.log(today);
+      endDate.setDate(today.getDate() - 2);
       break;
     case 'a-maand':
-      startDate.setMonth(today.getMonth() - 1, 1); // First day of the last month
+      startDate.setMonth(today.getMonth() - 1, 1);
+      endDate.setDate(0);
       break;
     case '3-maand':
-      startDate.setMonth(currentDate.getMonth() - 3); // First day of the month 3 months ago
+      startDate.setMonth(currentDate.getMonth() - 3);
+      endDate.setDate(today.getDate() - 2);
       break;
     case '6-maand':
-      startDate.setMonth(currentDate.getMonth() - 6); // First day of the month 6 months ago
+      startDate.setMonth(currentDate.getMonth() - 6);
+      endDate.setDate(today.getDate() - 2);
       break;
     case '12-maand':
       startDate.setFullYear(currentDate.getFullYear() - 1);
+      endDate.setDate(today.getDate() - 2);
       break;
     case '16-maand':
       startDate.setFullYear(currentDate.getFullYear() - 1, currentDate.getMonth() - 4);
+      endDate.setDate(today.getDate() - 2);
       break;
     case 'jaar':
       startDate.setMonth(0, 1);
+      endDate.setDate(today.getDate() - 2);
       break;
     default:
       break;
   }
 
   startDateInput.value = formatDate(startDate);
-
-  const endDate = new Date();
-  endDate.setDate(today.getDate() - 2);
-
   endDateInput.value = formatDate(endDate);
 });
 

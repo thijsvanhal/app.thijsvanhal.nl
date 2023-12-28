@@ -24,7 +24,9 @@ let modal;
 let error_modal;
 document.addEventListener('DOMContentLoaded', function() {
     modal = new bootstrap.Modal(document.getElementById("loginModal"));
-    error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+    if (document.getElementById("error-modal")) {
+        error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
+    }
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 });
