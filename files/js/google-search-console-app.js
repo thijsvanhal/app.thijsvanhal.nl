@@ -92,6 +92,7 @@ function closeOptions () {
 
 function createCustomDropdown(dropdown, optionsId, searchInputId, data) {
   const dropdownOptions = document.getElementById(optionsId);
+  dropdownOptions.innerHTML = '';
   const searchInput = document.getElementById(searchInputId);
 
   data.forEach(optionText => {
@@ -278,7 +279,8 @@ function downloadExcelFile() {
 }
 
 function updateInformation(data) {
-  loginLinkGoogle.style.display = "none";
+  loginLinkGoogle.className = "btn btn-primary secondbutton";
+  loginLinkGoogle.innerText = "Selecteer een ander Google account";
   document.getElementById("searchproperty").removeAttribute("disabled");
   welcomeText.textContent = "Selecteer een property, " + data.name;
 }
