@@ -28,8 +28,6 @@ onAuthStateChanged(auth, (currentUser) => {
 });
 
 // JavaScript Code
-
-let mixedKeywordsArray = [];
 let taskIds = [];
 let keywords = [];
 

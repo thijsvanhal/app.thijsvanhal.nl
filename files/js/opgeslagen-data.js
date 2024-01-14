@@ -52,6 +52,12 @@ async function loadStoredData() {
         const historicData = querySnapshot.docs.map(doc => doc.data());
 
         historicData.forEach(entry => {
+            entry.date = new Date(entry.timestamp);
+        });
+        
+        historicData.sort((a, b) => b.date - a.date);
+
+        historicData.forEach(entry => {
             const listItem = document.createElement("div");
             listItem.innerHTML = `<h3>${entry.titel}</h3>
                                 <p>Gemaakt op: ${entry.timestamp}</p>

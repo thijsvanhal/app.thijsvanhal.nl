@@ -238,7 +238,7 @@
             <label for="list-values">Zoekwoorden</label>
           </div>
         </div>
-        <button type="button" class="btn btn-primary thirdbutton" onclick="addList()">Voeg rijtje toe</button>
+        <button type="button" class="btn btn-primary thirdbutton" id="add-list-button">Voeg rijtje toe</button>
       </div>
       <div class="col-md-auto">
         <div class="d-flex" style="height: 100%;">
@@ -252,7 +252,7 @@
             <textarea class="form-control" placeholder="Plaats bulk rijtjes hier" id="bulk-list-values"></textarea>
             <label for="bulk-list-values">Bulk rijtjes toevoegen</label>
           </div>
-          <button type="button" class="btn btn-primary thirdbutton" onclick="bulkaddList()">Voeg bulk rijtjes
+          <button type="button" class="btn btn-primary thirdbutton" id="bulk-add-list-button">Voeg bulk rijtjes
             toe</button>
         </div>
       </div>
@@ -262,7 +262,7 @@
     <h2>Gegenereerde rijtjes</h2>
     <div class="lijsten" id="alle-lijsten">
     </div>
-    <button type="button" class="btn btn-primary secondbutton" onclick="removeLists()" style="width: auto;">Verwijder
+    <button type="button" class="btn btn-primary secondbutton" id="remove-lists-button" style="width: auto;">Verwijder
       alle rijtjes</button>
   </div>
   <div class="container-sm" style="display: none;">
@@ -356,8 +356,7 @@
       </label>
       <textarea class="form-control" id="filter-zoekvolume-waarde" style="display: none;"></textarea>
     </div>
-    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen"
-      onclick="mixLists(login_storage, login, password, api_login)" disabled>Zoekvolumes ophalen</button>
+    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen" disabled>Zoekvolumes ophalen</button>
   </div>
   <div class="container-sm" id="witte-container">
     <h2>Data opslaan en terugkijken</h2>
@@ -423,7 +422,7 @@
   </div>
   <script type="module" src="/files/js/auth.js"></script>
   <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/files/js/keyword-mixer-app.js"></script>
+  <script type="module" src="/files/js/keyword-mixer-app.js"></script>
   <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
 </body>
 

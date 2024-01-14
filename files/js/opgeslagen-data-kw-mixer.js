@@ -1,91 +1,96 @@
-let mixedKeywordsArray = '';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, query, where, getDocs, collection, getDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-//Database
-const dbName = 'historicDataKM';
-const dbVersion = 1;
-
-const openDBRequest = indexedDB.open(dbName, dbVersion);
-
-openDBRequest.onupgradeneeded = function (event) {
-    const db = event.target.result;
-    
-    if (!db.objectStoreNames.contains("historicData")) {
-        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
-    }
+const firebaseConfig = {
+    apiKey: "AIzaSyCaTODMga4jcKR1Xwo1H7XVhSzyfBwCfRc",
+    authDomain: "app-thijsvanhal-nl.firebaseapp.com",
+    projectId: "app-thijsvanhal-nl",
+    storageBucket: "app-thijsvanhal-nl.appspot.com",
+    messagingSenderId: "437337351675",
+    appId: "1:437337351675:web:0c273400b65e1f6a7ad75e",
+    measurementId: "G-L57H7E26H3"
 };
 
-// Function to load and display stored data automatically
-function loadStoredData() {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
-    const store = transaction.objectStore("historicData");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    const getDataRequest = store.getAll();
+let user;
 
-    getDataRequest.onsuccess = () => {
-        const historicData = getDataRequest.result;
-        const dataList = document.getElementById("data-list");
-
-        if (getDataRequest.readyState === "done" && historicData.length > 0) {
-            dataList.innerHTML = "";
-
-            historicData.reverse();
-            historicData.forEach(entry => {
-                const listItem = document.createElement("div");
-                listItem.innerHTML = `<span>${entry.titel} (${entry.timestamp})</span><br>
-                                    <button type="button" class="btn btn-primary view-button" style="width: auto" data-id="${entry.id}">Bekijk</button> 
-                                    <button type="button" class="btn btn-primary download-button" style="width: auto" data-id="${entry.id}">Download</button> 
-                                    <button type="button" class="btn btn-primary delete-button secondbutton" style="width: auto" data-id="${entry.id}">Verwijder</button>
-                                     `;
-                dataList.appendChild(listItem);
-            });
-
-            const viewButtons = document.querySelectorAll(".view-button");
-            const downloadButtons = document.querySelectorAll(".download-button");
-            const deleteButtons = document.querySelectorAll(".delete-button");
-
-            viewButtons.forEach(button => {
-                button.addEventListener("click", (event) => {
-                    const id = Number(event.target.getAttribute("data-id"));
-                    viewData(id);
-                });
-            });
-
-            downloadButtons.forEach(button => {
-                button.addEventListener("click", (event) => {
-                    const id = Number(event.target.getAttribute("data-id"));
-                    downloadData(id);
-                });
-            });
-
-            deleteButtons.forEach(button => {
-                button.addEventListener("click", (event) => {
-                    const id = Number(event.target.getAttribute("data-id"));
-                    deleteData(id);
-                });
-            });
-
-            console.log("Data loaded from IndexedDB.");
-        } else if (getDataRequest.readyState === "done" && historicData.length === 0) {
-            dataList.innerHTML = "<p>Op dit moment heb je nog geen data opgeslagen.</p>";
-        }
-    };
-}
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(loadStoredData, 1500);
+onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+        user = currentUser;
+        loadStoredData();
+    } else {
+        user = null;
+    }
 });
 
-openDBRequest.onerror = function (event) {
-    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
-};
+//Database
+const dbName = 'historicDataKWM';
+let mixedKeywordsArray = '';
 
-function downloadData(id) {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
-    const store = transaction.objectStore("historicData");
-    
-    const getDataRequest = store.get(id);
-    
-    getDataRequest.onsuccess = function () {
-        const data = getDataRequest.result;
+// Function to load and display stored data automatically
+async function loadStoredData() {
+    const dataList = document.getElementById("data-container");
+    const q = query(collection(db, dbName), where("userId", "==", user.uid));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+        dataList.innerHTML = "<p>Op dit moment heb je nog geen data opgeslagen.</p>";
+    } else {
+        dataList.innerHTML = "";
+        const historicData = querySnapshot.docs.map(doc => doc.data());
+
+        historicData.forEach(entry => {
+            entry.date = new Date(entry.timestamp);
+        });
+        
+        historicData.sort((a, b) => b.date - a.date);
+        historicData.forEach(entry => {
+            const listItem = document.createElement("div");
+            listItem.innerHTML = `<span>${entry.titel} (${entry.timestamp})</span><br>
+                                <button type="button" class="btn btn-primary view-button" style="width: auto" data-id="${entry.id}">Bekijk</button> 
+                                <button type="button" class="btn btn-primary download-button" style="width: auto" data-id="${entry.id}">Download</button> 
+                                <button type="button" class="btn btn-primary delete-button secondbutton" style="width: auto" data-id="${entry.id}">Verwijder</button>
+                                    `;
+            dataList.appendChild(listItem);
+        });
+
+        const viewButtons = document.querySelectorAll(".view-button");
+        const downloadButtons = document.querySelectorAll(".download-button");
+        const deleteButtons = document.querySelectorAll(".delete-button");
+
+        viewButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = String(event.target.getAttribute("data-id"));
+                viewData(id);
+            });
+        });
+
+        downloadButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = String(event.target.getAttribute("data-id"));
+                downloadData(id);
+            });
+        });
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = String(event.target.getAttribute("data-id"));
+                deleteData(id);
+            });
+        });
+    };
+}
+
+async function downloadData(id) {
+    const docRef = doc(db, dbName, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
         if (data) {
             mixedKeywordsArray = JSON.parse(data.data);
             generateExcel();
@@ -93,19 +98,15 @@ function downloadData(id) {
     };
 }
 
-function viewData(id) {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readonly");
-    const store = transaction.objectStore("historicData");
-    
-    const getDataRequest = store.get(id);
-    
-    getDataRequest.onsuccess = function () {
-        const data = getDataRequest.result;
+async function viewData(id) {
+    const docRef = doc(db, dbName, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
         if (data) {
-            // Parse the JSON data
             const mixedKeywordsArray = JSON.parse(data.data);
 
-            // Create a table to display the data
             const div = document.createElement('div');
             div.className = "table-responsive";
             const table = document.createElement('table');
@@ -113,7 +114,6 @@ function viewData(id) {
             const thead = document.createElement('thead');
             const tbody = document.createElement('tbody');
 
-            // Create table headers
             const headerRow = document.createElement('tr');
             mixedKeywordsArray.forEach((item) => {
                 const cell = document.createElement('th');
@@ -122,7 +122,6 @@ function viewData(id) {
             });
             thead.appendChild(headerRow);
 
-            // Create table rows
             const maxMixedKeywords = Math.max(...mixedKeywordsArray.map((item) => item.mixedKeywords.length));
             for (let i = 0; i < maxMixedKeywords; i++) {
                 const row = document.createElement('tr');
@@ -139,33 +138,26 @@ function viewData(id) {
             table.appendChild(thead);
             table.appendChild(tbody);
 
-            // Get the modal and content elements
             const viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
             const viewDataContent = document.getElementById("view-data-content");
 
-            // Clear the content and append the table
             viewDataContent.innerHTML = '<h2>Bekijk data</h2>';
             viewDataContent.appendChild(table);
 
-            // Show the modal
             viewModal.show();
         }
     };
 }
 
-function deleteData(id) {
-    const transaction = openDBRequest.result.transaction(["historicData"], "readwrite");
-    const store = transaction.objectStore("historicData");
-    
-    const deleteRequest = store.delete(id);
-    
-    deleteRequest.onsuccess = function () {
-        loadStoredData();
-    };
+async function deleteData(id) {
+    const docRef = doc(db, dbName, id);
+
+    await deleteDoc(docRef);
+
+    loadStoredData();
 }
 
 async function generateExcel() {
-    console.log(mixedKeywordsArray);
     mixedKeywordsArray.forEach(function (keywordObj) {
         const mixedKeywords = keywordObj.mixedKeywords;
         const searchVolume = keywordObj.searchVolume;

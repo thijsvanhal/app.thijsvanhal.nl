@@ -1,4 +1,31 @@
-// JavaScript Code
+// Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import {getFirestore, collection, addDoc, updateDoc, doc} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCaTODMga4jcKR1Xwo1H7XVhSzyfBwCfRc",
+    authDomain: "app-thijsvanhal-nl.firebaseapp.com",
+    projectId: "app-thijsvanhal-nl",
+    storageBucket: "app-thijsvanhal-nl.appspot.com",
+    messagingSenderId: "437337351675",
+    appId: "1:437337351675:web:0c273400b65e1f6a7ad75e",
+    measurementId: "G-L57H7E26H3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let user;
+
+onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+        user = currentUser;
+    } else {
+        user = null;
+    }
+});
 
 // Constanten
 const resultTextarea = document.getElementById('result-mixer');
@@ -7,8 +34,11 @@ const keywordsInput1 = document.getElementById('lijst-1');
 const keywordsInput2 = document.getElementById('lijst-2');
 const keywordsInput3 = document.getElementById('lijst-3');
 
+const statusElement = document.querySelector('.bulk-mixer-status');
+
 let mixedKeywordsArray = [];
 let taskIds = [];
+let taskIdsSuggestions = [];
 let lineNames = [];
 let apiMethodes = [];
 let api_methode;
@@ -237,6 +267,11 @@ if (listsStorage) {
     updateAccordion();
 }
 
+const addListButton = document.getElementById("add-list-button");
+addListButton.addEventListener("click", function() {
+    addList();
+});
+
 async function addList() {
     const list_name = document.getElementById("list-name");
     const list_values = document.getElementById("list-values");
@@ -264,6 +299,11 @@ async function addList() {
     list_name.value = "";
     list_values.value = "";
 }
+
+const bulkAddListButton = document.getElementById("bulk-add-list-button");
+bulkAddListButton.addEventListener("click", function() {
+    bulkaddList();
+});
 
 async function bulkaddList() {
     const textarea = document.getElementById('bulk-list-values');
@@ -306,7 +346,14 @@ async function bulkaddList() {
     textarea.value = "";
 }     
 
+
+
 // Verwijderen van alle lijsten
+const removeListsButton = document.getElementById("remove-lists-button");
+removeListsButton.addEventListener("click", function() {
+    removeLists();
+});
+
 function removeLists() {
     lists = [];
     sessionStorage.removeItem("lists");
@@ -648,58 +695,6 @@ if (checkbox_checked === "checked") {
     checkbox.checked = true;
 }
 
-function calculateCost(lines) {
-    let totalCost = 0;
-
-    for (const line of lines) {
-        const values = line.split(",");
-        
-        if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
-            var max_keywords = 20;
-        } else {
-            var max_keywords = 1000;
-        }
-        document.getElementById("optional-list-mix").checked = values[1] === "1";
-        if (values[0] !== "0" && values[0] !== "1") {
-            document.getElementById("lijst-1").value = getListValues(values[0]);
-        } else {
-            document.getElementById("lijst-1").value = getListValues(values[2]);
-        }
-        document.getElementById("lijst-2").value = getListValues(values[3]);
-        document.getElementById("optional-list-2").checked = values[4] === "1";
-        document.getElementById("lijst-3").value = getListValues(values[5]);
-        document.getElementById("optional-list-3").checked = values[6] === "1";
-        updateMixer();
-        const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
-        const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
-        totalCost += numRequests * 0.05;
-    }
-    return new Promise((resolve) => {
-        const confirmPopup = document.getElementById("popup");
-        const costSpan = document.getElementById("cost");
-
-        costSpan.textContent = `$${totalCost.toFixed(2)}`;
-        confirmPopup.style.display = "block";
-
-        const hideConfirmation = () => {
-            confirmPopup.style.display = "none";
-        };
-
-        const cancelButton = document.getElementById("cancel");
-        cancelButton.addEventListener("click", async () => {
-            hideConfirmation();
-            location.reload();
-        });
-
-        const confirm = document.getElementById("confirm");
-        confirm.removeEventListener("click", hideConfirmation);
-        confirm.addEventListener("click", async () => {
-            hideConfirmation();
-            resolve();
-        });
-    });
-}
-
 const error_sluiten_knop = document.querySelector("#error-modal .btn-close");
 error_sluiten_knop.onclick = function() {
     document.getElementById("error-modal").style.display = "none";
@@ -720,22 +715,25 @@ filter_zoekvolume.addEventListener("click", function() {
 });
 
 // Mixen van bulk lijsten
-async function mixLists(login_storage, login, password, api_login) {
+const mixListsButton = document.getElementById("zoekvolumes-ophalen");
+mixListsButton.addEventListener("click", function() {
+    mixLists();
+});
+
+async function mixLists() {
     // verwijder huidige waardes
     document.getElementById("save-button").style = "width: auto; display:none;";
     document.querySelector('.bulk-mixer-status').innerHTML = '';
     mixedKeywordsArray = [];
     taskIds = [];
+    taskIdsSuggestions = [];
     lineNames = [];
     apiMethodes = [];
 
+    let totalCost = 0;
+
     const inputTextarea = document.getElementById("bulk-input");
-
-
-
-    const statusElement = document.querySelector('.bulk-mixer-status');
     const lines = inputTextarea.value.split("\n");
-    await calculateCost(lines);
 
     if (!api_login && login_storage === "") {
         error_modal.show();
@@ -787,109 +785,66 @@ async function mixLists(login_storage, login, password, api_login) {
             document.getElementById("optional-list-3").checked = values[6] === "1";
             updateMixer();
             const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
-            mixedKeywordsArray.push({
-                line: nonEmptyValues.join(" + "),
-                mixedKeywords: mixedKeywords,
-                searchVolume: []
-            });
-
             if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
                 var max_keywords = 20;
             } else {
                 var max_keywords = 1000;
             }
+            mixedKeywordsArray.push({
+                line: nonEmptyValues.join(" + "),
+                maxKeywords: max_keywords,
+                mixedKeywords: mixedKeywords,
+                searchVolume: []
+            });
+        }
 
-            const numRequests = Math.ceil(mixedKeywords.length / max_keywords);
-            
-            for (let i = 0; i < numRequests; i++) {
-                const startIndex = i * max_keywords;
-                const endIndex = Math.min(startIndex + max_keywords, mixedKeywords.length);
-                const keywordsSlice = mixedKeywords.slice(startIndex, endIndex);
+        const selectedCountry = document.getElementById('search-location').value;
+        const selectedLanguage = document.getElementById('search-language').value;
 
-                const selectedCountry = document.getElementById('search-location').value;
-                const selectedLanguage = document.getElementById('search-language').value;
-
-                const post_array = [{
-                    "location_name": selectedCountry,
-                    "language_name": selectedLanguage,
-                    "keywords": keywordsSlice,
-                }];
-
-                if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
-                    api_methode = "keywords_for_keywords";
-                } else {
-                    api_methode = "search_volume";
-                }
-                apiMethodes.push(api_methode);
-                const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${api_methode}/task_post`;
-                const requestPostOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(login + ':' + password)
-                    }
-                };
-    
-                // POST request
-                const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
-                const post_result = await post_response.json();
-                console.log(post_result.tasks);
-                const status = post_result.tasks[0].status_code;
-                if (status === 20100) {
-                    lineNames.push(nonEmptyValues.join(" + "));
-                    taskIds.push(post_result.tasks[0].id);
-                } else {
-                    error_modal.show();
-                    document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b> <br><br> De tool gaat verder maar je zult rijtje <b>${nonEmptyValues.join(" + ")}</b> moeten controleren en later opnieuw moeten ophalen!</p>`;
-                    const modalClosedPromise = new Promise((resolve) => {
-                        error_modal._element.addEventListener("hidden.bs.modal", function () {
-                            resolve();
-                        }, { once: true });
-                    });
-                    await modalClosedPromise;
-                }
+        const SearchVolumeKeywords = mixedKeywordsArray.filter(obj => obj.maxKeywords === 1000).flatMap(obj => obj.mixedKeywords);
+        if (SearchVolumeKeywords.length !== 0) {
+            const SearchVolumeRequests = Math.ceil(SearchVolumeKeywords.length / 1000);
+            totalCost += SearchVolumeRequests * 0.05;
+        }
+        const SuggestionsKeywords = mixedKeywordsArray.filter(obj => obj.maxKeywords === 20);
+        if (SuggestionsKeywords.length !== 0) {
+            for (const obj of SuggestionsKeywords) {
+                const keywords = obj.mixedKeywords;
+                const SuggestionsRequests = Math.ceil(keywords.length / 20);
+                totalCost += SuggestionsRequests * 0.05;
             }
         }
 
-        for (let i = 0; i < taskIds.length; i++) {
-            const taskId = taskIds[i];
-            const line_name = lineNames[i];
-            const getApiMethode = apiMethodes[i];
-            const results = await fetchData(taskId, login, password, getApiMethode);
-            for (const result of results) {
-                const keyword = result.keyword;
-                if (result.search_volume !== null) {
-                    var NewSearchVolume = result.search_volume;
-                } else {
-                    var NewSearchVolume = 0;
-                }
-                const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
-                if (existingObject) {
-                    const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
-                        k === keyword
-                    );
-                    if (matchingKeywordIndex !== -1) {
-                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                            console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
-                            existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
-                            existingObject.searchVolume.splice(matchingKeywordIndex, 1);
-                        } else {
-                            existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
-                        }
-                    } else {
-                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                            console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
-                            continue;
-                        } else {
-                            existingObject.mixedKeywords.push(keyword);
-                            existingObject.searchVolume.push(NewSearchVolume);
-                        }
-                    }
-                }
-                
-            }
-            statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor <b>${line_name}</b> opgehaald.</p></div>`);
-        }
+        await new Promise((resolve) => {
+            const confirmPopup = document.getElementById("popup");
+            const costSpan = document.getElementById("cost");
+
+            costSpan.textContent = `$${totalCost.toFixed(2)}`;
+            confirmPopup.style.display = "block";
+
+            const hideConfirmation = () => {
+                confirmPopup.style.display = "none";
+            };
+
+            const cancelButton = document.getElementById("cancel");
+            cancelButton.addEventListener("click", async () => {
+                hideConfirmation();
+                location.reload();
+            });
+
+            const confirm = document.getElementById("confirm");
+            confirm.removeEventListener("click", hideConfirmation);
+            confirm.addEventListener("click", async () => {
+                hideConfirmation();
+                resolve();
+            });
+        });
+
+        await Promise.all([
+            SearchVolumeData(SearchVolumeKeywords, selectedCountry, selectedLanguage),
+            SuggestionsData(SuggestionsKeywords, selectedCountry, selectedLanguage)
+        ]);
+
         if (checkbox.checked) {
             saveData();
         } else {
@@ -908,6 +863,162 @@ async function mixLists(login_storage, login, password, api_login) {
             });
             await modalClosedPromise;
         }
+    }
+}
+
+async function SearchVolumeData(keywords, country, language) {
+    const numRequests = Math.ceil(keywords.length / 1000);
+        
+    for (let i = 0; i < numRequests; i++) {
+        const startIndex = i * 1000;
+        const endIndex = Math.min(startIndex + 1000, keywords.length);
+        const keywordsSlice = keywords.slice(startIndex, endIndex);
+
+        const post_array = [{
+            "location_name": country,
+            "language_name": language,
+            "keywords": keywordsSlice,
+        }];
+
+        const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post`;
+        const requestPostOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(login + ':' + password)
+            }
+        };
+
+        // POST request
+        const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
+        const post_result = await post_response.json();
+        console.log(post_result.tasks);
+        const status = post_result.tasks[0].status_code;
+        if (status === 20100) {
+            taskIds.push(post_result.tasks[0].id);
+        } else {
+            error_modal.show();
+            document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b>. Dit gebeurde tijdens het ophalen van de lijst met als eerste zoekwoord <b>${keywordsSlice[0]}</b> en als laatste <b>${keywordsSlice[keywordsSlice.length - 1]}</b> <br><br> De tool gaat verder maar je zult die zoekwoorden moeten controleren en later opnieuw moeten ophalen!</p>`;
+            const modalClosedPromise = new Promise((resolve) => {
+                error_modal._element.addEventListener("hidden.bs.modal", function () {
+                    resolve();
+                }, { once: true });
+            });
+            await modalClosedPromise;
+        }
+    }
+    
+    for (let i = 0; i < taskIds.length; i++) {
+        const taskId = taskIds[i];
+        const getApiMethode = "search_volume";
+        const results = await fetchData(taskId, login, password, getApiMethode);
+        for (const result of results) {
+            const keyword = result.keyword;
+            let NewSearchVolume = result.search_volume !== null ? result.search_volume : 0;
+            for (const obj of mixedKeywordsArray) {
+                const keywordIndices = [];
+                for(let i = 0; i < obj.mixedKeywords.length; i++) {
+                    if(obj.mixedKeywords[i] === keyword) keywordIndices.push(i);
+                }
+                for(const index of keywordIndices) {
+                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                        obj.mixedKeywords.splice(index, 1);
+                        obj.searchVolume.splice(index, 1);
+                    } else {
+                        obj.searchVolume[index] = NewSearchVolume;
+                    }
+                }
+            }
+        }
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor de DataForSEO taak met ID <b>${taskId}</b> opgehaald.</p></div>`);
+    }
+}
+
+async function SuggestionsData(array, country, language) {
+    for (const obj of array) {
+        const line = obj.line;
+        const keywords = obj.mixedKeywords;
+        const numRequests = Math.ceil(keywords.length / 20);
+            
+        for (let i = 0; i < numRequests; i++) {
+            const startIndex = i * 20;
+            const endIndex = Math.min(startIndex + 20, keywords.length);
+            const keywordsSlice = keywords.slice(startIndex, endIndex);
+
+            const post_array = [{
+                "location_name": country,
+                "language_name": language,
+                "keywords": keywordsSlice,
+            }];
+
+            const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/keywords_for_keywords/task_post`;
+            const requestPostOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(login + ':' + password)
+                }
+            };
+
+            // POST request
+            const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
+            const post_result = await post_response.json();
+            console.log(post_result.tasks);
+            const status = post_result.tasks[0].status_code;
+            if (status === 20100) {
+                lineNames.push(line);
+                taskIdsSuggestions.push(post_result.tasks[0].id);
+            } else {
+                error_modal.show();
+                document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b> <br><br> De tool gaat verder maar je zult rijtje <b>${line}</b> moeten controleren en later opnieuw moeten ophalen!</p>`;
+                const modalClosedPromise = new Promise((resolve) => {
+                    error_modal._element.addEventListener("hidden.bs.modal", function () {
+                        resolve();
+                    }, { once: true });
+                });
+                await modalClosedPromise;
+            }
+        }
+    }
+
+    for (let i = 0; i < taskIdsSuggestions.length; i++) {
+        const taskId = taskIdsSuggestions[i];
+        const line_name = lineNames[i];
+        const getApiMethode = "keywords_for_keywords";
+        const results = await fetchData(taskId, login, password, getApiMethode);
+        for (const result of results) {
+            const keyword = result.keyword;
+            if (result.search_volume !== null) {
+                var NewSearchVolume = result.search_volume;
+            } else {
+                var NewSearchVolume = 0;
+            }
+            const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
+            if (existingObject) {
+                const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
+                    k === keyword
+                );
+                if (matchingKeywordIndex !== -1) {
+                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                        console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
+                        existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
+                        existingObject.searchVolume.splice(matchingKeywordIndex, 1);
+                    } else {
+                        existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
+                    }
+                } else {
+                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                        console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
+                        continue;
+                    } else {
+                        existingObject.mixedKeywords.push(keyword);
+                        existingObject.searchVolume.push(NewSearchVolume);
+                    }
+                }
+            }
+            
+        }
+        statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor de DataForSEO taak met ID <b>${taskId}</b> opgehaald.</p></div>`);
     }
 }
 
@@ -1100,37 +1211,37 @@ const afhankelijkRadio = document.getElementById("afhankelijk");
 
 disabled.addEventListener("input", function() {
     if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
-        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        mixListsButton.removeAttribute("disabled");
         checkErrors();
     } else {
-        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+        mixListsButton.setAttribute("disabled", "disabled");
     }
 });
 
 disabled1.addEventListener("change", function() {
     if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
-        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        mixListsButton.removeAttribute("disabled");
         checkErrors();
     } else {
-        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+        mixListsButton.setAttribute("disabled", "disabled");
     }
 });
 
 disabled2.addEventListener("change", function() {
     if (disabled.value != '' && disabled2.checked == true || disabled1.checked == true || disabled3.checked == true) {
-        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        mixListsButton.removeAttribute("disabled");
         checkErrors();
     } else {
-        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+        mixListsButton.setAttribute("disabled", "disabled");
     }
 });
 
 disabled3.addEventListener("change", function() {
     if (disabled.value != '' && disabled3.checked == true || disabled1.checked == true || disabled3.checked == true) {
-        document.getElementById("zoekvolumes-ophalen").removeAttribute("disabled");
+        mixListsButton.removeAttribute("disabled");
         checkErrors();
     } else {
-        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+        mixListsButton.setAttribute("disabled", "disabled");
     }
 });
 
@@ -1150,7 +1261,7 @@ function checkErrors() {
         document.getElementById("error-message").innerHTML = `<p class="body-text">Je hebt niet de juiste API methode geselecteerd. Je kunt enkel 'verschilt per regel' selecteren als je ook rijtjes gaat mixen. Selecteer voor nu 'Zoekvolumes' of 'Suggesties'</p>`;
         afhankelijkRadio.checked = false;
         radioButtons.forEach(radio => radio.checked = false);
-        document.getElementById("zoekvolumes-ophalen").setAttribute("disabled", "disabled");
+        mixListsButton.setAttribute("disabled", "disabled");
     }
 }
 
@@ -1196,42 +1307,24 @@ async function getData (login, password) {
 }
 
 //database
-const dbName = "historicDataKM";
-const dbVersion = 1;
-let db;
-
-const openDBRequest = indexedDB.open(dbName, dbVersion);
-
-openDBRequest.onupgradeneeded = function (event) {
-    const db = event.target.result;
-    
-    if (!db.objectStoreNames.contains("historicData")) {
-        db.createObjectStore("historicData", { keyPath: "id", autoIncrement: true });
-    }
-};
-
-openDBRequest.onsuccess = function (event) {
-    db = event.target.result;
-};
-
-openDBRequest.onerror = function (event) {
-    window.alert("Er is een fout in de database, neem contact op met de developer:", event.target.error);
-};
-
 async function saveData() {
-    const transaction = db.transaction(["historicData"], "readwrite");
-    const store = transaction.objectStore("historicData");
     const titel = mixedKeywordsArray[0].line;
-    const newData = { data: JSON.stringify(mixedKeywordsArray), titel: titel, timestamp: new Date().toLocaleString() };
+    const newData = { data: JSON.stringify(mixedKeywordsArray), titel: titel, timestamp: new Date().toLocaleString(), userId: user.uid };
     
-    store.add(newData);
-    
-    transaction.oncomplete = () => {
+    try {
+        const docRef = await addDoc(collection(db, "historicDataKWM"), newData);
+
+        await updateDoc(doc(db, "historicDataKWM", docRef.id), {
+            id: docRef.id
+        });
+        
         const successToast = document.getElementById("success-toast");
         const bootstrapToast = new bootstrap.Toast(successToast);
         bootstrapToast.show();
-    };
-    document.getElementById("save-button").style = "width: auto; display:none;";
+        document.getElementById("save-button").style = "width: auto; display:none;";
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
 };
 
 document.getElementById("save-button").addEventListener("click", saveData);
