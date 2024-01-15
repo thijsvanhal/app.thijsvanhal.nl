@@ -790,11 +790,14 @@ async function mixLists() {
             } else {
                 var max_keywords = 1000;
             }
+
+            const defaultSearchVolumes = mixedKeywords.map(keyword => keyword.trim() !== "" ? 0 : null);
+
             mixedKeywordsArray.push({
                 line: nonEmptyValues.join(" + "),
                 maxKeywords: max_keywords,
                 mixedKeywords: mixedKeywords,
-                searchVolume: []
+                searchVolume: defaultSearchVolumes
             });
         }
 
@@ -988,11 +991,8 @@ async function SuggestionsData(array, country, language) {
         const results = await fetchData(taskId, login, password, getApiMethode);
         for (const result of results) {
             const keyword = result.keyword;
-            if (result.search_volume !== null) {
-                var NewSearchVolume = result.search_volume;
-            } else {
-                var NewSearchVolume = 0;
-            }
+            let NewSearchVolume = result.search_volume !== null ? result.search_volume : 0;
+
             const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
             if (existingObject) {
                 const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
