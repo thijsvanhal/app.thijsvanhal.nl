@@ -917,7 +917,13 @@ async function SearchVolumeData(keywords, country, language) {
         const results = await fetchData(taskId, login, password, getApiMethode);
         for (const result of results) {
             const keyword = result.keyword;
-            let NewSearchVolume = result.search_volume !== null ? result.search_volume : 0;
+            let NewSearchVolume;
+            if (result.search_volume !== null) {
+                NewSearchVolume = result.search_volume
+            } else {
+                NewSearchVolume = 0;
+            }
+            
             for (const obj of mixedKeywordsArray) {
                 const keywordIndices = [];
                 for(let i = 0; i < obj.mixedKeywords.length; i++) {
@@ -991,7 +997,12 @@ async function SuggestionsData(array, country, language) {
         const results = await fetchData(taskId, login, password, getApiMethode);
         for (const result of results) {
             const keyword = result.keyword;
-            let NewSearchVolume = result.search_volume !== null ? result.search_volume : 0;
+            let NewSearchVolume;
+            if (result.search_volume !== null) {
+                NewSearchVolume = result.search_volume
+            } else {
+                NewSearchVolume = 0;
+            }
 
             const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
             if (existingObject) {
