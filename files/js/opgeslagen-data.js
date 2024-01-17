@@ -22,7 +22,6 @@ onAuthStateChanged(auth, (currentUser) => {
     if (currentUser) {
         user = currentUser;
         loadStoredData();
-        populateData();
     } else {
         user = null;
     }
@@ -91,6 +90,7 @@ async function loadStoredData() {
                 deleteData(id);
             });
         });
+        populateData();
     }
 }
 
