@@ -161,7 +161,6 @@ async function getData(login_storage, login, password, api_login) {
         return
     }   
 
-    mixedKeywordsArray = [];
     taskIds = [];
 
     keywords = [

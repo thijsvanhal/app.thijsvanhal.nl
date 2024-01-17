@@ -40,6 +40,13 @@ else if (currentUrl.includes('content-document-helper')) {
     dbName = "historicDataCDH";
 }
 
+function parseDate(date) {
+    const parts = date.split(' ');
+    const dateParts = parts[0].split('-');
+    const timeParts = parts[1].split(':');
+    return new Date(dateParts[2], dateParts[1] - 1, dateParts[0], ...timeParts);
+}
+
 async function loadStoredData() {
     const dataList = document.getElementById("data-container");
     const q = query(collection(db, dbName), where("userId", "==", user.uid));
@@ -52,10 +59,10 @@ async function loadStoredData() {
         const historicData = querySnapshot.docs.map(doc => doc.data());
 
         historicData.forEach(entry => {
-            entry.date = new Date(entry.timestamp);
+            entry.date = parseDate(entry.timestamp);
         });
         
-        historicData.sort((a, b) => b.date - a.date);
+        historicData.sort((a, b) => b.date - a.date );
 
         historicData.forEach(entry => {
             const listItem = document.createElement("div");
