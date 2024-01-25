@@ -54,7 +54,7 @@ if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
-    key = parsed_login_storage.key;
+    key = parsed_login_storage.key && parsed_login_storage.key !== '' ? parsed_login_storage.key : '';
     fetchLanguageData();
     fetchLocationData();
 } else {
