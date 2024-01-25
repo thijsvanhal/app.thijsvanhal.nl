@@ -267,7 +267,6 @@
       <input type="text" class="form-control" id="filter" placeholder="Filter waarde: zoekwoord, pagina of RegEx" disabled>
       <label for="filter">Filter waarde: zoekwoord, pagina of RegEx</label>
     </form>
-    
   </div>
   <div class="container-sm" id="keyword-container">
     <button type="button" class="btn btn-primary" onclick="getData()">Data ophalen</button>
@@ -275,6 +274,20 @@
   </div>
   <div class="container-sm" id="keyword-container">
     <p>Deze tool is als hobbyproject gemaakt. Heb je een bug gevonden of een idee hoe deze tool verbeterd kan worden? Aarzel niet om <a href="https://www.thijsvanhal.nl/contact/">contact met mij op te nemen!</a></p>
+  </div>
+  <div class="modal" id="error-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Error!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+        </div>
+        <div class="modal-body">
+          <p id="error-message"></p>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Begrepen</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="/files/js/auth.js"></script>
   <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>

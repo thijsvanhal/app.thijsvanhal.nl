@@ -15,6 +15,11 @@ loginLinkGoogle.onclick = function() {
   initClient();
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+});
+
 // Datum selecties
 let today = new Date();
 var beginDate = new Date(today.getFullYear(), today.getMonth() - 16, today.getDate());
@@ -204,12 +209,31 @@ async function getData() {
     if (response.ok) {
       data = await response.json();
       const rows = data.rows;
-      allData.push(rows);
-      totalRows += rows.length;
+      if (rows) {
+        allData.push(rows);
+        totalRows += rows.length;
+      } else {
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = `<p class="body-text">Er is (helaas) geen data opgehaald. Dit betekent dat je de verkeerde property hebt geselecteerd, een periode waar geen data beschikbaar is of een onmogelijke filter. Check dit of probeer het opnieuw.</p>`;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
+        return;
+      }
     } else {
       const errorData = await response.json();
-      window.alert('Error: ' + errorData.error.message + ' . Neem contact op met de developer!');
-      break;
+      error_modal.show();
+      document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: ${errorData.error.message}</p>`;
+      const modalClosedPromise = new Promise((resolve) => {
+          error_modal._element.addEventListener("hidden.bs.modal", function () {
+              resolve();
+          }, { once: true });
+      });
+      await modalClosedPromise;
+      return;
     }
     startRow += maxRows;
     statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool heeft al ${totalRows} rijen voor je opgehaald.</p></div>`);
@@ -285,11 +309,6 @@ function updateInformation(data) {
   welcomeText.textContent = "Selecteer een property, " + data.name;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-  const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-});
-
 // Datum selecties
 const startDateInput = document.getElementById('start-date');
 const endDateInput = document.getElementById('end-date');
@@ -299,11 +318,9 @@ const currentDate = new Date();
 currentDate.setDate(currentDate.getDate() - 1);
 
 selecteerPeriode.addEventListener('change', function () {
-  // Get the selected value from the select element
   const selectedValue = selecteerPeriode.value;
 
-  // Calculate the start date based on the selected value
-  const startDate = new Date(currentDate); // Clone the current date
+  const startDate = new Date(currentDate);
   const endDate = new Date();
 
   switch (selectedValue) {

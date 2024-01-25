@@ -28,8 +28,6 @@ onAuthStateChanged(auth, (currentUser) => {
 });
 
 // JavaScript Code
-
-let mixedKeywordsArray = [];
 let taskIds = [];
 let keywords = [];
 
@@ -40,21 +38,29 @@ function getLocalStorage(name) {
 }
 
 // Login met DataForSEO
+const dataforseo_email = document.getElementById("dataforseo-api-login");
+const dataforseo_password = document.getElementById("dataforseo-api-wachtwoord");
+const openai_key = document.getElementById("openai-api-key");
+
 let login;
 let password;
+let key;
 let parsed_login_storage;
 let login_storage = getLocalStorage("userData");
-let email_login = document.getElementById("inputEmail").value;
-let api_login = document.getElementById("inputAPI").value;
+let email_login = dataforseo_email.value;
+let api_login = dataforseo_password.value;
+let api_key = openai_key.value;
 if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
+    key = parsed_login_storage.key;
     fetchLanguageData();
     fetchLocationData();
 } else {
     login = email_login;
     password = api_login;
+    key = api_key;
     fetchLanguageData();
     fetchLocationData();
 }
@@ -71,13 +77,13 @@ const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const deleteButton = document.getElementById("deleteButton");
 const rememberme = document.getElementById("rememberMe");
-const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
 loginLink.onclick = function () {
     modal.show();
     if (login) {
-        document.getElementById("inputEmail").value = login;
-        document.getElementById("inputAPI").value = password;
+        dataforseo_email.value = login;
+        dataforseo_password.value = password;
+        openai_key.value = key;
         if (login_storage) {
             rememberme.checked = true;
         }
@@ -89,28 +95,35 @@ loginLink.onclick = function () {
 
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        var userData = {
-            email: document.getElementById("inputEmail").value,
-            password: document.getElementById("inputAPI").value
+        const userData = {
+            email: dataforseo_email.value,
+            password: dataforseo_password.value,
+            key: openai_key.value
         };
         localStorage.setItem('userData', JSON.stringify(userData));
         login_storage = getLocalStorage("userData");
         parsed_login_storage = JSON.parse(login_storage);
         login = parsed_login_storage.email;
         password = parsed_login_storage.password;
+        key = parsed_login_storage.key;
     } else {
-        login = document.getElementById("inputEmail").value;
-        password = document.getElementById("inputAPI").value;
+        localStorage.removeItem('userData');
+        login = dataforseo_email.value;
+        password = dataforseo_password.value;
+        key = openai_key.value;
     }
+    modal.hide();
 };
 
 deleteButton.onclick = function() {
     localStorage.removeItem('userData');
     login = '';
     password = '';
+    key = '';
     rememberme.checked = false;
-    document.getElementById("inputEmail").value = '';
-    document.getElementById("inputAPI").value = '';
+    dataforseo_email.value = '';
+    dataforseo_password.value = '';
+    openai_key.value = '';
     modal.hide();
 };
 
@@ -176,7 +189,6 @@ async function getData(login_storage, login, password, api_login) {
         return
     }
 
-    mixedKeywordsArray = [];
     taskIds = [];
 
     keywords = [
@@ -244,6 +256,19 @@ async function getData(login_storage, login, password, api_login) {
         } else {
             renderResults(keywords[0].keyword, keywords[1].keyword, null, keywordResults[0], keywordResults[1], null);
         }
+
+        if (key !== '') {
+            await getSummary();
+        } else {
+            const samenvatting_container = document.getElementById('samenvatting');
+            samenvatting_container.innerHTML = `
+            <h2>Advies van AI</h2>
+            <p>Je hebt geen OpenAI Key ingevuld, daarom kan AI geen samenvatting en advies maken.</p>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal" style="width:auto">Invullen</button>
+            `;
+            samenvatting_container.setAttribute('id', 'witte-container');
+        }
+
         if (checkbox.checked) {
             saveData();
         } else {
@@ -444,6 +469,59 @@ function calculateSimilarity(results1, results2, results3) {
     return { similarityPercentage, commonResults };
 }
 
+// AI
+async function getSummary() {
+    const container = document.getElementById('samenvatting');
+    container.innerHTML = '<p>De AI gaat bezig met samenvatten...</p>';
+
+    const input_data = document.getElementById('serps').innerHTML;
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${key}`,
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo-1106",
+            messages: [
+                {
+                    role: "system",
+                    content: `
+                    Ik geef je html van een tool die ik gebruik voor het vergelijken van verschillende serps van zoekwoorden in Google. Het doel van het gebruiken van deze tool is om erachter te komen of ik verschillende pagina's moet maken voor elk losse zoekwoord of dat ik met 1 pagina op de zoekwoorden kan ranken. 
+                    Ik wil dat je de gegevens in de html analyseert en mij vervolgens antwoord geeft op onderstaande vragen:
+                    - Wat zou jij adviseren om te doen? Per zoekwoord een pagina of 1 pagina?
+                    - Wat is het verschil tussen de top 3 zoektermen per positie? Analyseer het verschil tussen de pagina's per zoekterm.
+
+                    Dit is de html uit de tool:
+                    ${input_data}
+                    `,
+                },
+            ],
+        }),
+    });
+    const data = await response.json();
+    const summary = data.choices[0].message.content;
+    console.log(summary);
+    const paragraphs = summary.split('\n');
+    const pElements = paragraphs.map((paragraphText) => {
+        const p = document.createElement('p');
+        p.textContent = paragraphText;
+        container.appendChild(p);
+        return p;
+    });
+    const summaryContainer = document.createElement('div');
+    const summaryh2 = document.createElement('h2');
+    summaryh2.textContent = 'AI Advies';
+    pElements.forEach((p) => {
+        summaryContainer.appendChild(p);
+    });
+    container.innerHTML = '';
+    container.setAttribute('id', 'witte-container');
+    container.appendChild(summaryh2);
+    container.appendChild(summaryContainer);
+}
+
 // Language & location
 let typingTimer;
 const Interval = 500;
@@ -462,7 +540,6 @@ async function fetchLocationData() {
     const filteredLocationEntries = locationData.filter(location => {
         return desiredCountries.some(country => location.location_name.toLowerCase().includes(country.toLowerCase()));
     });
-    console.log(filteredLocationEntries);
   
     const locationOptions = filteredLocationEntries.map(location => location.location_name);
     const locationDropdown = document.getElementById('location-dropdown');
@@ -556,7 +633,7 @@ function handleResultClick(event) {
 
 //Database
 async function saveData() {
-    const dataHTML = document.getElementById("serps").innerHTML;
+    const dataHTML = document.getElementById("data").innerHTML;
 
     const titles = [];
     for (let i = 1; i <= 3; i++) {

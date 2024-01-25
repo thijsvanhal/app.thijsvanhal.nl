@@ -406,7 +406,7 @@ function filterOptions(optionsId, filter) {
 
 async function getSummary(taskId, login, password) {
     const container = document.getElementById('samenvatting');
-    container.innerHTML = '<p>De AI gaat bezig met samenvatten...</p>'
+    container.innerHTML = '<p>De AI gaat bezig met samenvatten...</p>';
 
     const post_array = [{
         "task_id": taskId,

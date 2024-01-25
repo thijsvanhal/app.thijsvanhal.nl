@@ -280,7 +280,6 @@ async function addList() {
 
     const listExists = lists.some((list) => list.name === listName);
     if (listExists) {
-        
         error_modal.show();
         document.getElementById("error-message").innerHTML = `<p class="body-text">Rijtje <b>${listName}</b> bestaat al, pas de naam aan :)</p>`;
         const modalClosedPromise = new Promise((resolve) => {
