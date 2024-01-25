@@ -220,8 +220,13 @@ async function getData(login_storage, login, password, api_login) {
         return;
     } else {       
         document.getElementById("save-button").style = "width: auto; display:none;";
-        const container = document.getElementById('serps');
+        const container = document.querySelector('.serps');
         container.innerHTML = '<p>De tool is de SERPS aan het ophalen...</p>';
+        container.removeAttribute("id");
+        
+        const serp_container = document.querySelector('.samenvatting');
+        serp_container.innerHTML = '';
+        serp_container.removeAttribute("id");
     
         for (const keywordObj of keywords) {
             const selectedCountry = document.getElementById('search-location').value;
@@ -260,7 +265,7 @@ async function getData(login_storage, login, password, api_login) {
         if (key !== '') {
             await getSummary();
         } else {
-            const samenvatting_container = document.getElementById('samenvatting');
+            const samenvatting_container = document.querySelector('.samenvatting');
             samenvatting_container.innerHTML = `
             <h2>Advies van AI</h2>
             <p>Je hebt geen OpenAI Key ingevuld, daarom kan AI geen samenvatting en advies maken.</p>
@@ -303,7 +308,7 @@ async function fetchData(taskId, login, password) {
 }
 
 async function renderResults(keyword1, keyword2, keyword3 = null, results1, results2, results3 = null) {
-    const container = document.getElementById('serps');
+    const container = document.querySelector('.serps');
 
     const { similarityPercentage: similarityPercentage1, commonResults: commonResults1 } = calculateSimilarity(results1, results2);
 
@@ -312,74 +317,70 @@ async function renderResults(keyword1, keyword2, keyword3 = null, results1, resu
         const { similarityPercentage: similarityPercentage2, commonResults: commonResults2 } = calculateSimilarity(results1, results3);
         const { similarityPercentage: similarityPercentage3, commonResults: commonResults3 } = calculateSimilarity(results2, results3);
         container.innerHTML = `
-            <div id="serps">
-                <h2>SERP Resultaten</h2>
-                <p>De 3 SERP's komen voor <strong>${similarityPercentage.toFixed(2)}%</strong> met elkaar overeen.</p>
-                <ul>
-                    <li>SERP ${keyword1} en ${keyword2} komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</li>
-                    <li>SERP ${keyword1} en ${keyword3} komen voor <strong>${similarityPercentage2.toFixed(2)}%</strong> met elkaar overeen.</li>
-                    <li>SERP ${keyword2} en ${keyword3} komen voor <strong>${similarityPercentage3.toFixed(2)}%</strong> met elkaar overeen.</li>
-                </ul>
-                <h3>Overeenkomende URLs:</h3>
-                <ul>
-                    ${commonResults.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                </ul>
-                <div class="row">
-                    <div class="col-sm" style="overflow-x: auto">
-                        <h3>SERP ${keyword1} en ${keyword2}</h3>
-                        <ul>
-                            ${commonResults1.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="col-sm" style="overflow-x: auto">
-                        <h3>SERP ${keyword1} en ${keyword3}</h3>
-                        <ul>
-                            ${commonResults2.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="col-sm" style="overflow-x: auto">
-                        <h3>SERP ${keyword2} en ${keyword3}</h3>
-                        <ul>
-                            ${commonResults3.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
-                        </ul>
-                    </div>
+            <h2>SERP Resultaten</h2>
+            <p>De 3 SERP's komen voor <strong>${similarityPercentage.toFixed(2)}%</strong> met elkaar overeen.</p>
+            <ul>
+                <li>SERP ${keyword1} en ${keyword2} komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</li>
+                <li>SERP ${keyword1} en ${keyword3} komen voor <strong>${similarityPercentage2.toFixed(2)}%</strong> met elkaar overeen.</li>
+                <li>SERP ${keyword2} en ${keyword3} komen voor <strong>${similarityPercentage3.toFixed(2)}%</strong> met elkaar overeen.</li>
+            </ul>
+            <h3>Overeenkomende URLs:</h3>
+            <ul>
+                ${commonResults.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+            </ul>
+            <div class="row">
+                <div class="col-sm" style="overflow-x: auto">
+                    <h3>SERP ${keyword1} en ${keyword2}</h3>
+                    <ul>
+                        ${commonResults1.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                    </ul>
                 </div>
-                <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
-                <div class="row">
-                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                        <h2>SERP 1: ${keyword1}</h2>
-                        ${renderPositionResults(results1, commonResults1)}
-                    </div>
-                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                        <h2>SERP 2: ${keyword2}</h2>
-                        ${renderPositionResults(results2, commonResults2)}
-                    </div>
-                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                        <h2>SERP 3: ${keyword3}</h2>
-                        ${renderPositionResults(results3, commonResults3)}
-                    </div>
+                <div class="col-sm" style="overflow-x: auto">
+                    <h3>SERP ${keyword1} en ${keyword3}</h3>
+                    <ul>
+                        ${commonResults2.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                    </ul>
+                </div>
+                <div class="col-sm" style="overflow-x: auto">
+                    <h3>SERP ${keyword2} en ${keyword3}</h3>
+                    <ul>
+                        ${commonResults3.map(result => `<li><a href="${result.url}" target="_blank">${result.url}</a></li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
+            <div class="row">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                    <h2>SERP 1: ${keyword1}</h2>
+                    ${renderPositionResults(results1, commonResults1)}
+                </div>
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                    <h2>SERP 2: ${keyword2}</h2>
+                    ${renderPositionResults(results2, commonResults2)}
+                </div>
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                    <h2>SERP 3: ${keyword3}</h2>
+                    ${renderPositionResults(results3, commonResults3)}
                 </div>
             </div>
         `;
     } else {
         container.innerHTML = `
-            <div id="serps">
-                <h2>SERP Resultaten</h2>
-                <p>De SERP's komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</p>
-                <h3>Overeenkomende URLs:</h3>
-                <ul>
-                    ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
-                </ul>
-                <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
-                <div class="row">
-                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                        <h2>SERP 1: ${keyword1}</h2>
-                        ${renderPositionResults(results1, commonResults1)}
-                    </div>
-                    <div class="col-sm" id="col-serp" style="overflow-x: auto">
-                        <h2>SERP 2: ${keyword2}</h2>
-                        ${renderPositionResults(results2, commonResults1)}
-                    </div>
+            <h2>SERP Resultaten</h2>
+            <p>De SERP's komen voor <strong>${similarityPercentage1.toFixed(2)}%</strong> met elkaar overeen.</p>
+            <h3>Overeenkomende URLs:</h3>
+            <ul>
+                ${commonResults1.map(result => `<li><a href="${result.url}">${result.url}</a></li>`).join('')}
+            </ul>
+            <p>Klik op een overeenkomend resultaat en ontdek de positie van die pagina bij de vergelijkende SERPs!</p>
+            <div class="row">
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                    <h2>SERP 1: ${keyword1}</h2>
+                    ${renderPositionResults(results1, commonResults1)}
+                </div>
+                <div class="col-sm" id="col-serp" style="overflow-x: auto">
+                    <h2>SERP 2: ${keyword2}</h2>
+                    ${renderPositionResults(results2, commonResults1)}
                 </div>
             </div>
         `;
@@ -471,10 +472,10 @@ function calculateSimilarity(results1, results2, results3) {
 
 // AI
 async function getSummary() {
-    const container = document.getElementById('samenvatting');
+    const container = document.querySelector('.samenvatting');
     container.innerHTML = '<p>De AI gaat bezig met samenvatten...</p>';
 
-    const input_data = document.getElementById('serps').innerHTML;
+    const input_data = document.querySelector('.serps').innerHTML;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
