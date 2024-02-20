@@ -144,21 +144,35 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">DataForSEO API Instellingen</h5>
+          <h5 class="modal-title" id="loginModalLabel">API Instellingen</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
         </div>
         <div class="modal-body">
+          <p>Om deze tool te gebruiken heb je DataForSEO en OpenAI nodig.</p>
           <form>
-            <div class="mb-3">
-              <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            <h2>DataForSEO</h2>
+            <div class="form-floating" id="form-margin">
+              <input type="email" placeholder="DataForSEO e-mail" class="form-control" id="dataforseo-api-login"
+                data-np-intersection-state="visible">
+              <label for="dataforseo-email">DataForSEO API Login</label>
             </div>
-            <div class="mb-3">
-              <input type="password" class="form-control" id="inputAPI" placeholder="API Wachtwoord">
+            <div class="form-floating" id="form-margin">
+              <input type="password" placeholder="DataForSEO API Wachtwoord" class="form-control" id="dataforseo-api-wachtwoord"
+                data-np-intersection-state="visible">
+              <label for="dataforseo-api-wachtwoord">DataForSEO API Wachtwoord</label>
             </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Onthouden in browser (wordt niet naar een server
-                gestuurd)</label>
+            <h2>OpenAI</h2>
+            <div class="form-floating" id="form-margin">
+              <input type="password" placeholder="OpenAI API Key" class="form-control" id="openai-api-key"
+                data-np-intersection-state="visible">
+              <label for="openai-api-key">OpenAI API Key</label>
+            </div>
+            <div class="form-check" id="form-margin">
+              <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">
+                Onthouden in browser (wordt niet naar een server
+                gestuurd)
+              </label>
             </div>
             <button type="button" class="btn btn-primary" id="loginButton" data-bs-dismiss="modal">Opslaan</button>
             <button type="button" class="btn btn-primary secondbutton" id="deleteButton"
@@ -234,6 +248,10 @@
     <div class="container-sm" id="samenvatting">
     </div>
     <div class="container-sm" id="serps">
+    </div>
+    <div class="container-sm" id="clustering">
+    </div>
+    <div class="container-sm" id="zoekwoorden">
     </div>
   </div>
   <div class="container-sm" id="screenshots">

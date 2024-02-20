@@ -107,7 +107,7 @@ h3 {
 .btn {
     font-family: madabold;
     color: #fff !important;
-    background-color: #02343f !important;
+    background-color: #02343f;
     border-color: #031c22 !important;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -124,8 +124,8 @@ h3 {
 .secondbutton {
     font-family: madabold;
     color: #02343f !important;
-    background-color: #fff !important;
-    border-color: #031c22 !important;
+    background-color: #fff;
+    border-color: #031c22;
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 12px;
@@ -141,7 +141,7 @@ h3 {
 .thirdbutton {
     font-family: madabold;
     color: #fff !important;
-    border-color: #fff !important;
+    border-color: #fff;
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 1rem;
@@ -695,4 +695,7 @@ a {
 }
 .popover-content {
     font-family: madaregular;
+}
+.table {
+    --bs-table-bg: ;
 }

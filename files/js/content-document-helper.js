@@ -29,6 +29,7 @@ onAuthStateChanged(auth, (currentUser) => {
 
 // JavaScript Code
 let taskIds = [];
+let taskIdsSearchVolume = [];
 let keywords = [];
 
 // Ophalen van localstorage
@@ -38,21 +39,29 @@ function getLocalStorage(name) {
 }
 
 // Login met DataForSEO
+const dataforseo_email = document.getElementById("dataforseo-api-login");
+const dataforseo_password = document.getElementById("dataforseo-api-wachtwoord");
+const openai_key = document.getElementById("openai-api-key");
+
 let login;
 let password;
+let key;
 let parsed_login_storage;
 let login_storage = getLocalStorage("userData");
-let email_login = document.getElementById("inputEmail").value;
-let api_login = document.getElementById("inputAPI").value;
+let email_login = dataforseo_email.value;
+let api_login = dataforseo_password.value;
+let api_key = openai_key.value;
 if (login_storage) {
     parsed_login_storage = JSON.parse(login_storage);
     login = parsed_login_storage.email;
     password = parsed_login_storage.password;
+    key = parsed_login_storage.key && parsed_login_storage.key !== '' ? parsed_login_storage.key : '';
     fetchLanguageData();
     fetchLocationData();
 } else {
     login = email_login;
     password = api_login;
+    key = api_key;
     fetchLanguageData();
     fetchLocationData();
 }
@@ -69,13 +78,13 @@ const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const deleteButton = document.getElementById("deleteButton");
 const rememberme = document.getElementById("rememberMe");
-const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
 loginLink.onclick = function () {
     modal.show();
     if (login) {
-        document.getElementById("inputEmail").value = login;
-        document.getElementById("inputAPI").value = password;
+        dataforseo_email.value = login;
+        dataforseo_password.value = password;
+        openai_key.value = key;
         if (login_storage) {
             rememberme.checked = true;
         }
@@ -87,28 +96,35 @@ loginLink.onclick = function () {
 
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        var userData = {
-            email: document.getElementById("inputEmail").value,
-            password: document.getElementById("inputAPI").value
+        const userData = {
+            email: dataforseo_email.value,
+            password: dataforseo_password.value,
+            key: openai_key.value
         };
         localStorage.setItem('userData', JSON.stringify(userData));
         login_storage = getLocalStorage("userData");
         parsed_login_storage = JSON.parse(login_storage);
         login = parsed_login_storage.email;
         password = parsed_login_storage.password;
+        key = parsed_login_storage.key;
     } else {
-        login = document.getElementById("inputEmail").value;
-        password = document.getElementById("inputAPI").value;
+        localStorage.removeItem('userData');
+        login = dataforseo_email.value;
+        password = dataforseo_password.value;
+        key = openai_key.value;
     }
+    modal.hide();
 };
 
 deleteButton.onclick = function() {
     localStorage.removeItem('userData');
     login = '';
     password = '';
+    key = '';
     rememberme.checked = false;
-    document.getElementById("inputEmail").value = '';
-    document.getElementById("inputAPI").value = '';
+    dataforseo_email.value = '';
+    dataforseo_password.value = '';
+    openai_key.value = '';
     modal.hide();
 };
 
@@ -142,7 +158,7 @@ button.addEventListener("click", function() {
 
 // Ophalen van data
 async function getData(login_storage, login, password, api_login) {
-    const divs = ['overzicht', 'samenvatting', 'screenshots'];
+    const divs = ['overzicht', 'samenvatting', 'screenshots','clustering', 'zoekwoorden'];
     divs.forEach(id => {
         document.getElementById(id).innerHTML = '';
     });
@@ -162,6 +178,7 @@ async function getData(login_storage, login, password, api_login) {
     }   
 
     taskIds = [];
+    taskIdsSearchVolume = [];
 
     keywords = [
         {
@@ -190,9 +207,11 @@ async function getData(login_storage, login, password, api_login) {
         document.getElementById("save-button").style = "width: auto; display:none;";
         const container_serps = document.getElementById('serps');
         container_serps.innerHTML = '<p>De tool gaat bezig met het verzamelen van data...</p>';
+
+        const selectedCountry = document.getElementById('search-location').value;
+        const selectedLanguage = document.getElementById('search-language').value;
+
         for (const keywordObj of keywords) {
-            const selectedCountry = document.getElementById('search-location').value;
-            const selectedLanguage = document.getElementById('search-language').value;
 
             const post_array = [{
                 "location_name": selectedCountry,
@@ -217,13 +236,88 @@ async function getData(login_storage, login, password, api_login) {
             console.log(post_result.tasks);
             taskIds.push(post_result.tasks[0].id);
         }
+
+        const post_array = [{
+            "location_name": selectedCountry,
+            "language_name": selectedLanguage,
+            "keywords": [keyword]
+        }];
+
+        const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/keywords_for_keywords/task_post`;
+        const requestPostOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(login + ':' + password)
+            }
+        };
+
+        // POST request
+        const post_response = await fetch(post_url, { ...requestPostOptions, body: JSON.stringify(post_array) });
+        const post_result = await post_response.json();
+        console.log(post_result.tasks);
+        const status = post_result.tasks[0].status_code;
+        if (status === 20100) {
+            taskIdsSearchVolume = post_result.tasks[0].id;
+        } else {
+            error_modal.show();
+            document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <b>${post_result.tasks[0].status_message}</b>.</p>`;
+            const modalClosedPromise = new Promise((resolve) => {
+                error_modal._element.addEventListener("hidden.bs.modal", function () {
+                    resolve();
+                }, { once: true });
+            });
+            await modalClosedPromise;
+        }
+
+        // Fetch SERPS
         const fetchPromises = taskIds.map(taskId => fetchData(taskId, login, password));
         const allResults = await Promise.all(fetchPromises);
         const keywordResults = allResults.map(taskResults => taskResults[0].result);
         
         renderResults(keywords[0].keyword, keywordResults[0], keywordResults[1]);
 
+        // Fetch Search Volumes
+        const allKeywords = [];
+        const volumes_container = document.getElementById("zoekwoorden");
+        const results = await fetchDataSearchVolume(taskIdsSearchVolume);
+
+        function createTableRow(keyword, searchVolume) {
+            return `<tr>
+                        <td>${keyword}</td>
+                        <td>${searchVolume}</td>
+                    </tr>`;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('table', 'table-hover');
+        const tableHeader = `<thead>
+                                <tr>
+                                    <th>Zoekwoord</th>
+                                    <th>Zoekvolume</th>
+                                </tr>
+                            </thead>`;
+        table.innerHTML = tableHeader;
+
+        const tableBody = document.createElement('tbody');
+        results.forEach(result => {
+            const keyword = result.keyword;
+            let searchVolume = result.search_volume !== null ? result.search_volume : 0;
+            const row = createTableRow(keyword, searchVolume);
+            tableBody.innerHTML += row;
+            allKeywords.push(keyword);
+        });
+
+        table.appendChild(tableBody);
+        const summaryh2 = document.createElement('h2');
+        summaryh2.textContent = 'Zoekwoorden';
+        volumes_container.appendChild(summaryh2);
+        volumes_container.appendChild(table);
+
+        // AI
         await getSummary(taskIds[0], login, password);
+
+        await getClusters(allKeywords);
         
         const container = document.getElementById('screenshots');
         (async () => {
@@ -316,6 +410,80 @@ function renderPositionResults(results) {
         `;
     }).join('');
 }
+
+async function fetchDataSearchVolume(taskId) {
+    let status = '';
+    let fetchResults = [];
+    while (status !== 'Ok.') {
+        const requestGetOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + btoa(login + ':' + password)
+            }
+        };
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/keywords_for_keywords/task_get/${taskId}`;
+        const get_response = await fetch(get_url, requestGetOptions);
+        const get_result = await get_response.json();
+        console.log(get_result.tasks);
+        status = get_result.tasks[0].status_message;
+        if (status === 'Ok.') {
+            fetchResults = get_result.tasks[0].result;
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+    return fetchResults;
+}
+
+async function getClusters(input_data) {
+    console.log(input_data);
+    const container = document.getElementById('clustering');
+    container.innerHTML = '<p>De AI gaat bezig met samenvatten...</p>';
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${key}`,
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo-1106",
+            messages: [
+                {
+                    role: "system",
+                    content: `
+                    Ik geef je een lijst met zoekwoorden. Het is jouw rol om de zoekwoorden te clusteren op onderwerp. Op basis van de zoekwoorden geef je een lijst met relevante clusters terug én het aantal zoekwoorden die in dat cluster vallen. Geef per cluster een korte beschrijving. Geef daarnaast per cluster voorbeelden van zoekwoorden die het cluster bevatten.
+
+                    Dit zijn de zoekwoorden die ik wil dat je clustert:
+                    ${input_data}
+                    `,
+                },
+            ],
+        }),
+    });
+    const data = await response.json();
+    const summary = data.choices[0].message.content;
+    console.log(summary);
+    const paragraphs = summary.split('\n');
+    const pElements = paragraphs.map((paragraphText) => {
+        const p = document.createElement('p');
+        p.textContent = paragraphText;
+        container.appendChild(p);
+        return p;
+    });
+    const summaryContainer = document.createElement('div');
+    const summaryh2 = document.createElement('h2');
+    summaryh2.textContent = 'AI Clusters';
+    pElements.forEach((p) => {
+        summaryContainer.appendChild(p);
+    });
+    container.innerHTML = '';
+    // container.setAttribute('id', 'witte-container');
+    container.appendChild(summaryh2);
+    container.appendChild(summaryContainer);
+}
+
 
 // Language & location
 let typingTimer;
