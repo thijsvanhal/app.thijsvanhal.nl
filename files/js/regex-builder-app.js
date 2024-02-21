@@ -11,7 +11,7 @@ function generateRegexGSC(values) {
             return url.substring(0, index);
         }
         const domain = extractBaseUrl(values);
-        const inputs = values.split('\n').map(input => {
+        const inputs = values.split('\n').filter(row => row.trim() !== '').map(input => {
             return input.replace(/^.*\/\/[^\/]+/, '');
             });
         const joined = inputs.join('|');
@@ -28,7 +28,7 @@ function generateRegexGA(values) {
     if (values === '') {
         return new String('');
     } else {
-        const inputs = values.split('\n').map(input => {
+        const inputs = values.split('\n').filter(row => row.trim() !== '').map(input => {
             return input.replace(/^.*\/\/[^\/]+/, '');
             });
         const joined = inputs.join('|');
@@ -88,7 +88,7 @@ function generateRegexBevat(values) {
     if (values === '') {
         return new String('');
     } else {
-        const inputs = values.split('\n');
+        const inputs = values.split('\n').filter(row => row.trim() !== '');
         const joined = inputs.join('|');
         return new String(`\\b(${joined})\\b`);
     }
@@ -99,7 +99,7 @@ function generateRegexExact(values) {
     if (values === '') {
         return new String('');
     } else {
-        const inputs = values.split('\n');
+        const inputs = values.split('\n').filter(row => row.trim() !== '');
         const joined = inputs.join('|');
         return new String(`^(${joined})$`);
     }
@@ -121,7 +121,6 @@ let resultLengthExact;
 
 const currentUrl = window.location.href;
 if (!currentUrl.includes('zoekwoorden')) {
-    console.log(currentUrl);
     textField = document.getElementById('input-area');
     resultTextareaGSC = document.getElementById('result-gsc');
     resultTextareaGA = document.getElementById('result-ga');
