@@ -176,13 +176,10 @@ function updateMixer () {
 
 function isValidKeywordPhrase(phrase) {
     const words = phrase.split(/\s+/);
-    if (words.length > 10) {
+    if (words.length > 10 || phrase.length > 80) {
         return false;
     }
     for (const word of words) {
-        if (word.length > 80) {
-            return false;
-        }
         const disallowedSymbols = /[^\w\s'-]/;
         if (disallowedSymbols.test(word)) {
             return false;

@@ -120,6 +120,9 @@ h3 {
     --bs-btn-active-border-color: #02343f;
     width: 100%;
 }
+.btn:disabled {
+    background-color: #02343f;
+}
 
 .secondbutton {
     font-family: madabold;
@@ -145,11 +148,12 @@ h3 {
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 1rem;
+    background-color: #031c22;
     --bs-btn-hover-color: #f0edcc;
-    --bs-btn-hover-bg: #031c22;
+    --bs-btn-hover-bg: #010c0f;
     --bs-btn-hover-border-color: #02343f;
     --bs-btn-active-color: #f0edcc;
-    --bs-btn-active-bg: #031c22;
+    --bs-btn-active-bg: #010c0f;
     --bs-btn-active-border-color: #02343f;
     width: 100%;
 }
