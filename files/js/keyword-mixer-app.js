@@ -323,6 +323,7 @@ async function bulkaddList() {
         const listExists = lists.some(list => list.name === listName);
 
         if (listExists) {
+            removeLists();
             const error_modal = new bootstrap.Modal(document.getElementById("error-modal"));
             error_modal.show();
             document.getElementById("error-message").innerHTML = `<p class="body-text">Rijtje <b>${listName}</b> bestaat al, pas de naam aan :)</p>`;
@@ -341,8 +342,6 @@ async function bulkaddList() {
     setSessionStorage("lists", lists);
     textarea.value = "";
 }     
-
-
 
 // Verwijderen van alle lijsten
 const removeListsButton = document.getElementById("remove-lists-button");
