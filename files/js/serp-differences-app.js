@@ -484,7 +484,7 @@ async function getSummary() {
             Authorization: `Bearer ${key}`,
         },
         body: JSON.stringify({
-            model: "gpt-3.5-turbo-1106",
+            model: "gpt-4-0125-preview",
             messages: [
                 {
                     role: "system",
