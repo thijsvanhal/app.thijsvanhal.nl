@@ -175,13 +175,28 @@ function updateMixer () {
 };
 
 function isValidKeywordPhrase(phrase) {
-    const words = phrase.split(/\s+/);
-    if (words.length > 10 || phrase.length > 80) {
+    const modifiedPhrase = phrase.replace(/(site:|search:)/g, '');
+
+    if (modifiedPhrase.length > 80) {
+        return false;
+    }
+
+    const invalidSymbolsRegex = /[,!@%^()={}~`<>?\\|―]/;
+    if (invalidSymbolsRegex.test(modifiedPhrase)) {
+        return false;
+    }
+
+    const fourByteUnicodeRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u{10000}-\u{10FFFF}]/u;
+    if (fourByteUnicodeRegex.test(modifiedPhrase)) {
+        return false;
+    }
+
+    const words = modifiedPhrase.split(/\s+/);
+    if (words.length > 10) {
         return false;
     }
     for (const word of words) {
-        const disallowedSymbols = /[^\w\s'-]/;
-        if (disallowedSymbols.test(word)) {
+        if (!/^(C\+\+)$/.test(word) && /[\.\-\+]/.test(word)) {
             return false;
         }
     }
