@@ -724,6 +724,28 @@ filter_zoekvolume.addEventListener("click", function() {
     }
 });
 
+function levenshtein(a, b) {
+    if (a.length === 0) return b.length; 
+    if (b.length === 0) return a.length; 
+    let matrix = [];
+    for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+    for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
 // Mixen van bulk lijsten
 const mixListsButton = document.getElementById("zoekvolumes-ophalen");
 mixListsButton.addEventListener("click", function() {
@@ -761,13 +783,37 @@ async function mixLists() {
         for (const line of lines) {
             const checkvalues = line.split(",");
             const checknonEmptyValues = checkvalues.filter((value, index) => [0, 2, 3, 5].includes(index) && value.trim() !== "" && value.trim() !== "0" && value.trim() !== "1");
-            const checkExist = checknonEmptyValues.every(value => {
-                return lists.some(list => list.name === value);
-            });
             
-            if (!checkExist) {
+            let nonExistingValues = [];
+            let typoSuggestions = {};
+        
+            for (const value of checknonEmptyValues) {
+                if (!lists.some(list => list.name === value)) {
+                    nonExistingValues.push(value);
+                    let closestMatch = lists.reduce((acc, list) => {
+                        let distance = levenshtein(value, list.name);
+                        if (distance < acc.distance) {
+                            return { name: list.name, distance };
+                        }
+                        return acc;
+                    }, { name: "", distance: Infinity });
+        
+                    if (closestMatch.distance <= 2) {
+                        typoSuggestions[value] = closestMatch.name;
+                    }
+                }
+            }
+        
+            if (nonExistingValues.length > 0) {
+                let errorMessage = `<p class="body-text">In het rijtje <b>${checknonEmptyValues.join(" + ")}</b> zijn de volgende namen niet gevonden: <i>${nonExistingValues.join(", ")}</i><br>`;
+                for (const [wrong, suggestion] of Object.entries(typoSuggestions)) {
+                    errorMessage += `<br>Bedoelde je "${suggestion}" in plaats van "${wrong}" ?<br>`;
+                }
+                errorMessage += "<br>Voeg de missende rijtjes eerst toe of corrigeer de typfouten en probeer opnieuw!</p>";
+        
                 error_modal.show();
-                document.getElementById("error-message").innerHTML = `<p class="body-text">De naam <b>${checknonEmptyValues.join(" + ")}</b> komt niet overeen met de naam van het rijtje.<br> Pas deze aan en probeer opnieuw!</p>`;
+                document.getElementById("error-message").innerHTML = errorMessage;
+        
                 const modalClosedPromise = new Promise((resolve) => {
                     error_modal._element.addEventListener("hidden.bs.modal", function () {
                         resolve();
@@ -776,7 +822,7 @@ async function mixLists() {
                 await modalClosedPromise;
                 return;
             }
-        }
+        }        
 
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>De tool begint met het ophalen van de zoekvolumes...</p></div>`);
     
