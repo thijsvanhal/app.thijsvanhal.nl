@@ -40,8 +40,6 @@ let mixedKeywordsArray = [];
 let taskIds = [];
 let taskIdsSuggestions = [];
 let lineNames = [];
-let apiMethodes = [];
-let api_methode;
 
 // Functie Length
 function getLength(mixedKeywords) {
@@ -67,30 +65,30 @@ function removeDuplicates(mixedKeywords) {
 }
 
 // Code voor automatisch updaten van mixer
-var elements = ["lijst-1", "lijst-2", "lijst-3", "optional-list-mix", "optional-list-2", "optional-list-3"];
-for (var i = 0; i < elements.length; i++) {
-    var el = document.getElementById(elements[i]);
+const elements = ["lijst-1", "lijst-2", "lijst-3", "optional-list-mix", "optional-list-2", "optional-list-3"];
+elements.forEach(function(element) {
+    let el = document.getElementById(element);
     if (el instanceof HTMLInputElement) {
         el.addEventListener("input", updateMixer);
     } else {
         el.addEventListener("blur", updateMixer);
     }
-}
+});
 
 let SeeNotification = true;
 
 function updateMixer () {
     SeeNotification = true;
-    var textArea1 = document.getElementById("lijst-1").value;
-    var keywords1 = textArea1 ? textArea1.split("\n").filter(Boolean) : [''];
-    var textArea2 = document.getElementById("lijst-2").value;
-    var keywords2 = textArea2 ? textArea2.split("\n").filter(Boolean) : [''];
-    var textArea3 = document.getElementById("lijst-3").value;
-    var keywords3 = textArea3 ? textArea3.split("\n").filter(Boolean) : [''];
-    var switchOrder = document.getElementById("optional-list-mix").checked;
-    var optional2 = document.getElementById("optional-list-2").checked;
-    var optional3 = document.getElementById("optional-list-3").checked;
-    var mixedKeywords = [];
+    const textArea1 = document.getElementById("lijst-1").value;
+    const keywords1 = textArea1 ? textArea1.split("\n").filter(Boolean) : [''];
+    const textArea2 = document.getElementById("lijst-2").value;
+    const keywords2 = textArea2 ? textArea2.split("\n").filter(Boolean) : [''];
+    const textArea3 = document.getElementById("lijst-3").value;
+    const keywords3 = textArea3 ? textArea3.split("\n").filter(Boolean) : [''];
+    const switchOrder = document.getElementById("optional-list-mix").checked;
+    const optional2 = document.getElementById("optional-list-2").checked;
+    const optional3 = document.getElementById("optional-list-3").checked;
+    let mixedKeywords = [];
     
     if (switchOrder) {
         // lijsten wisselen
@@ -165,13 +163,13 @@ function updateMixer () {
             ].join("\n");
         }
     }
-    let KeywordsArray = mixedKeywords.toLowerCase().split('\n');
-    let noDuplicates = removeDuplicates(KeywordsArray.filter(isValidKeywordPhrase));
-    var length = getLength(noDuplicates);
+    const KeywordsArray = mixedKeywords.toLowerCase().split('\n');
+    const noDuplicates = removeDuplicates(KeywordsArray.filter(isValidKeywordPhrase));
+    const length = getLength(noDuplicates);
     resultTextarea.value = noDuplicates.toString();
     resultLength.textContent = length.toString();
     window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
+    window.dataLayer.push({'event': 'zoekwoorden_gegenereerd'});
 };
 
 function isValidKeywordPhrase(phrase) {
@@ -350,7 +348,6 @@ async function bulkaddList() {
             await modalClosedPromise;
             return;
         }
-
         lists.push(list);
     }
     updateAccordion();
@@ -373,7 +370,7 @@ function removeLists() {
 }
 
 // Maken en updaten van alle rijtjes als accordions
-function updateAccordion() {
+async function updateAccordion() {
     const accordionLists = document.getElementById("alle-lijsten");
     accordionLists.innerHTML = "";
 
@@ -384,9 +381,9 @@ function updateAccordion() {
     const existingListNames = Array.from(document.querySelectorAll(".accordion-item button")).map((button) => button.innerText.trim());
     const newLists = lists.filter((list) => !existingListNames.includes(list.name));
 
-    for (let i = 0; i < newLists.length; i++) {
-        let list = newLists[i];
+    const fragment = document.createDocumentFragment();
 
+    newLists.forEach((list, i) => {
         let colElement = document.createElement("div");
         colElement.classList.add("col");
 
@@ -424,12 +421,13 @@ function updateAccordion() {
         let listValuesUL = document.createElement("ul");
         listValuesUL.classList.add("accordion-unsorted-list");
 
-        for (let j = 0; j < list.values.length; j++) {
+        list.values.forEach(value => {
             let listValueLI = document.createElement("li");
             listValueLI.style.display = "block";
-            listValueLI.textContent = list.values[j];
+            listValueLI.textContent = value;
             listValuesUL.appendChild(listValueLI);
-        }
+        })
+
         listContentBody.appendChild(listValuesUL);
 
         // Edit Option
@@ -437,9 +435,6 @@ function updateAccordion() {
         editButton.classList.add("btn", "btn-primary");
         editButton.textContent = "Bewerk";
         editButton.addEventListener("click", () => {
-            let editTextArea = document.createElement("textarea");
-            editTextArea.value = list.values.join("\n");
-        
             let editModal = document.createElement("div");
             editModal.classList.add("modal");
             editModal.tabIndex = "-1";
@@ -461,7 +456,42 @@ function updateAccordion() {
         
             let editModalBody = document.createElement("div");
             editModalBody.classList.add("modal-body");
-            editModalBody.textContent = "Pas de zoekwoorden van het rijtje aan en klik op opslaan";
+
+            let formElement = document.createElement("div");
+            formElement.className = "form-floating";
+
+            let inputElement = document.createElement("input");
+            inputElement.className = "form-control";
+            inputElement.placeholder = "Vul naam van rijtje in";
+            inputElement.type = "text";
+            inputElement.id = "edit-modal-list";
+            inputElement.value = list.name;
+            let inputLabel = document.createElement("label");
+            inputLabel.setAttribute("for", "edit-modal-list");
+            inputLabel.textContent = "Naam rijtje";
+
+            formElement.appendChild(inputElement);
+            formElement.appendChild(inputLabel);
+
+            let divTextarea = document.createElement("div");
+            divTextarea.className = "form-floating";
+            divTextarea.style.marginTop = "1rem";
+
+            let textareaElement = document.createElement("textarea");
+            textareaElement.className = "form-control";
+            textareaElement.placeholder = "Plaats zoekwoorden hier";
+            textareaElement.id = "edit-modal-values"
+            textareaElement.value = list.values.join("\n");
+
+            let textareaLabel = document.createElement("label");
+            textareaLabel.setAttribute("for", "edit-modal-values");
+            textareaLabel.textContent = "Zoekwoorden";
+
+            divTextarea.appendChild(textareaElement);
+            divTextarea.appendChild(textareaLabel);
+
+            editModalBody.appendChild(formElement);
+            editModalBody.appendChild(divTextarea);
         
             let editModalFooter = document.createElement("div");
             editModalFooter.classList.add("modal-footer");
@@ -470,8 +500,10 @@ function updateAccordion() {
             saveButton.classList.add("btn", "btn-primary");
             saveButton.textContent = "Opslaan";
             saveButton.addEventListener("click", () => {
-                const newContent = editTextArea.value.split("\n");
-                list.values = newContent;
+                const newTitle = inputElement.value;
+                const newKeywords = textareaElement.value.split("\n");
+                list.name = newTitle;
+                list.values = newKeywords;
                 updateAccordion();
                 setSessionStorage("lists", lists);
                 closeModal();
@@ -483,7 +515,6 @@ function updateAccordion() {
             cancelButton.addEventListener("click", closeModal);
         
             editModalHeader.appendChild(editModalTitle);
-            editModalBody.appendChild(editTextArea);
             editModalFooter.appendChild(saveButton);
             editModalFooter.appendChild(cancelButton);
         
@@ -515,96 +546,48 @@ function updateAccordion() {
         let removeButton = document.createElement("button");
         removeButton.classList.add("btn", "btn-primary", "secondbutton");
         removeButton.textContent = "Verwijder";
-        removeButton.addEventListener("click", () => {
-            const confirmation = confirm("Weet je zeker dat je dit rijtje wilt verwijderen?");
-            if (confirmation) {
-                lists = lists.filter((item) => item.name !== list.name);
-                setSessionStorage("lists", lists);
-                updateAccordion();
-            }
+        removeButton.addEventListener("click", async () => {
+            await new Promise((resolve) => {
+                const confirmPopup = document.getElementById("popup");
+                const confirmPopupBodyText = document.getElementById("popup-body-text");
+    
+                confirmPopupBodyText.innerHTML = `Weet je zeker dat je dit rijtje wilt verwijderen?`;
+                confirmPopup.style.display = "block";
+    
+                const hideConfirmation = () => {
+                    confirmPopup.style.display = "none";
+                };
+    
+                const cancelButton = document.getElementById("cancel");
+                cancelButton.addEventListener("click", async () => {
+                    hideConfirmation();
+                    resolve();
+                });
+    
+                const confirm = document.getElementById("confirm");
+                confirm.removeEventListener("click", hideConfirmation);
+                confirm.addEventListener("click", async () => {
+                    lists = lists.filter((item) => item.name !== list.name);
+                    setSessionStorage("lists", lists);
+                    updateAccordion();
+                    hideConfirmation();
+                    resolve();
+                });
+            });
         });
         listContentBody.appendChild(removeButton);
 
         listContent.appendChild(listContentBody);
-
         accordionItem.appendChild(listHeader);
         accordionItem.appendChild(listContent);
         accordionElement.appendChild(accordionItem);
-
         colElement.appendChild(accordionElement);
         rowContainer.appendChild(colElement);
         
-    }
+    });
+    rowContainer.appendChild(fragment);
     accordionLists.appendChild(rowContainer);
 }
-
-function addRow() {
-    const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-    const newRow = table.insertRow(table.rows.length);
-    newRow.id = 'waarde';
-    const columns = ['name1', 'name2', 'name3', 'suggestions', 'swapLists', 'optionalList2', 'optionalList3'];
-
-    for (const col of columns) {
-        const cell = newRow.insertCell();
-        const input = document.createElement('input');
-        if (col.includes('List')) {
-            input.type = 'checkbox';
-            input.className = 'form-check-input';
-        } else {
-            input.type = 'text';
-            input.className = 'form-control';
-        }
-        input.name = col;
-        cell.appendChild(input);
-    }
-
-    const actionCell = newRow.insertCell();
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'btn btn-danger';
-    deleteButton.textContent = 'Verwijder';
-    deleteButton.onclick = function () {
-        deleteRow(this);
-    };
-    actionCell.appendChild(deleteButton);
-}
-
-function deleteRow(button) {
-    const row = button.closest('tr');
-    row.parentNode.removeChild(row);
-}
-
-const columnOrder = ['suggestions', 'swapLists', 'name1', 'name2', 'optionalList2', 'name3', 'optionalList3'];
-
-function buildTable() {
-    const tableRows = document.querySelectorAll('table#dataTable tbody tr#waarde');
-    let result = '';
-
-    for (const row of tableRows) {
-        const columns = row.querySelectorAll('input');
-        result += columnOrder.map((col, index) => {
-            const input = Array.from(columns).find(input => input.name === col);
-            
-            if (col === 'optionalList2' && columns[index - 3].value.trim() === '') {
-                return null;
-            } else if (col === 'optionalList3' && columns[index - 4].value.trim() === '') {
-                return null;
-            } else if (input.type === 'checkbox') {
-                return input.checked ? 1 : 0;
-            } else {
-                const value = input.value.trim();
-                if (value === '') {
-                    return null;
-                }
-                return value;
-            }
-        }).filter(value => value !== null).join(',') + '\n';
-    }
-
-    document.getElementById('afhankelijk').checked = true;    
-    document.getElementById('bulk-input').innerText = result;
-}
-
 
 // Functie voor ophalen van waardes van de lijst op basis van de lijst naam
 function getListValues(listName) {
@@ -648,7 +631,6 @@ const loginLink = document.getElementById("loginLink");
 const loginButton = document.getElementById("loginButton");
 const deleteButton = document.getElementById("deleteButton");
 const rememberme = document.getElementById("rememberMe");
-const logoutButtonContainer = document.getElementById("logoutButtonContainer");
 
 loginLink.onclick = function () {
     modal.show();
@@ -666,7 +648,7 @@ loginLink.onclick = function () {
 
 loginButton.onclick = function() {
     if (rememberme.checked) {
-        var userData = {
+        let userData = {
             email: document.getElementById("inputEmail").value,
             password: document.getElementById("inputAPI").value
         };
@@ -761,6 +743,7 @@ async function mixLists() {
     taskIdsSuggestions = [];
     lineNames = [];
     apiMethodes = [];
+    let max_keywords;
 
     let totalCost = 0;
 
@@ -842,9 +825,9 @@ async function mixLists() {
             updateMixer();
             const mixedKeywords = document.getElementById("result-mixer").value.split("\n");
             if (values[0] === "1" || document.getElementById('suggesties').checked == true) {
-                var max_keywords = 20;
+                max_keywords = 20;
             } else {
-                var max_keywords = 1000;
+                max_keywords = 1000;
             }
 
             const defaultSearchVolumes = mixedKeywords.map(keyword => keyword.trim() !== "" ? 0 : null);
@@ -876,9 +859,9 @@ async function mixLists() {
 
         await new Promise((resolve) => {
             const confirmPopup = document.getElementById("popup");
-            const costSpan = document.getElementById("cost");
+            const confirmPopupBodyText = document.getElementById("popup-body-text");
 
-            costSpan.textContent = `$${totalCost.toFixed(2)}`;
+            confirmPopupBodyText.innerHTML = `<strong>Let op!</strong> Dit gaat in totaal <strong><span id="cost">$${totalCost.toFixed(2)}</span></strong> kosten. Weet je zeker dat je dit geld gaat uitgeven? `;
             confirmPopup.style.display = "block";
 
             const hideConfirmation = () => {
@@ -969,8 +952,8 @@ async function SearchVolumeData(keywords, country, language) {
     
     for (let i = 0; i < taskIds.length; i++) {
         const taskId = taskIds[i];
-        const getApiMethode = "search_volume";
-        const results = await fetchData(taskId, login, password, getApiMethode);
+        const apiMethode = "search_volume";
+        const results = await fetchData(taskId, login, password, apiMethode);
         for (const result of results) {
             const keyword = result.keyword;
             let NewSearchVolume;
@@ -1049,8 +1032,8 @@ async function SuggestionsData(array, country, language) {
     for (let i = 0; i < taskIdsSuggestions.length; i++) {
         const taskId = taskIdsSuggestions[i];
         const line_name = lineNames[i];
-        const getApiMethode = "keywords_for_keywords";
-        const results = await fetchData(taskId, login, password, getApiMethode);
+        const apiMethode = "keywords_for_keywords";
+        const results = await fetchData(taskId, login, password, apiMethode);
         for (const result of results) {
             const keyword = result.keyword;
             let NewSearchVolume;
@@ -1067,7 +1050,6 @@ async function SuggestionsData(array, country, language) {
                 );
                 if (matchingKeywordIndex !== -1) {
                     if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                        console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
                         existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
                         existingObject.searchVolume.splice(matchingKeywordIndex, 1);
                     } else {
@@ -1075,7 +1057,6 @@ async function SuggestionsData(array, country, language) {
                     }
                 } else {
                     if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                        console.log(keyword, NewSearchVolume, filter_zoekvolume_waarde.value);
                         continue;
                     } else {
                         existingObject.mixedKeywords.push(keyword);
@@ -1089,7 +1070,7 @@ async function SuggestionsData(array, country, language) {
     }
 }
 
-async function fetchData(taskId, login, password, getApiMethode) {
+async function fetchData(taskId, login, password, apiMethode) {
     let status = '';
     let fetchResults = [];
     while (status !== 'Ok.') {
@@ -1100,7 +1081,7 @@ async function fetchData(taskId, login, password, getApiMethode) {
                 'Authorization': 'Basic ' + btoa(login + ':' + password)
             }
         };
-        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${getApiMethode}/task_get/${taskId}`;
+        const get_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/${apiMethode}/task_get/${taskId}`;
         const get_response = await fetch(get_url, requestGetOptions);
         const get_result = await get_response.json();
         console.log(get_result.tasks);
@@ -1341,7 +1322,7 @@ async function getData (login, password) {
 
     for (let i = 0; i < taskIdsInput.length; i++) {
         const line = taskIdsInput[i];
-    
+
         const slash = line.split("/");
         const space = line.split("\t");
 
@@ -1350,17 +1331,18 @@ async function getData (login, password) {
         taskIds.push(taskId);
         apiMethodes.push(api_methode);
 
-        const getApiMethode = apiMethodes[i];
-        const results = await fetchData(taskId, login, password, getApiMethode);
+        const apiMethode = apiMethodes[i];
+        const results = await fetchData(taskId, login, password, apiMethode);
         console.log(results);
         const keywords = [];
         const searchVolumes = [];
         for (const result of results) {
+            let SearchVolume;
             keywords.push(result.keyword);
             if (result.search_volume !== null) {
-                var SearchVolume = result.search_volume;
+                SearchVolume = result.search_volume;
             } else {
-                var SearchVolume = 0;
+                SearchVolume = 0;
             }
             searchVolumes.push(SearchVolume);
         }
