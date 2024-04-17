@@ -448,7 +448,7 @@ async function getClusters(input_data) {
             Authorization: `Bearer ${key}`,
         },
         body: JSON.stringify({
-            model: "gpt-4-0125-preview",
+            model: "gpt-4-turbo-2024-04-09",
             messages: [
                 {
                     role: "system",
@@ -468,7 +468,8 @@ async function getClusters(input_data) {
     const paragraphs = summary.split('\n');
     const pElements = paragraphs.map((paragraphText) => {
         const p = document.createElement('p');
-        p.textContent = paragraphText;
+        const updatedText = paragraphText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        p.innerHTML = updatedText;
         container.appendChild(p);
         return p;
     });
