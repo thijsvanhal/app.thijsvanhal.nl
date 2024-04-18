@@ -742,7 +742,6 @@ async function mixLists() {
     taskIds = [];
     taskIdsSuggestions = [];
     lineNames = [];
-    apiMethodes = [];
     let max_keywords;
 
     let totalCost = 0;
