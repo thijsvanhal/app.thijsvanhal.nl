@@ -392,7 +392,7 @@ function renderPositionResults(results) {
     const filteredItems = allItems.filter(item => item.type !== "paid");
     filteredItems.sort((a, b) => a.rank_absolute - b.rank_absolute);
 
-    const top10Items = allItems.slice(0, 10);
+    const top10Items = filteredItems.slice(0, 10);
 
     return top10Items.map((item, index) => {
         return `
