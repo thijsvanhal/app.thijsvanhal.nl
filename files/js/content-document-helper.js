@@ -448,7 +448,7 @@ async function getClusters(input_data) {
             Authorization: `Bearer ${key}`,
         },
         body: JSON.stringify({
-            model: "gpt-4-turbo-2024-04-09",
+            model: "gpt-4o",
             messages: [
                 {
                     role: "system",
