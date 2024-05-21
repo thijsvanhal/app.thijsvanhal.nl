@@ -465,22 +465,15 @@ async function getClusters(input_data) {
     const data = await response.json();
     const summary = data.choices[0].message.content;
     console.log(summary);
-    const paragraphs = summary.split('\n');
-    const pElements = paragraphs.map((paragraphText) => {
-        const p = document.createElement('p');
-        const updatedText = paragraphText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        p.innerHTML = updatedText;
-        container.appendChild(p);
-        return p;
-    });
+
+    const converter = new showdown.Converter(),
+    text      = summary,
+    html      = converter.makeHtml(text);
     const summaryContainer = document.createElement('div');
     const summaryh2 = document.createElement('h2');
     summaryh2.textContent = 'AI Clusters';
-    pElements.forEach((p) => {
-        summaryContainer.appendChild(p);
-    });
+    summaryContainer.innerHTML = html;
     container.innerHTML = '';
-    // container.setAttribute('id', 'witte-container');
     container.appendChild(summaryh2);
     container.appendChild(summaryContainer);
 }
@@ -599,19 +592,14 @@ async function getSummary(taskId, login, password) {
     const post_result = await post_response.json();
     console.log(post_result);
     const summary = post_result.tasks[0].result[0].items[0].summary;
-    const paragraphs = summary.split('\n');
-    const pElements = paragraphs.map((paragraphText) => {
-        const p = document.createElement('p');
-        p.textContent = paragraphText;
-        container.appendChild(p);
-        return p;
-    });
+
+    const converter = new showdown.Converter(),
+    text      = summary,
+    html      = converter.makeHtml(text);
     const summaryContainer = document.createElement('div');
     const summaryh2 = document.createElement('h2');
     summaryh2.textContent = 'SERP Samenvatting';
-    pElements.forEach((p) => {
-        summaryContainer.appendChild(p);
-    });
+    summaryContainer.innerHTML = html;
     container.innerHTML = '';
     container.appendChild(summaryh2);
     container.appendChild(summaryContainer);

@@ -504,20 +504,14 @@ async function getSummary() {
     const data = await response.json();
     const summary = data.choices[0].message.content;
     console.log(summary);
-    const paragraphs = summary.split('\n');
-    const pElements = paragraphs.map((paragraphText) => {
-        const p = document.createElement('p');
-        const updatedText = paragraphText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        p.innerHTML = updatedText;
-        container.appendChild(p);
-        return p;
-    });
+    
+    const converter = new showdown.Converter(),
+    text      = summary,
+    html      = converter.makeHtml(text);
     const summaryContainer = document.createElement('div');
     const summaryh2 = document.createElement('h2');
     summaryh2.textContent = 'AI Advies';
-    pElements.forEach((p) => {
-        summaryContainer.appendChild(p);
-    });
+    summaryContainer.innerHTML = html;
     container.innerHTML = '';
     container.setAttribute('id', 'witte-container');
     container.appendChild(summaryh2);
