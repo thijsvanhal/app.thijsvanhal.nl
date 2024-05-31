@@ -179,7 +179,16 @@ function isValidKeywordPhrase(phrase) {
         return false;
     }
 
-    const invalidSymbolsRegex = /[,!@%^()={}~`<>?\\|―]/;
+    if (modifiedPhrase !== modifiedPhrase.trim()) {
+        return false;
+    }    
+
+    const objectReplacementCharacterRegex = /\uFFFC/;
+    if (objectReplacementCharacterRegex.test(modifiedPhrase)) {
+        return false;
+    }
+
+    const invalidSymbolsRegex = /[,!@%^()={}~`'’´×®❤*<>–;?\\|―]/; 
     if (invalidSymbolsRegex.test(modifiedPhrase)) {
         return false;
     }
@@ -194,6 +203,9 @@ function isValidKeywordPhrase(phrase) {
         return false;
     }
     for (const word of words) {
+        if (word === '0') {
+            return false;
+        }
         if (!/^(C\+\+)$/.test(word) && /[\.\-\+]/.test(word)) {
             return false;
         }
