@@ -85,7 +85,14 @@ body {
     background-color: rgba(247, 238, 145, 0.25);
 }
 
-h1, h2, h3 {
+code {
+    font-family: madabold;
+    font-size: 14px;
+    font-style: italic;
+    color: #02343f;
+}
+
+h1, h2, h3, h4 {
     font-family: madabold;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -102,6 +109,10 @@ h2 {
 
 h3 {
     font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
 }
 
 .btn {

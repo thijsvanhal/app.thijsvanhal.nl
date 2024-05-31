@@ -40,7 +40,13 @@ else if (currentUrl.includes('content-document-helper')) {
 }
 
 function parseDate(date) {
-    const parts = date.split(' ');
+    let parts;
+    
+    if (date.includes(',')) {
+        parts = date.split(',');
+    } else {
+        parts = date.split(' ');
+    }
     const dateParts = parts[0].split('-');
     const timeParts = parts[1].split(':');
     return new Date(dateParts[2], dateParts[1] - 1, dateParts[0], ...timeParts);
@@ -60,7 +66,7 @@ async function loadStoredData() {
         historicData.forEach(entry => {
             entry.date = parseDate(entry.timestamp);
         });
-        
+
         historicData.sort((a, b) => b.date - a.date );
 
         historicData.forEach(entry => {
@@ -170,6 +176,23 @@ function displayData(data) {
             `;
     
             dataContainer.appendChild(div);
+        });
+
+        const viewButtons = document.querySelectorAll(".view-button");
+        const deleteButtons = document.querySelectorAll(".delete-button");
+
+        viewButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = String(event.target.getAttribute("data-id"));
+                viewData(id);
+            });
+        });
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", (event) => {
+                const id = String(event.target.getAttribute("data-id"));
+                deleteData(id);
+            });
         });
     }
 }
