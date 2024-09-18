@@ -140,12 +140,7 @@ if (!currentUrl.includes('zoekwoorden')) {
     radioExact.addEventListener('click', () => {
         generateRegEx();
     })
-    
-    // Zorg dat output geselecteerd wordt
-    textField.addEventListener('click', () => {
-        textField.select();
-    });
-    
+
     resultTextareaGSC.addEventListener('click', () => {
         resultTextareaGSC.select();
         document.execCommand("copy");
@@ -181,11 +176,6 @@ if (!currentUrl.includes('zoekwoorden')) {
         resultLengthExact.textContent = lengthExact.toString();
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({'event': 'regex_zoekwoorden'});
-    });
-
-    // Zorg dat output geselecteerd wordt
-    textField.addEventListener('click', () => {
-        textField.select();
     });
 
     resultTextareaBevat.addEventListener('click', () => {
