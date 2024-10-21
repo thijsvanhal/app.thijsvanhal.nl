@@ -298,7 +298,22 @@
   <div class="container-sm" id="blauwe-container">
     <div>
       <h2>Bulk zoekvolumes ophalen</h2>
+      <div>
+        <div class="form-floating">
+          <textarea class="form-control" placeholder="Plaats lijst met rijtjes hier" id="bulk-input"></textarea>
+          <label for="bulk-input">Lijst met rijtjes</label>
+        </div>
+      </div>
       <div class="row" style="margin-top: 1rem;">
+        <div class="col-sm">
+          <div class="custom-dropdown">
+            <form class="form-floating">
+              <input type="text" class="form-control" id="datepicker" placeholder="Selecteer periode" value=""/>
+              <label for="datepicker">Periode</label>
+            </form>
+            
+          </div>
+        </div>
         <div class="col-sm">
           <div class="custom-dropdown" id="location-dropdown">
             <form class="form-floating">
@@ -323,31 +338,40 @@
         </div>
       </div>
     </div>
+    <h3 style="margin-bottom: 0.5rem;">API Methode</h3>
     <div>
-      <div class="form-floating">
-        <textarea class="form-control" placeholder="Plaats lijst met rijtjes hier" id="bulk-input"></textarea>
-        <label for="bulk-input">Lijst met rijtjes</label>
-      </div>
-    </div>
-    <h3>Selecteer API Methode</h3>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="zoekvolumes">
+        <input class="form-check-input" type="radio" name="RadioApiMethode" id="zoekvolumes">
         <label class="form-check-label" for="zoekvolumes">
           Zoekvolumes
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="suggesties">
+        <input class="form-check-input" type="radio" name="RadioApiMethode" id="suggesties">
         <label class="form-check-label" for="suggesties">
           Suggesties
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="radio" name="flexRadioDefault" id="afhankelijk">
+        <input class="form-check-input" type="radio" name="RadioApiMethode" id="afhankelijk">
         <label class="form-check-label" for="afhankelijk">
           Verschilt per regel
         </label>
       </div>
+    </div>
+    <h3 style="margin-bottom: 0.5rem;">Export</h3>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="RadioExport" id="kolom">
+      <label class="form-check-label" for="kolom">
+        Kolommen
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="RadioExport" id="rij">
+      <label class="form-check-label" for="rij">
+        Rijen
+      </label>
+    </div>
     <div class="form-check" style="display: flex;margin-top: 1rem;margin-bottom: 1rem;">
       <input class="form-check-input" type="checkbox" value="" id="filter-zoekvolume" style="display: inline-flex;">
       <label class="form-check-label" id="filter-zoekvolume-label" for="filter-zoekvolume" style="display: inline-flex;margin-left: 10px;">
@@ -355,7 +379,7 @@
       </label>
       <textarea class="form-control" id="filter-zoekvolume-waarde" style="display: none;"></textarea>
     </div>
-    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen" disabled>Zoekvolumes ophalen</button>
+    <button type="button" class="btn btn-primary thirdbutton" id="zoekvolumes-ophalen">Zoekvolumes ophalen</button>
   </div>
   <div class="container-sm" id="witte-container">
     <h2 class="hulp-element">Opgeslagen data</h2>
@@ -422,7 +446,10 @@
   <script type="module" src="/files/js/auth.js"></script>
   <script type="text/javascript" src="/files/js/bootstrap.min.js"></script>
   <script type="module" src="/files/js/keyword-mixer-app.js"></script>
+  <script src="/files/js/easypick.js"></script>
   <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <script src="https://www.unpkg.com/browse/k-means@1.0.0/index.js"></script>
 </body>
 
 </html>

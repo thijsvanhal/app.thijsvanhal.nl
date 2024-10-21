@@ -37,6 +37,7 @@ const keywordsInput3 = document.getElementById('lijst-3');
 const statusElement = document.querySelector('.bulk-mixer-status');
 
 let mixedKeywordsArray = [];
+let KeywordsArray = [];
 let taskIds = [];
 let taskIdsSuggestions = [];
 let lineNames = [];
@@ -704,6 +705,98 @@ error_sluiten_knop.onclick = function() {
     document.getElementById("error-modal").style.display = "none";
 };
 
+// Standaard Datum selecties
+let today = new Date();
+
+const startDate = new Date();
+startDate.setMonth(today.getMonth() - 1, 1);
+
+const threeMonthStartDate = new Date(startDate);
+threeMonthStartDate.setMonth(startDate.getMonth() - 2);
+
+const twelveMonthStartDate = new Date(startDate);
+twelveMonthStartDate.setMonth(startDate.getMonth() - 11);
+
+const twoYearStartDate = new Date(startDate);
+twoYearStartDate.setMonth(startDate.getMonth() - 23);
+
+const fourYearStartDate = new Date(startDate);
+fourYearStartDate.setMonth(startDate.getMonth() - 47);
+
+//Datepicker
+let endDate = new Date(today);
+endDate.setDate(0);
+
+const beginDateString = fourYearStartDate.toISOString().split("T")[0];
+const endDateString = endDate.toISOString().split("T")[0];
+
+let startDateSelection;
+let endDateSelection;
+
+startDateSelection = twelveMonthStartDate;
+endDateSelection = endDate;
+
+const defaultDateString = twelveMonthStartDate.toISOString().split("T")[0];
+document.getElementById('datepicker').value = `${defaultDateString} - ${endDateString}`;
+
+const picker = new easepick.create({
+    element: "#datepicker",
+    css: [
+        "/files/css/easypick.css",
+        "/files/css/styles.css"
+    ],
+    setup(picker) {
+        picker.on('select', (e) => {
+            startDateSelection = e.detail.start;
+            endDateSelection = e.detail.end;
+            console.log(startDateSelection, endDateSelection);
+        });
+    },
+    zIndex: 10,
+    LockPlugin: {
+        minDate: beginDateString,
+        maxDate: endDateString
+    },
+    PresetPlugin: {
+        position: "right",
+        customPreset: {
+            'Afgelopen maand': [new Date(startDate), new Date(endDate)],
+            'Afgelopen 3 maanden': [new Date(threeMonthStartDate), new Date(endDate)],
+            'Afgelopen 12 maanden': [new Date(twelveMonthStartDate), new Date(endDate)],
+            'Afgelopen 2 jaar': [new Date(twoYearStartDate), new Date(endDate)],
+            'Afgelopen 4 jaar': [new Date(fourYearStartDate), new Date(endDate)],
+        },
+        customLabels: ['Afgelopen maand', 'Afgelopen 3 maanden', 'Afgelopen 12 maanden', 'Afgelopen 2 jaar', 'Afgelopen 4 jaar']
+    },
+    AmpPlugin: {
+        dropdown: {
+            months: true,
+            years: true,
+            minYear: 2020
+        },
+        darkMode: false
+    },
+    plugins: [
+        "RangePlugin",
+        "LockPlugin",
+        "PresetPlugin",
+        "AmpPlugin"
+    ]
+})
+  
+function getAllMonthsBetween(start, end) {
+    const monthsArray = [];
+    let currentDate = new Date(start.getTime());
+
+    while (currentDate <= end) {
+        const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+        monthsArray.push(formattedDate);
+        currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+  
+    return monthsArray.reverse();
+}
+
 // Filter
 let filter_zoekvolume = document.getElementById("filter-zoekvolume");
 let filter_zoekvolume_waarde = document.getElementById("filter-zoekvolume-waarde");
@@ -751,15 +844,26 @@ async function mixLists() {
     document.getElementById("save-button").style = "width: auto; display:none;";
     document.querySelector('.bulk-mixer-status').innerHTML = '';
     mixedKeywordsArray = [];
+    KeywordsArray = [];
     taskIds = [];
     taskIdsSuggestions = [];
     lineNames = [];
     let max_keywords;
 
+    KeywordsArray.push({
+        line: [],
+        mixedKeywords: [],
+        Month: [],
+        searchVolume: []
+    });
+
     let totalCost = 0;
 
     const inputTextarea = document.getElementById("bulk-input");
     const lines = inputTextarea.value.split("\n");
+
+    const apiMethodSelected = document.querySelector('input[name="RadioApiMethode"]:checked');
+    const exportSelected = document.querySelector('input[name="RadioExport"]:checked');
 
     if (!api_login && login_storage === "") {
         error_modal.show();
@@ -772,6 +876,28 @@ async function mixLists() {
         });
         await modalClosedPromise;
         modal.show();
+        return;
+    } else if (!apiMethodSelected || !exportSelected) {
+        let missingSelectionMessage = "<p class='body-text'>Je moet een keuze maken voor";
+        if (!apiMethodSelected) {
+            missingSelectionMessage += " <b>API Methode</b>";
+        }
+        if (!exportSelected) {
+            if (!apiMethodSelected) {
+                missingSelectionMessage += " en";
+            }
+            missingSelectionMessage += " <b>Export</b>";
+        }
+        missingSelectionMessage += ".</p>";
+
+        error_modal.show();
+        document.getElementById("error-message").innerHTML = missingSelectionMessage;
+        const modalClosedPromise = new Promise((resolve) => {
+            error_modal._element.addEventListener("hidden.bs.modal", function () {
+                resolve();
+            }, { once: true });
+        });
+        await modalClosedPromise;
         return;
     } else {
         for (const line of lines) {
@@ -905,7 +1031,11 @@ async function mixLists() {
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p><b>Alles</b> is klaar! Je vindt het Excel bestand in je downloads map!</p></div>`);
         try {
-            generateExcel();
+            if (document.getElementById('kolom').checked == true) {
+                generateExcel();
+            } else {
+                generateCSV();
+            }
         } catch (error) {
             error_modal.show();
             document.getElementById("error-message").innerHTML = `<p class="body-text">De volgende error heeft zich plaatsgevonden: <br><br> ${error}</p>`;
@@ -927,10 +1057,16 @@ async function SearchVolumeData(keywords, country, language) {
         const endIndex = Math.min(startIndex + 1000, keywords.length);
         const keywordsSlice = keywords.slice(startIndex, endIndex);
 
+        const startDate = startDateSelection.toISOString().split("T")[0];
+        const endDate = endDateSelection.toISOString().split("T")[0];
+        console.log(startDate, endDate);
+
         const post_array = [{
             "location_name": country,
             "language_name": language,
             "keywords": keywordsSlice,
+            "date_from": startDate,
+            "date_to": endDate,
         }];
 
         const post_url = `https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post`;
@@ -967,26 +1103,57 @@ async function SearchVolumeData(keywords, country, language) {
         const results = await fetchData(taskId, login, password, apiMethode);
         for (const result of results) {
             const keyword = result.keyword;
-            let NewSearchVolume;
-            if (result.search_volume !== null) {
-                NewSearchVolume = result.search_volume
-            } else {
-                NewSearchVolume = 0;
-            }
-            
-            for (const obj of mixedKeywordsArray) {
-                const keywordIndices = [];
-                for(let i = 0; i < obj.mixedKeywords.length; i++) {
-                    if(obj.mixedKeywords[i] === keyword) keywordIndices.push(i);
+
+            if (document.getElementById('kolom').checked == true) {
+                let NewSearchVolume;
+                if (result.search_volume !== null) {
+                    NewSearchVolume = result.search_volume
+                } else {
+                    NewSearchVolume = 0;
                 }
-                for(const index of keywordIndices) {
-                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                        obj.mixedKeywords.splice(index, 1);
-                        obj.searchVolume.splice(index, 1);
-                    } else {
-                        obj.searchVolume[index] = NewSearchVolume;
+                
+                for (const obj of mixedKeywordsArray) {
+                    const keywordIndices = [];
+                    for(let i = 0; i < obj.mixedKeywords.length; i++) {
+                        if(obj.mixedKeywords[i] === keyword) keywordIndices.push(i);
+                    }
+                    for(const index of keywordIndices) {
+                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                            obj.mixedKeywords.splice(index, 1);
+                            obj.searchVolume.splice(index, 1);
+                        } else {
+                            obj.searchVolume[index] = NewSearchVolume;
+                        }
                     }
                 }
+            } else {
+                const searches = result.monthly_searches;
+                const AllMonths = getAllMonthsBetween(startDateSelection, endDateSelection);
+
+                for (const obj of mixedKeywordsArray) {
+                    for(let i = 0; i < obj.mixedKeywords.length; i++) {
+                        if(obj.mixedKeywords[i] === keyword) {
+                            const line_name = obj.line;  
+                            if (result.monthly_searches !== null) {
+                                for (let j = 0; j < searches.length; j++) {
+                                    const search_volume = searches[j].search_volume;
+                                    const date = `${searches[j].year}-${searches[j].month}-1`;
+                                    KeywordsArray[0].line.push(line_name);
+                                    KeywordsArray[0].mixedKeywords.push(keyword);
+                                    KeywordsArray[0].searchVolume.push(search_volume);
+                                    KeywordsArray[0].Month.push(date);
+                                } 
+                            } else {
+                                for (let j = 0; j < AllMonths.length; j++) {
+                                    KeywordsArray[0].line.push(line_name);
+                                    KeywordsArray[0].mixedKeywords.push(keyword);
+                                    KeywordsArray[0].searchVolume.push((0));
+                                    KeywordsArray[0].Month.push(AllMonths[j]);
+                                }
+                            }
+                        }
+                    }
+                } 
             }
         }
         statusElement.insertAdjacentHTML('afterbegin', `<div class="body-text"><p>Er zijn zoekvolumes voor de DataForSEO taak met ID <b>${taskId}</b> opgehaald.</p></div>`);
@@ -1047,31 +1214,85 @@ async function SuggestionsData(array, country, language) {
         const results = await fetchData(taskId, login, password, apiMethode);
         for (const result of results) {
             const keyword = result.keyword;
-            let NewSearchVolume;
-            if (result.search_volume !== null) {
-                NewSearchVolume = result.search_volume
-            } else {
-                NewSearchVolume = 0;
-            }
 
-            const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
-            if (existingObject) {
-                const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
-                    k === keyword
-                );
-                if (matchingKeywordIndex !== -1) {
-                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                        existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
-                        existingObject.searchVolume.splice(matchingKeywordIndex, 1);
-                    } else {
-                        existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
-                    }
+            if (document.getElementById('kolom').checked == true) {
+                let NewSearchVolume;
+                if (result.search_volume !== null) {
+                    NewSearchVolume = result.search_volume
                 } else {
-                    if(NewSearchVolume < filter_zoekvolume_waarde.value) {
-                        continue;
+                    NewSearchVolume = 0;
+                }
+
+                const existingObject = mixedKeywordsArray.find(obj => obj.line === line_name);
+                if (existingObject) {
+                    const matchingKeywordIndex = existingObject.mixedKeywords.findIndex((k) =>
+                        k === keyword
+                    );
+                    if (matchingKeywordIndex !== -1) {
+                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                            existingObject.mixedKeywords.splice(matchingKeywordIndex, 1);
+                            existingObject.searchVolume.splice(matchingKeywordIndex, 1);
+                        } else {
+                            existingObject.searchVolume[matchingKeywordIndex] = NewSearchVolume;
+                        }
                     } else {
-                        existingObject.mixedKeywords.push(keyword);
-                        existingObject.searchVolume.push(NewSearchVolume);
+                        if(NewSearchVolume < filter_zoekvolume_waarde.value) {
+                            continue;
+                        } else {
+                            existingObject.mixedKeywords.push(keyword);
+                            existingObject.searchVolume.push(NewSearchVolume);
+                        }
+                    }
+                }
+            } else {
+                const searches = result.monthly_searches;
+                const AllMonths = getAllMonthsBetween(startDateSelection, endDateSelection);
+                let keywordFound = false;
+
+                for (const obj of mixedKeywordsArray) {
+                    for(let i = 0; i < obj.mixedKeywords.length; i++) {
+                        if(obj.mixedKeywords[i] === keyword) {
+                            keywordFound = true;
+
+                            const line_name = obj.line;  
+                            if (result.monthly_searches !== null) {
+                                for (let j = 0; j < searches.length; j++) {
+                                    const search_volume = searches[j].search_volume;
+                                    const date = `${searches[j].year}-${searches[j].month}-1`;
+                                    KeywordsArray[0].line.push(line_name);
+                                    KeywordsArray[0].mixedKeywords.push(keyword);
+                                    KeywordsArray[0].searchVolume.push(search_volume);
+                                    KeywordsArray[0].Month.push(date);
+                                } 
+                            } else {
+                                for (let j = 0; j < AllMonths.length; j++) {
+                                    KeywordsArray[0].line.push(line_name);
+                                    KeywordsArray[0].mixedKeywords.push(keyword);
+                                    KeywordsArray[0].searchVolume.push((0));
+                                    KeywordsArray[0].Month.push(AllMonths[j]);
+                                }
+                            }
+                        }
+                    }
+                    if (keywordFound) break;
+                }
+                if (!keywordFound) {
+                    if (result.monthly_searches !== null) {
+                        for (let j = 0; j < searches.length; j++) {
+                            const search_volume = searches[j].search_volume;
+                            const date = `${searches[j].year}-${searches[j].month}-1`;
+                            KeywordsArray[0].line.push(line_name);
+                            KeywordsArray[0].mixedKeywords.push(keyword);
+                            KeywordsArray[0].searchVolume.push(search_volume);
+                            KeywordsArray[0].Month.push(date);
+                        }
+                    } else {
+                        for (let j = 0; j < AllMonths.length; j++) {
+                            KeywordsArray[0].line.push(line_name);
+                            KeywordsArray[0].mixedKeywords.push(keyword);
+                            KeywordsArray[0].searchVolume.push(0);
+                            KeywordsArray[0].Month.push(AllMonths[j]);
+                        }
                     }
                 }
             }
@@ -1173,6 +1394,33 @@ async function generateExcel() {
     document.body.removeChild(link);
 }
 
+async function generateCSV() {
+    const headers = ["Cluster", "Zoekwoord", "Maand", "Volume"];
+    const data = [headers];
+
+    for (let i = 0; i < KeywordsArray[0].mixedKeywords.length; i++) {
+        KeywordsArray.forEach(function (item) {
+            const row = [
+                item.line[i],
+                item.mixedKeywords[i],
+                item.Month[i] !== undefined ? String(item.Month[i]) : null,
+                item.searchVolume[i] !== undefined ? String(item.searchVolume[i]) : null
+            ];
+            data.push(row);
+        });
+    }
+
+    const csvContent = Papa.unparse(data);
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'bulk-zoekwoordlijsten.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 // Language & location
 let typingTimer;
 const Interval = 500;
@@ -1261,51 +1509,12 @@ function filterOptions(optionsId, filter) {
 }
 
 // Disabled
-const disabled = document.getElementById("bulk-input");
-const disabled1 = document.getElementById("zoekvolumes");
-const disabled2 = document.getElementById("suggesties");
-const disabled3 = document.getElementById("afhankelijk");
-const radioButtons = document.querySelectorAll('input[name="flexRadioDefault"]');
+const listInput = document.getElementById('bulk-input');
+const radioButtons = document.querySelectorAll('input[name="RadioApiMethode"]');
 const afhankelijkRadio = document.getElementById("afhankelijk");
 
-disabled.addEventListener("input", function() {
-    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
-        mixListsButton.removeAttribute("disabled");
-        checkErrors();
-    } else {
-        mixListsButton.setAttribute("disabled", "disabled");
-    }
-});
-
-disabled1.addEventListener("change", function() {
-    if (disabled.value != '' && disabled1.checked == true || disabled2.checked == true || disabled3.checked == true) {
-        mixListsButton.removeAttribute("disabled");
-        checkErrors();
-    } else {
-        mixListsButton.setAttribute("disabled", "disabled");
-    }
-});
-
-disabled2.addEventListener("change", function() {
-    if (disabled.value != '' && disabled2.checked == true || disabled1.checked == true || disabled3.checked == true) {
-        mixListsButton.removeAttribute("disabled");
-        checkErrors();
-    } else {
-        mixListsButton.setAttribute("disabled", "disabled");
-    }
-});
-
-disabled3.addEventListener("change", function() {
-    if (disabled.value != '' && disabled3.checked == true || disabled1.checked == true || disabled3.checked == true) {
-        mixListsButton.removeAttribute("disabled");
-        checkErrors();
-    } else {
-        mixListsButton.setAttribute("disabled", "disabled");
-    }
-});
-
-function checkErrors() {
-    const lines = disabled.value.trim().split('\n');
+afhankelijkRadio.addEventListener("change", function() {
+    const lines = listInput.value.trim().split('\n');
     const firstLine = lines[0];
 
     if ((firstLine.startsWith('0') || firstLine.startsWith('1')) && !afhankelijkRadio.checked) {
@@ -1322,7 +1531,7 @@ function checkErrors() {
         radioButtons.forEach(radio => radio.checked = false);
         mixListsButton.setAttribute("disabled", "disabled");
     }
-}
+});
 
 // Data ophalen op basis van taskId's in html form.
 async function getData (login, password) {

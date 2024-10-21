@@ -714,3 +714,37 @@ a {
 .table {
     --bs-table-bg: ;
 }
+
+#datepicker {
+    width: 100%;
+    border-radius: 0.7rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2302343f' class='bi bi-calendar-fill' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+:host {
+    --color-fg-primary: #02343f;
+    --color-bg-secondary: #f2f2f2; 
+    --color-bg-inrange: #f2f2f2;
+}
+.calendar>.header button>svg {
+    fill: #02343f;
+}
+.month-name span {
+    font-size: 14px;
+    font-family: madabold;
+    color: rgb(33, 37, 41);
+}
+.preset-button.unit {
+    margin-top: 20px;
+    background-color: var(--color-bg-default);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 5px;
+}
+.preset-button.unit:hover {
+    border: 1px solid #02343f !important;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
